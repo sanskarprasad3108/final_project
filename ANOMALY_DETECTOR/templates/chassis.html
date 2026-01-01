@@ -104,21 +104,31 @@
             overflow: hidden;
             background: rgba(0, 0, 0, 0.3);
         }
-        .component-image {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
+        .component-svg {
+            width: 100%;
+            height: 100%;
+            max-width: 280px;
+            max-height: 280px;
             transition: filter 0.3s ease;
         }
-        .image-normal { filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5)); }
-        .image-anomaly {
+        .svg-normal { filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5)); }
+        .svg-anomaly {
             filter: drop-shadow(0 0 15px rgba(255, 0, 0, 0.8)) drop-shadow(0 0 30px rgba(255, 50, 50, 0.6));
-            animation: image-pulse 0.5s ease-in-out infinite;
+            animation: svg-pulse 0.5s ease-in-out infinite;
         }
-        @keyframes image-pulse {
+        @keyframes svg-pulse {
             0%, 100% { filter: drop-shadow(0 0 15px rgba(255, 0, 0, 0.8)) drop-shadow(0 0 30px rgba(255, 50, 50, 0.6)); }
             50% { filter: drop-shadow(0 0 25px rgba(255, 0, 0, 1)) drop-shadow(0 0 50px rgba(255, 50, 50, 0.8)); }
         }
+        .smoke-svg {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .smoke-svg.smoke-active { opacity: 1; }
         .smoke-container {
             position: absolute;
             top: 0; left: 0;
@@ -246,14 +256,131 @@
             <div class="image-panel">
                 <div class="panel-title"><span>🏗️</span> Chassis Frame</div>
                 <div class="component-image-container">
-                    <img src="/static/images/chassis.png" alt="Chassis" class="component-image image-normal" id="component-image">
-                    <div class="smoke-container" id="smoke-container">
-                        <div class="smoke-particle"></div>
-                        <div class="smoke-particle"></div>
-                        <div class="smoke-particle"></div>
-                        <div class="smoke-particle"></div>
-                        <div class="smoke-particle"></div>
-                    </div>
+                    <!-- Professional Chassis Frame SVG -->
+                    <svg id="chassis-svg" class="component-svg svg-normal" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="frameGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#ffd700"/>
+                                <stop offset="50%" style="stop-color:#b8860b"/>
+                                <stop offset="100%" style="stop-color:#daa520"/>
+                            </linearGradient>
+                            <linearGradient id="steelGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:#606060"/>
+                                <stop offset="50%" style="stop-color:#808080"/>
+                                <stop offset="100%" style="stop-color:#606060"/>
+                            </linearGradient>
+                            <linearGradient id="mountGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#4a4a4a"/>
+                                <stop offset="100%" style="stop-color:#2a2a2a"/>
+                            </linearGradient>
+                            <pattern id="reinforcePattern" patternUnits="userSpaceOnUse" width="10" height="10">
+                                <line x1="0" y1="10" x2="10" y2="0" stroke="#555" stroke-width="1"/>
+                            </pattern>
+                        </defs>
+                        
+                        <!-- Main Frame Rails -->
+                        <g id="chassis-main">
+                            <!-- Left Rail -->
+                            <rect x="20" y="70" width="160" height="20" rx="3" fill="url(#frameGradient)" stroke="#8B4513" stroke-width="2"/>
+                            <!-- Right Rail -->
+                            <rect x="20" y="110" width="160" height="20" rx="3" fill="url(#frameGradient)" stroke="#8B4513" stroke-width="2"/>
+                            
+                            <!-- Cross Members -->
+                            <rect x="35" y="70" width="15" height="60" rx="2" fill="url(#steelGradient)" stroke="#505050" stroke-width="1"/>
+                            <rect x="75" y="70" width="15" height="60" rx="2" fill="url(#steelGradient)" stroke="#505050" stroke-width="1"/>
+                            <rect x="110" y="70" width="15" height="60" rx="2" fill="url(#steelGradient)" stroke="#505050" stroke-width="1"/>
+                            <rect x="150" y="70" width="15" height="60" rx="2" fill="url(#steelGradient)" stroke="#505050" stroke-width="1"/>
+                            
+                            <!-- Reinforcement Plates -->
+                            <rect x="20" y="85" width="30" height="30" fill="url(#reinforcePattern)" opacity="0.5"/>
+                            <rect x="150" y="85" width="30" height="30" fill="url(#reinforcePattern)" opacity="0.5"/>
+                            
+                            <!-- Front Axle Mount -->
+                            <g id="front-mount">
+                                <rect x="25" y="60" width="25" height="15" rx="3" fill="url(#mountGradient)" stroke="#333" stroke-width="1"/>
+                                <circle cx="37" cy="55" r="6" fill="#404040" stroke="#303030" stroke-width="1"/>
+                                <rect x="25" y="125" width="25" height="15" rx="3" fill="url(#mountGradient)" stroke="#333" stroke-width="1"/>
+                                <circle cx="37" cy="145" r="6" fill="#404040" stroke="#303030" stroke-width="1"/>
+                            </g>
+                            
+                            <!-- Rear Axle Mount -->
+                            <g id="rear-mount">
+                                <rect x="150" y="60" width="25" height="15" rx="3" fill="url(#mountGradient)" stroke="#333" stroke-width="1"/>
+                                <circle cx="162" cy="55" r="6" fill="#404040" stroke="#303030" stroke-width="1"/>
+                                <rect x="150" y="125" width="25" height="15" rx="3" fill="url(#mountGradient)" stroke="#333" stroke-width="1"/>
+                                <circle cx="162" cy="145" r="6" fill="#404040" stroke="#303030" stroke-width="1"/>
+                            </g>
+                            
+                            <!-- Suspension Points -->
+                            <g id="suspension-points" fill="#ffd700" stroke="#b8860b" stroke-width="1">
+                                <circle cx="50" cy="65" r="4">
+                                    <animate attributeName="cy" values="65;63;65" dur="1s" repeatCount="indefinite"/>
+                                </circle>
+                                <circle cx="50" cy="135" r="4">
+                                    <animate attributeName="cy" values="135;137;135" dur="1s" repeatCount="indefinite"/>
+                                </circle>
+                                <circle cx="150" cy="65" r="4">
+                                    <animate attributeName="cy" values="65;63;65" dur="1.2s" repeatCount="indefinite"/>
+                                </circle>
+                                <circle cx="150" cy="135" r="4">
+                                    <animate attributeName="cy" values="135;137;135" dur="1.2s" repeatCount="indefinite"/>
+                                </circle>
+                            </g>
+                            
+                            <!-- Center Load Area -->
+                            <rect x="60" y="75" width="80" height="50" rx="5" fill="none" stroke="#ffd700" stroke-width="1" stroke-dasharray="5,3"/>
+                            <text x="100" y="105" font-size="10" fill="#ffd700" text-anchor="middle" font-family="Arial">LOAD</text>
+                            
+                            <!-- Rivets/Bolts -->
+                            <g id="rivets" fill="#505050">
+                                <circle cx="30" cy="80" r="2"/>
+                                <circle cx="170" cy="80" r="2"/>
+                                <circle cx="30" cy="120" r="2"/>
+                                <circle cx="170" cy="120" r="2"/>
+                                <circle cx="92" cy="80" r="2"/>
+                                <circle cx="108" cy="80" r="2"/>
+                                <circle cx="92" cy="120" r="2"/>
+                                <circle cx="108" cy="120" r="2"/>
+                            </g>
+                        </g>
+                        
+                        <!-- Status Indicator Light -->
+                        <circle id="status-light" cx="175" cy="25" r="8" fill="#00ff88">
+                            <animate attributeName="opacity" values="1;0.5;1" dur="1.5s" repeatCount="indefinite"/>
+                        </circle>
+                        
+                        <!-- Structural Integrity Lines -->
+                        <g id="integrity-lines" stroke="#ffd700" stroke-width="0.5" opacity="0.4">
+                            <line x1="37" y1="80" x2="162" y2="80"/>
+                            <line x1="37" y1="120" x2="162" y2="120"/>
+                            <line x1="50" y1="70" x2="50" y2="130"/>
+                            <line x1="150" y1="70" x2="150" y2="130"/>
+                        </g>
+                    </svg>
+                    <!-- Smoke/Stress Effect SVG -->
+                    <svg class="smoke-svg" id="smoke-container" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <radialGradient id="smokeGrad">
+                                <stop offset="0%" style="stop-color:#888;stop-opacity:0.6"/>
+                                <stop offset="100%" style="stop-color:#444;stop-opacity:0"/>
+                            </radialGradient>
+                        </defs>
+                        <circle cx="60" cy="180" r="20" fill="url(#smokeGrad)">
+                            <animate attributeName="cy" values="180;20" dur="3s" repeatCount="indefinite"/>
+                            <animate attributeName="r" values="20;40" dur="3s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.7;0" dur="3s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="100" cy="180" r="25" fill="url(#smokeGrad)">
+                            <animate attributeName="cy" values="180;10" dur="2.5s" repeatCount="indefinite" begin="0.5s"/>
+                            <animate attributeName="r" values="25;50" dur="2.5s" repeatCount="indefinite" begin="0.5s"/>
+                            <animate attributeName="opacity" values="0.8;0" dur="2.5s" repeatCount="indefinite" begin="0.5s"/>
+                        </circle>
+                        <circle cx="140" cy="180" r="15" fill="url(#smokeGrad)">
+                            <animate attributeName="cy" values="180;30" dur="3.5s" repeatCount="indefinite" begin="1s"/>
+                            <animate attributeName="r" values="15;35" dur="3.5s" repeatCount="indefinite" begin="1s"/>
+                            <animate attributeName="opacity" values="0.6;0" dur="3.5s" repeatCount="indefinite" begin="1s"/>
+                        </circle>
+                    </svg>
                 </div>
             </div>
         </div>
@@ -342,21 +469,24 @@
             
             const statusBox = document.getElementById('component-status');
             const statusText = document.getElementById('status-text');
-            const componentImage = document.getElementById('component-image');
+            const chassisSvg = document.getElementById('chassis-svg');
             const smokeContainer = document.getElementById('smoke-container');
+            const statusLight = document.getElementById('status-light');
             
             if (anomaly) {
                 statusBox.className = 'component-status status-anomaly';
                 statusText.textContent = '⚠️ ANOMALY';
-                componentImage.className = 'component-image image-anomaly';
+                chassisSvg.className.baseVal = 'component-svg svg-anomaly';
                 smokeContainer.classList.add('smoke-active');
+                if (statusLight) statusLight.setAttribute('fill', '#ff4444');
                 document.getElementById('sensor-vibration').classList.add('anomaly');
                 document.getElementById('sensor-load').classList.add('anomaly');
             } else {
                 statusBox.className = 'component-status status-normal';
                 statusText.textContent = 'NORMAL';
-                componentImage.className = 'component-image image-normal';
+                chassisSvg.className.baseVal = 'component-svg svg-normal';
                 smokeContainer.classList.remove('smoke-active');
+                if (statusLight) statusLight.setAttribute('fill', '#00ff88');
                 document.getElementById('sensor-vibration').classList.remove('anomaly');
                 document.getElementById('sensor-load').classList.remove('anomaly');
             }

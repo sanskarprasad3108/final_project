@@ -159,25 +159,30 @@
             background: rgba(0, 0, 0, 0.3);
         }
 
-        .component-image {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
+        .component-svg {
+            width: 100%;
+            height: 100%;
+            max-width: 280px;
+            max-height: 280px;
             transition: filter 0.3s ease;
         }
 
-        /* Glow effects for image */
-        .image-normal {
-            filter: drop-shadow(0 0 10px rgba(0, 255, 136, 0.5));
+        /* SVG Glow Effects */
+        .svg-normal {
+            filter: drop-shadow(0 0 8px rgba(0, 255, 136, 0.4));
         }
 
-        .image-anomaly {
+        .svg-anomaly {
             filter: drop-shadow(0 0 15px rgba(255, 0, 0, 0.8)) 
                     drop-shadow(0 0 30px rgba(255, 50, 50, 0.6));
-            animation: image-pulse 0.5s ease-in-out infinite;
+            animation: svg-pulse 0.5s ease-in-out infinite;
         }
 
-        @keyframes image-pulse {
+        .svg-anomaly #engine-block { fill: #8B0000 !important; }
+        .svg-anomaly #engine-head { fill: #A00000 !important; }
+        .svg-anomaly #engine-pipes path { stroke: #ff4444 !important; }
+
+        @keyframes svg-pulse {
             0%, 100% { filter: drop-shadow(0 0 15px rgba(255, 0, 0, 0.8)) drop-shadow(0 0 30px rgba(255, 50, 50, 0.6)); }
             50% { filter: drop-shadow(0 0 25px rgba(255, 0, 0, 1)) drop-shadow(0 0 50px rgba(255, 50, 50, 0.8)); }
         }
@@ -394,14 +399,104 @@
                     <span>🔧</span> Engine Assembly
                 </div>
                 <div class="component-image-container">
-                    <img src="/static/images/engine.png" alt="Engine" class="component-image image-normal" id="component-image">
-                    <div class="smoke-container" id="smoke-container">
-                        <div class="smoke-particle"></div>
-                        <div class="smoke-particle"></div>
-                        <div class="smoke-particle"></div>
-                        <div class="smoke-particle"></div>
-                        <div class="smoke-particle"></div>
-                    </div>
+                    <!-- ENGINE SVG - Professional Industrial Illustration -->
+                    <svg id="engine-svg" class="component-svg svg-normal" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <!-- Normal state gradient -->
+                            <linearGradient id="engine-metal" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#4a5568"/>
+                                <stop offset="50%" style="stop-color:#2d3748"/>
+                                <stop offset="100%" style="stop-color:#1a202c"/>
+                            </linearGradient>
+                            <linearGradient id="engine-highlight" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#718096"/>
+                                <stop offset="100%" style="stop-color:#4a5568"/>
+                            </linearGradient>
+                            <linearGradient id="pipe-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:#2d3748"/>
+                                <stop offset="50%" style="stop-color:#4a5568"/>
+                                <stop offset="100%" style="stop-color:#2d3748"/>
+                            </linearGradient>
+                            <!-- Glow filter -->
+                            <filter id="glow-normal" x="-50%" y="-50%" width="200%" height="200%">
+                                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                                <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                            </filter>
+                        </defs>
+                        
+                        <!-- Engine Block -->
+                        <g id="engine-block">
+                            <rect x="40" y="60" width="120" height="100" rx="8" fill="url(#engine-metal)" stroke="#1a202c" stroke-width="2"/>
+                            <!-- Cylinder fins -->
+                            <rect x="45" y="70" width="110" height="6" rx="2" fill="#1a202c"/>
+                            <rect x="45" y="82" width="110" height="6" rx="2" fill="#1a202c"/>
+                            <rect x="45" y="94" width="110" height="6" rx="2" fill="#1a202c"/>
+                            <rect x="45" y="106" width="110" height="6" rx="2" fill="#1a202c"/>
+                            <!-- Side panel -->
+                            <rect x="45" y="120" width="45" height="35" rx="3" fill="url(#engine-highlight)" stroke="#2d3748"/>
+                            <rect x="110" y="120" width="45" height="35" rx="3" fill="url(#engine-highlight)" stroke="#2d3748"/>
+                        </g>
+                        
+                        <!-- Engine Head -->
+                        <g id="engine-head">
+                            <rect x="50" y="40" width="100" height="25" rx="5" fill="url(#engine-highlight)" stroke="#1a202c" stroke-width="2"/>
+                            <!-- Valve covers -->
+                            <ellipse cx="75" cy="52" rx="12" ry="8" fill="#2d3748" stroke="#4a5568"/>
+                            <ellipse cx="125" cy="52" rx="12" ry="8" fill="#2d3748" stroke="#4a5568"/>
+                        </g>
+                        
+                        <!-- Exhaust/Intake Pipes -->
+                        <g id="engine-pipes">
+                            <path d="M160 80 Q180 80 180 60 L180 45" fill="none" stroke="url(#pipe-gradient)" stroke-width="8" stroke-linecap="round"/>
+                            <path d="M160 100 Q185 100 185 120 L185 140" fill="none" stroke="url(#pipe-gradient)" stroke-width="8" stroke-linecap="round"/>
+                            <path d="M40 90 Q20 90 20 70 L20 50" fill="none" stroke="url(#pipe-gradient)" stroke-width="8" stroke-linecap="round"/>
+                        </g>
+                        
+                        <!-- Oil Pan -->
+                        <g id="engine-oil-pan">
+                            <path d="M50 160 L50 175 Q50 185 60 185 L140 185 Q150 185 150 175 L150 160" fill="#1a202c" stroke="#2d3748" stroke-width="2"/>
+                            <rect x="90" y="178" width="20" height="12" rx="2" fill="#2d3748"/>
+                        </g>
+                        
+                        <!-- Bolts/Details -->
+                        <g id="engine-details">
+                            <circle cx="55" cy="67" r="3" fill="#718096"/>
+                            <circle cx="145" cy="67" r="3" fill="#718096"/>
+                            <circle cx="55" cy="153" r="3" fill="#718096"/>
+                            <circle cx="145" cy="153" r="3" fill="#718096"/>
+                        </g>
+                        
+                        <!-- Status indicator light -->
+                        <circle id="status-light" cx="100" cy="130" r="6" fill="#00ff88" opacity="0.8">
+                            <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite"/>
+                        </circle>
+                    </svg>
+                    
+                    <!-- SVG Smoke Animation -->
+                    <svg class="smoke-svg" id="smoke-container" viewBox="0 0 200 200" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;opacity:0;transition:opacity 0.3s;">
+                        <defs>
+                            <filter id="smoke-blur">
+                                <feGaussianBlur stdDeviation="3"/>
+                            </filter>
+                        </defs>
+                        <g id="smoke-particles" filter="url(#smoke-blur)">
+                            <ellipse cx="80" cy="180" rx="15" ry="10" fill="rgba(150,150,150,0.5)">
+                                <animate attributeName="cy" values="180;20" dur="3s" repeatCount="indefinite"/>
+                                <animate attributeName="rx" values="15;30" dur="3s" repeatCount="indefinite"/>
+                                <animate attributeName="opacity" values="0.6;0" dur="3s" repeatCount="indefinite"/>
+                            </ellipse>
+                            <ellipse cx="100" cy="180" rx="20" ry="12" fill="rgba(130,130,130,0.5)">
+                                <animate attributeName="cy" values="180;10" dur="3.5s" begin="0.5s" repeatCount="indefinite"/>
+                                <animate attributeName="rx" values="20;40" dur="3.5s" begin="0.5s" repeatCount="indefinite"/>
+                                <animate attributeName="opacity" values="0.5;0" dur="3.5s" begin="0.5s" repeatCount="indefinite"/>
+                            </ellipse>
+                            <ellipse cx="120" cy="180" rx="12" ry="8" fill="rgba(140,140,140,0.5)">
+                                <animate attributeName="cy" values="180;30" dur="2.8s" begin="1s" repeatCount="indefinite"/>
+                                <animate attributeName="rx" values="12;25" dur="2.8s" begin="1s" repeatCount="indefinite"/>
+                                <animate attributeName="opacity" values="0.55;0" dur="2.8s" begin="1s" repeatCount="indefinite"/>
+                            </ellipse>
+                        </g>
+                    </svg>
                 </div>
             </div>
         </div>
@@ -553,14 +648,15 @@
             // Update status
             const statusBox = document.getElementById('component-status');
             const statusText = document.getElementById('status-text');
-            const componentImage = document.getElementById('component-image');
+            const componentImage = document.getElementById('engine-svg');
             const smokeContainer = document.getElementById('smoke-container');
             
             if (anomaly) {
                 statusBox.className = 'component-status status-anomaly';
                 statusText.textContent = '⚠️ ANOMALY';
-                componentImage.className = 'component-image image-anomaly';
-                smokeContainer.classList.add('smoke-active');
+                componentImage.className = 'component-svg svg-anomaly';
+                smokeContainer.style.opacity = '1';
+                document.getElementById('status-light').setAttribute('fill', '#ff4444');
                 
                 // Mark anomalous sensors
                 document.getElementById('sensor-temp').classList.add('anomaly');
@@ -569,8 +665,9 @@
             } else {
                 statusBox.className = 'component-status status-normal';
                 statusText.textContent = 'NORMAL';
-                componentImage.className = 'component-image image-normal';
-                smokeContainer.classList.remove('smoke-active');
+                componentImage.className = 'component-svg svg-normal';
+                smokeContainer.style.opacity = '0';
+                document.getElementById('status-light').setAttribute('fill', '#00ff88');
                 
                 // Remove anomaly markers
                 document.getElementById('sensor-temp').classList.remove('anomaly');

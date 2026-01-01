@@ -102,21 +102,26 @@
             overflow: hidden;
             background: rgba(0, 0, 0, 0.3);
         }
-        .component-image {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
+        .component-svg {
+            width: 100%;
+            height: 100%;
+            max-width: 280px;
+            max-height: 280px;
             transition: filter 0.3s ease;
         }
-        .image-normal { filter: drop-shadow(0 0 10px rgba(0, 191, 255, 0.5)); }
-        .image-anomaly {
+        .svg-normal { filter: drop-shadow(0 0 8px rgba(0, 191, 255, 0.4)); }
+        .svg-anomaly {
             filter: drop-shadow(0 0 15px rgba(255, 0, 0, 0.8)) drop-shadow(0 0 30px rgba(255, 50, 50, 0.6));
-            animation: image-pulse 0.5s ease-in-out infinite;
+            animation: svg-pulse 0.5s ease-in-out infinite;
         }
-        @keyframes image-pulse {
+        .svg-anomaly #hydraulic-cylinder { fill: #8B0000 !important; }
+        .svg-anomaly #hydraulic-piston { fill: #A00000 !important; }
+        .svg-anomaly #hydraulic-pipes path { stroke: #ff4444 !important; }
+        @keyframes svg-pulse {
             0%, 100% { filter: drop-shadow(0 0 15px rgba(255, 0, 0, 0.8)) drop-shadow(0 0 30px rgba(255, 50, 50, 0.6)); }
             50% { filter: drop-shadow(0 0 25px rgba(255, 0, 0, 1)) drop-shadow(0 0 50px rgba(255, 50, 50, 0.8)); }
         }
+        .smoke-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
         .smoke-container {
             position: absolute;
             top: 0; left: 0;
@@ -244,14 +249,89 @@
             <div class="image-panel">
                 <div class="panel-title"><span>🛢️</span> Hydraulic System</div>
                 <div class="component-image-container">
-                    <img src="/static/images/hydraulics.png" alt="Hydraulics" class="component-image image-normal" id="component-image">
-                    <div class="smoke-container" id="smoke-container">
-                        <div class="smoke-particle"></div>
-                        <div class="smoke-particle"></div>
-                        <div class="smoke-particle"></div>
-                        <div class="smoke-particle"></div>
-                        <div class="smoke-particle"></div>
-                    </div>
+                    <!-- HYDRAULICS SVG - Professional Industrial Illustration -->
+                    <svg id="hydraulics-svg" class="component-svg svg-normal" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="hyd-metal" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#4a5568"/>
+                                <stop offset="50%" style="stop-color:#2d3748"/>
+                                <stop offset="100%" style="stop-color:#1a202c"/>
+                            </linearGradient>
+                            <linearGradient id="hyd-chrome" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#a0aec0"/>
+                                <stop offset="50%" style="stop-color:#718096"/>
+                                <stop offset="100%" style="stop-color:#4a5568"/>
+                            </linearGradient>
+                            <linearGradient id="hyd-fluid" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#00bfff"/>
+                                <stop offset="100%" style="stop-color:#0077b6"/>
+                            </linearGradient>
+                        </defs>
+                        
+                        <!-- Main Cylinder Body -->
+                        <g id="hydraulic-cylinder">
+                            <rect x="60" y="40" width="80" height="140" rx="10" fill="url(#hyd-metal)" stroke="#1a202c" stroke-width="2"/>
+                            <!-- Cylinder cap top -->
+                            <rect x="55" y="35" width="90" height="15" rx="5" fill="url(#hyd-chrome)" stroke="#2d3748"/>
+                            <!-- Cylinder cap bottom -->
+                            <rect x="55" y="170" width="90" height="15" rx="5" fill="url(#hyd-chrome)" stroke="#2d3748"/>
+                            <!-- Viewport window -->
+                            <rect x="85" y="70" width="30" height="80" rx="3" fill="#0a1628" stroke="#2d3748"/>
+                            <rect x="88" y="100" width="24" height="45" fill="url(#hyd-fluid)" opacity="0.8">
+                                <animate attributeName="height" values="45;35;45" dur="2s" repeatCount="indefinite"/>
+                                <animate attributeName="y" values="100;110;100" dur="2s" repeatCount="indefinite"/>
+                            </rect>
+                        </g>
+                        
+                        <!-- Piston Rod -->
+                        <g id="hydraulic-piston">
+                            <rect x="92" y="15" width="16" height="30" rx="3" fill="url(#hyd-chrome)" stroke="#4a5568"/>
+                            <rect x="95" y="5" width="10" height="15" rx="2" fill="#718096"/>
+                        </g>
+                        
+                        <!-- Hydraulic Lines/Pipes -->
+                        <g id="hydraulic-pipes">
+                            <path d="M60 80 Q30 80 30 110 L30 150 Q30 170 50 170" fill="none" stroke="#4a5568" stroke-width="8" stroke-linecap="round"/>
+                            <path d="M140 80 Q170 80 170 110 L170 150 Q170 170 150 170" fill="none" stroke="#4a5568" stroke-width="8" stroke-linecap="round"/>
+                            <!-- Flow indicators -->
+                            <circle cx="30" cy="120" r="3" fill="#00bfff">
+                                <animate attributeName="cy" values="100;150;100" dur="1.5s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="170" cy="130" r="3" fill="#00bfff">
+                                <animate attributeName="cy" values="150;100;150" dur="1.5s" repeatCount="indefinite"/>
+                            </circle>
+                        </g>
+                        
+                        <!-- Fittings -->
+                        <g id="hydraulic-fittings">
+                            <circle cx="60" cy="80" r="6" fill="#718096" stroke="#2d3748"/>
+                            <circle cx="140" cy="80" r="6" fill="#718096" stroke="#2d3748"/>
+                            <rect x="45" y="165" width="12" height="8" rx="2" fill="#718096"/>
+                            <rect x="143" y="165" width="12" height="8" rx="2" fill="#718096"/>
+                        </g>
+                        
+                        <!-- Status indicator -->
+                        <circle id="status-light" cx="100" cy="155" r="5" fill="#00ff88" opacity="0.8">
+                            <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite"/>
+                        </circle>
+                    </svg>
+                    
+                    <!-- SVG Smoke Animation -->
+                    <svg class="smoke-svg" id="smoke-container" viewBox="0 0 200 200" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;opacity:0;transition:opacity 0.3s;">
+                        <defs><filter id="smoke-blur"><feGaussianBlur stdDeviation="3"/></filter></defs>
+                        <g filter="url(#smoke-blur)">
+                            <ellipse cx="80" cy="180" rx="15" ry="10" fill="rgba(150,150,150,0.5)">
+                                <animate attributeName="cy" values="180;20" dur="3s" repeatCount="indefinite"/>
+                                <animate attributeName="rx" values="15;30" dur="3s" repeatCount="indefinite"/>
+                                <animate attributeName="opacity" values="0.6;0" dur="3s" repeatCount="indefinite"/>
+                            </ellipse>
+                            <ellipse cx="120" cy="180" rx="18" ry="12" fill="rgba(130,130,130,0.5)">
+                                <animate attributeName="cy" values="180;10" dur="3.2s" begin="0.7s" repeatCount="indefinite"/>
+                                <animate attributeName="rx" values="18;35" dur="3.2s" begin="0.7s" repeatCount="indefinite"/>
+                                <animate attributeName="opacity" values="0.5;0" dur="3.2s" begin="0.7s" repeatCount="indefinite"/>
+                            </ellipse>
+                        </g>
+                    </svg>
                 </div>
             </div>
         </div>
@@ -342,21 +422,23 @@
             
             const statusBox = document.getElementById('component-status');
             const statusText = document.getElementById('status-text');
-            const componentImage = document.getElementById('component-image');
+            const componentImage = document.getElementById('hydraulics-svg');
             const smokeContainer = document.getElementById('smoke-container');
             
             if (anomaly) {
                 statusBox.className = 'component-status status-anomaly';
                 statusText.textContent = '⚠️ ANOMALY';
-                componentImage.className = 'component-image image-anomaly';
-                smokeContainer.classList.add('smoke-active');
+                componentImage.className = 'component-svg svg-anomaly';
+                smokeContainer.style.opacity = '1';
+                document.getElementById('status-light').setAttribute('fill', '#ff4444');
                 document.getElementById('sensor-pressure').classList.add('anomaly');
                 document.getElementById('sensor-load').classList.add('anomaly');
             } else {
                 statusBox.className = 'component-status status-normal';
                 statusText.textContent = 'NORMAL';
-                componentImage.className = 'component-image image-normal';
-                smokeContainer.classList.remove('smoke-active');
+                componentImage.className = 'component-svg svg-normal';
+                smokeContainer.style.opacity = '0';
+                document.getElementById('status-light').setAttribute('fill', '#00ff88');
                 document.getElementById('sensor-pressure').classList.remove('anomaly');
                 document.getElementById('sensor-load').classList.remove('anomaly');
             }
