@@ -212,6 +212,163 @@ COMPONENT_FAILURE_WEIGHTS = {
     'chassis': 0.10
 }
 
+# ============================================================
+# EXPLAINABLE AI (XAI) - FEATURE CONTRIBUTION ANALYSIS
+# ============================================================
+
+# Component feature names for explanations
+COMPONENT_FEATURE_NAMES = {
+    'engine': ['engine_temperature', 'oil_pressure', 'fuel_rate'],
+    'hydraulic': ['hydraulic_pressure', 'fluid_temp'],
+    'wheels': ['wheel_vibration', 'brake_temperature', 'wheel_speed'],
+    'chassis': ['chassis_vibration', 'load_weight']
+}
+
+# Human-readable feature descriptions
+FEATURE_DESCRIPTIONS = {
+    'engine_temperature': 'engine temperature',
+    'oil_pressure': 'oil pressure',
+    'fuel_rate': 'fuel consumption rate',
+    'hydraulic_pressure': 'hydraulic pressure',
+    'fluid_temp': 'hydraulic fluid temperature',
+    'wheel_vibration': 'wheel vibration',
+    'brake_temperature': 'brake temperature',
+    'wheel_speed': 'wheel speed',
+    'chassis_vibration': 'structural vibration',
+    'load_weight': 'load weight'
+}
+
+# Severity adjectives based on contribution percentage
+def get_severity_adjective(contribution):
+    """Return appropriate adjective based on contribution level."""
+    if contribution >= 60:
+        return "critically"
+    elif contribution >= 40:
+        return "significantly"
+    elif contribution >= 25:
+        return "notably"
+    elif contribution >= 15:
+        return "moderately"
+    else:
+        return "slightly"
+
+# Component-specific cause descriptors
+COMPONENT_CAUSE_TEMPLATES = {
+    'engine': {
+        'engine_temperature': ['overheating condition', 'thermal stress', 'cooling system inefficiency'],
+        'oil_pressure': ['lubrication system stress', 'potential oil pump degradation', 'viscosity issues'],
+        'fuel_rate': ['fuel injection irregularity', 'combustion inefficiency', 'fuel system imbalance']
+    },
+    'hydraulic': {
+        'hydraulic_pressure': ['possible blockage or valve malfunction', 'pump performance degradation', 'seal integrity issues'],
+        'fluid_temp': ['fluid overheating', 'cooling circuit inefficiency', 'excessive system load']
+    },
+    'wheels': {
+        'wheel_vibration': ['imbalance or surface irregularities', 'bearing wear', 'alignment deviation'],
+        'brake_temperature': ['brake system overheating', 'friction material degradation', 'caliper binding'],
+        'wheel_speed': ['speed sensor anomaly', 'drivetrain irregularity', 'traction control engagement']
+    },
+    'chassis': {
+        'chassis_vibration': ['structural resonance', 'mounting point stress', 'frame fatigue indication'],
+        'load_weight': ['excessive payload', 'load distribution imbalance', 'suspension overload']
+    }
+}
+
+def calculate_feature_contributions(X_scaled, X_pred, feature_names):
+    """
+    Calculate per-feature reconstruction error contributions.
+    
+    Returns:
+        list: Sorted list of {feature, contribution, error} dicts
+    """
+    # Compute per-feature squared error
+    feature_errors = np.square(X_scaled.flatten() - X_pred.flatten())
+    total_error = np.sum(feature_errors)
+    
+    if total_error == 0:
+        return []
+    
+    contributions = []
+    for i, feature_name in enumerate(feature_names):
+        contribution_pct = (feature_errors[i] / total_error) * 100
+        contributions.append({
+            'feature': feature_name,
+            'contribution': round(float(contribution_pct), 1),
+            'error': round(float(feature_errors[i]), 6)
+        })
+    
+    # Sort by contribution descending
+    contributions.sort(key=lambda x: x['contribution'], reverse=True)
+    return contributions
+
+def generate_explanation_text(component, contributions):
+    """
+    Generate natural language explanation from feature contributions.
+    
+    Args:
+        component: Component name (engine, hydraulic, wheels, chassis)
+        contributions: Sorted list of feature contributions
+    
+    Returns:
+        str: Human-readable explanation
+    """
+    if not contributions:
+        return "Anomaly detected but contribution analysis unavailable."
+    
+    component_names = {
+        'engine': 'Engine',
+        'hydraulic': 'Hydraulic system',
+        'wheels': 'Wheel assembly',
+        'chassis': 'Chassis'
+    }
+    
+    comp_display = component_names.get(component, component.title())
+    
+    # Primary cause (highest contributor)
+    primary = contributions[0]
+    primary_desc = FEATURE_DESCRIPTIONS.get(primary['feature'], primary['feature'])
+    primary_severity = get_severity_adjective(primary['contribution'])
+    
+    # Get specific cause template
+    cause_templates = COMPONENT_CAUSE_TEMPLATES.get(component, {})
+    specific_cause = cause_templates.get(primary['feature'], ['abnormal readings'])[0]
+    
+    # Build explanation
+    explanation_parts = []
+    
+    # Opening statement
+    if primary['contribution'] >= 50:
+        explanation_parts.append(
+            f"{comp_display} anomaly detected primarily due to {primary_severity} elevated {primary_desc}, "
+            f"contributing {primary['contribution']:.0f}% of the total deviation. "
+            f"This indicates {specific_cause}."
+        )
+    else:
+        explanation_parts.append(
+            f"{comp_display} anomaly detected with {primary_desc} as the leading factor "
+            f"({primary['contribution']:.0f}% contribution), suggesting {specific_cause}."
+        )
+    
+    # Secondary factors (if significant)
+    if len(contributions) > 1 and contributions[1]['contribution'] >= 15:
+        secondary = contributions[1]
+        sec_desc = FEATURE_DESCRIPTIONS.get(secondary['feature'], secondary['feature'])
+        sec_cause = cause_templates.get(secondary['feature'], ['elevated readings'])[0]
+        explanation_parts.append(
+            f"Elevated {sec_desc} ({secondary['contribution']:.0f}%) further indicates {sec_cause}."
+        )
+    
+    # Minor factors summary
+    minor_factors = [c for c in contributions[1:] if 5 <= c['contribution'] < 15]
+    if minor_factors:
+        minor_names = [FEATURE_DESCRIPTIONS.get(c['feature'], c['feature']) for c in minor_factors]
+        if len(minor_names) == 1:
+            explanation_parts.append(f"Minor deviation observed in {minor_names[0]}.")
+        elif len(minor_names) > 1:
+            explanation_parts.append(f"Minor deviations observed in {', '.join(minor_names[:-1])} and {minor_names[-1]}.")
+    
+    return " ".join(explanation_parts)
+
 # Failure scenarios
 FAILURE_SCENARIOS = [
     (['engine'], 0.30),
@@ -508,14 +665,22 @@ def simulate_data():
                 pca_result = model_info['pca'].transform(X_comp_scaled)[0].tolist()
                 comp_pca = pca_result + [0] * (3 - len(pca_result))
                 
+                # XAI: Calculate feature contributions (for anomaly explanation)
+                comp_feature_names = COMPONENT_FEATURE_NAMES.get(comp_name, [])
+                comp_contributions = calculate_feature_contributions(
+                    X_comp_scaled, X_comp_pred, comp_feature_names
+                )
+                
             except Exception as e:
                 print(f"[{comp_name}] Model error: {e}")
                 import traceback
                 traceback.print_exc()
                 # Fallback: use injection state
                 comp_anomaly = comp_name in active_failures if inject else False
+                comp_contributions = []
         else:
             comp_anomaly = comp_name in active_failures if inject else False
+            comp_contributions = []
         
         # Override with injection state if active
         if inject and comp_name in active_failures:
@@ -523,12 +688,21 @@ def simulate_data():
         
         affected_components[comp_name] = comp_anomaly
         
+        # Generate explanation only when anomaly is detected
+        root_cause_numeric = []
+        root_cause_text = ""
+        if comp_anomaly and comp_contributions:
+            root_cause_numeric = comp_contributions
+            root_cause_text = generate_explanation_text(comp_name, comp_contributions)
+        
         component_states[comp_name] = {
             'sensors': comp_sensors,
             'anomaly': comp_anomaly,
             'reconstruction_error': round(comp_recon_error, 4),
             'threshold': round(comp_threshold, 4),
-            'pca_coords': comp_pca
+            'pca_coords': comp_pca,
+            'root_cause_numeric': root_cause_numeric,
+            'root_cause_text': root_cause_text
         }
     
     # Update time series
@@ -678,6 +852,8 @@ def api_live_state():
             'reconstruction_error': float(state['components']['engine'].get('reconstruction_error', 0)),
             'threshold': float(state['components']['engine'].get('threshold', 0)),
             'pca_coords': state['components']['engine'].get('pca_coords', [0, 0, 0]),
+            'root_cause_numeric': state['components']['engine'].get('root_cause_numeric', []),
+            'root_cause_text': state['components']['engine'].get('root_cause_text', ''),
             'time_series': {
                 'timestamps': ts['timestamps'][-100:],
                 'engine_temp': ts['engine_temp'][-100:],
@@ -693,6 +869,8 @@ def api_live_state():
             'reconstruction_error': float(state['components']['hydraulic'].get('reconstruction_error', 0)),
             'threshold': float(state['components']['hydraulic'].get('threshold', 0)),
             'pca_coords': state['components']['hydraulic'].get('pca_coords', [0, 0, 0]),
+            'root_cause_numeric': state['components']['hydraulic'].get('root_cause_numeric', []),
+            'root_cause_text': state['components']['hydraulic'].get('root_cause_text', ''),
             'time_series': {
                 'timestamps': ts['timestamps'][-100:],
                 'hydraulic_pressure': ts['hydraulic_pressure'][-100:],
@@ -707,6 +885,8 @@ def api_live_state():
             'reconstruction_error': float(state['components']['wheels'].get('reconstruction_error', 0)),
             'threshold': float(state['components']['wheels'].get('threshold', 0)),
             'pca_coords': state['components']['wheels'].get('pca_coords', [0, 0, 0]),
+            'root_cause_numeric': state['components']['wheels'].get('root_cause_numeric', []),
+            'root_cause_text': state['components']['wheels'].get('root_cause_text', ''),
             'time_series': {
                 'timestamps': ts['timestamps'][-100:],
                 'vibration': ts['vibration'][-100:],
@@ -722,6 +902,8 @@ def api_live_state():
             'reconstruction_error': float(state['components']['chassis'].get('reconstruction_error', 0)),
             'threshold': float(state['components']['chassis'].get('threshold', 0)),
             'pca_coords': state['components']['chassis'].get('pca_coords', [0, 0, 0]),
+            'root_cause_numeric': state['components']['chassis'].get('root_cause_numeric', []),
+            'root_cause_text': state['components']['chassis'].get('root_cause_text', ''),
             'time_series': {
                 'timestamps': ts['timestamps'][-100:],
                 'vibration': ts['vibration'][-100:],

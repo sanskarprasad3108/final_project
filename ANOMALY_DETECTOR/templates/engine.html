@@ -399,171 +399,77 @@
                     <span>🔧</span> Engine Assembly
                 </div>
                 <div class="component-image-container">
-                    <!-- ENGINE SVG - 3D Industrial Illustration with Depth -->
+                    <!-- ENGINE SVG - Professional Industrial Illustration -->
                     <svg id="engine-svg" class="component-svg svg-normal" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                         <defs>
-                            <!-- 3D Metallic Base Gradient (top-left light source) -->
-                            <linearGradient id="engine-metal-3d" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#7a8599"/>
-                                <stop offset="25%" style="stop-color:#5a6578"/>
-                                <stop offset="50%" style="stop-color:#3d4555"/>
-                                <stop offset="75%" style="stop-color:#2a3140"/>
-                                <stop offset="100%" style="stop-color:#1a1f2c"/>
+                            <!-- Normal state gradient -->
+                            <linearGradient id="engine-metal" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#4a5568"/>
+                                <stop offset="50%" style="stop-color:#2d3748"/>
+                                <stop offset="100%" style="stop-color:#1a202c"/>
                             </linearGradient>
-                            <!-- Cast Iron Block Gradient -->
-                            <linearGradient id="cast-iron" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" style="stop-color:#6b7280"/>
-                                <stop offset="30%" style="stop-color:#4b5563"/>
-                                <stop offset="70%" style="stop-color:#374151"/>
-                                <stop offset="100%" style="stop-color:#1f2937"/>
+                            <linearGradient id="engine-highlight" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#718096"/>
+                                <stop offset="100%" style="stop-color:#4a5568"/>
                             </linearGradient>
-                            <!-- Chrome Highlight Gradient -->
-                            <linearGradient id="chrome-highlight" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" style="stop-color:#e5e7eb"/>
-                                <stop offset="20%" style="stop-color:#9ca3af"/>
-                                <stop offset="50%" style="stop-color:#6b7280"/>
-                                <stop offset="80%" style="stop-color:#4b5563"/>
-                                <stop offset="100%" style="stop-color:#374151"/>
+                            <linearGradient id="pipe-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:#2d3748"/>
+                                <stop offset="50%" style="stop-color:#4a5568"/>
+                                <stop offset="100%" style="stop-color:#2d3748"/>
                             </linearGradient>
-                            <!-- Cylinder Head Aluminum -->
-                            <linearGradient id="aluminum-head" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#9ca3af"/>
-                                <stop offset="40%" style="stop-color:#6b7280"/>
-                                <stop offset="100%" style="stop-color:#4b5563"/>
-                            </linearGradient>
-                            <!-- Pipe 3D Gradient -->
-                            <linearGradient id="pipe-3d" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" style="stop-color:#9ca3af"/>
-                                <stop offset="30%" style="stop-color:#6b7280"/>
-                                <stop offset="70%" style="stop-color:#374151"/>
-                                <stop offset="100%" style="stop-color:#1f2937"/>
-                            </linearGradient>
-                            <!-- Inner Shadow Filter -->
-                            <filter id="inner-shadow" x="-50%" y="-50%" width="200%" height="200%">
-                                <feComponentTransfer in="SourceAlpha">
-                                    <feFuncA type="table" tableValues="1 0"/>
-                                </feComponentTransfer>
-                                <feGaussianBlur stdDeviation="3"/>
-                                <feOffset dx="2" dy="3" result="offsetblur"/>
-                                <feFlood flood-color="#000" flood-opacity="0.5"/>
-                                <feComposite in2="offsetblur" operator="in"/>
-                                <feMerge>
-                                    <feMergeNode/>
-                                    <feMergeNode in="SourceGraphic"/>
-                                </feMerge>
+                            <!-- Glow filter -->
+                            <filter id="glow-normal" x="-50%" y="-50%" width="200%" height="200%">
+                                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                                <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
                             </filter>
-                            <!-- Drop Shadow -->
-                            <filter id="drop-shadow-3d" x="-20%" y="-20%" width="140%" height="140%">
-                                <feDropShadow dx="3" dy="4" stdDeviation="2" flood-color="#000" flood-opacity="0.4"/>
-                            </filter>
-                            <!-- Soft Glow -->
-                            <filter id="soft-glow">
-                                <feGaussianBlur stdDeviation="1.5" result="blur"/>
-                                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-                            </filter>
-                            <!-- Bolt Gradient -->
-                            <radialGradient id="bolt-3d" cx="30%" cy="30%" r="70%">
-                                <stop offset="0%" style="stop-color:#d1d5db"/>
-                                <stop offset="50%" style="stop-color:#9ca3af"/>
-                                <stop offset="100%" style="stop-color:#4b5563"/>
-                            </radialGradient>
-                            <!-- Oil Pan Dark -->
-                            <linearGradient id="oil-pan-3d" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" style="stop-color:#374151"/>
-                                <stop offset="50%" style="stop-color:#1f2937"/>
-                                <stop offset="100%" style="stop-color:#111827"/>
-                            </linearGradient>
                         </defs>
                         
-                        <!-- LAYER 1: Back Shadow Layer -->
-                        <g id="engine-shadow-layer" opacity="0.3">
-                            <rect x="45" y="65" width="120" height="100" rx="8" fill="#000"/>
+                        <!-- Engine Block -->
+                        <g id="engine-block">
+                            <rect x="40" y="60" width="120" height="100" rx="8" fill="url(#engine-metal)" stroke="#1a202c" stroke-width="2"/>
+                            <!-- Cylinder fins -->
+                            <rect x="45" y="70" width="110" height="6" rx="2" fill="#1a202c"/>
+                            <rect x="45" y="82" width="110" height="6" rx="2" fill="#1a202c"/>
+                            <rect x="45" y="94" width="110" height="6" rx="2" fill="#1a202c"/>
+                            <rect x="45" y="106" width="110" height="6" rx="2" fill="#1a202c"/>
+                            <!-- Side panel -->
+                            <rect x="45" y="120" width="45" height="35" rx="3" fill="url(#engine-highlight)" stroke="#2d3748"/>
+                            <rect x="110" y="120" width="45" height="35" rx="3" fill="url(#engine-highlight)" stroke="#2d3748"/>
                         </g>
                         
-                        <!-- LAYER 2: Engine Block Base -->
-                        <g id="engine-block" filter="url(#drop-shadow-3d)">
-                            <!-- Main Block -->
-                            <rect x="40" y="60" width="120" height="100" rx="8" fill="url(#cast-iron)" stroke="#1f2937" stroke-width="2"/>
-                            <!-- Block Top Highlight -->
-                            <rect x="42" y="62" width="116" height="8" rx="4" fill="rgba(255,255,255,0.1)"/>
-                            <!-- Cylinder Cooling Fins with 3D depth -->
-                            <g id="cooling-fins">
-                                <rect x="45" y="70" width="110" height="7" rx="1" fill="#1f2937"/>
-                                <rect x="45" y="70" width="110" height="2" fill="rgba(255,255,255,0.05)"/>
-                                <rect x="45" y="83" width="110" height="7" rx="1" fill="#1f2937"/>
-                                <rect x="45" y="83" width="110" height="2" fill="rgba(255,255,255,0.05)"/>
-                                <rect x="45" y="96" width="110" height="7" rx="1" fill="#1f2937"/>
-                                <rect x="45" y="96" width="110" height="2" fill="rgba(255,255,255,0.05)"/>
-                                <rect x="45" y="109" width="110" height="7" rx="1" fill="#1f2937"/>
-                                <rect x="45" y="109" width="110" height="2" fill="rgba(255,255,255,0.05)"/>
-                            </g>
-                            <!-- Side Access Panels with depth -->
-                            <g id="side-panels">
-                                <rect x="45" y="122" width="45" height="32" rx="3" fill="url(#engine-metal-3d)" stroke="#374151" stroke-width="1"/>
-                                <rect x="46" y="123" width="43" height="4" rx="2" fill="rgba(255,255,255,0.1)"/>
-                                <rect x="110" y="122" width="45" height="32" rx="3" fill="url(#engine-metal-3d)" stroke="#374151" stroke-width="1"/>
-                                <rect x="111" y="123" width="43" height="4" rx="2" fill="rgba(255,255,255,0.1)"/>
-                            </g>
+                        <!-- Engine Head -->
+                        <g id="engine-head">
+                            <rect x="50" y="40" width="100" height="25" rx="5" fill="url(#engine-highlight)" stroke="#1a202c" stroke-width="2"/>
+                            <!-- Valve covers -->
+                            <ellipse cx="75" cy="52" rx="12" ry="8" fill="#2d3748" stroke="#4a5568"/>
+                            <ellipse cx="125" cy="52" rx="12" ry="8" fill="#2d3748" stroke="#4a5568"/>
                         </g>
                         
-                        <!-- LAYER 3: Cylinder Head (elevated) -->
-                        <g id="engine-head" filter="url(#drop-shadow-3d)">
-                            <!-- Head Base -->
-                            <rect x="48" y="38" width="104" height="28" rx="5" fill="url(#aluminum-head)" stroke="#4b5563" stroke-width="1.5"/>
-                            <!-- Head Top Highlight -->
-                            <rect x="50" y="40" width="100" height="6" rx="3" fill="rgba(255,255,255,0.15)"/>
-                            <!-- Valve Covers with 3D bulge -->
-                            <ellipse cx="75" cy="52" rx="14" ry="9" fill="url(#chrome-highlight)" stroke="#4b5563" stroke-width="1"/>
-                            <ellipse cx="75" cy="50" rx="8" ry="4" fill="rgba(255,255,255,0.2)"/>
-                            <ellipse cx="125" cy="52" rx="14" ry="9" fill="url(#chrome-highlight)" stroke="#4b5563" stroke-width="1"/>
-                            <ellipse cx="125" cy="50" rx="8" ry="4" fill="rgba(255,255,255,0.2)"/>
-                        </g>
-                        
-                        <!-- LAYER 4: Exhaust/Intake Manifolds -->
+                        <!-- Exhaust/Intake Pipes -->
                         <g id="engine-pipes">
-                            <!-- Exhaust (right side, darker/hotter) -->
-                            <path d="M160 80 Q182 80 182 58 L182 42" fill="none" stroke="url(#pipe-3d)" stroke-width="10" stroke-linecap="round" filter="url(#drop-shadow-3d)"/>
-                            <path d="M160 80 Q180 80 180 60 L180 45" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="3" stroke-linecap="round"/>
-                            <!-- Lower Exhaust -->
-                            <path d="M160 102 Q188 102 188 125 L188 145" fill="none" stroke="url(#pipe-3d)" stroke-width="10" stroke-linecap="round" filter="url(#drop-shadow-3d)"/>
-                            <path d="M160 100 Q185 100 185 122 L185 142" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="3" stroke-linecap="round"/>
-                            <!-- Intake (left side) -->
-                            <path d="M40 92 Q18 92 18 68 L18 48" fill="none" stroke="url(#pipe-3d)" stroke-width="10" stroke-linecap="round" filter="url(#drop-shadow-3d)"/>
-                            <path d="M40 90 Q20 90 20 70 L20 52" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="3" stroke-linecap="round"/>
+                            <path d="M160 80 Q180 80 180 60 L180 45" fill="none" stroke="url(#pipe-gradient)" stroke-width="8" stroke-linecap="round"/>
+                            <path d="M160 100 Q185 100 185 120 L185 140" fill="none" stroke="url(#pipe-gradient)" stroke-width="8" stroke-linecap="round"/>
+                            <path d="M40 90 Q20 90 20 70 L20 50" fill="none" stroke="url(#pipe-gradient)" stroke-width="8" stroke-linecap="round"/>
                         </g>
                         
-                        <!-- LAYER 5: Oil Pan (bottom, deep shadow) -->
+                        <!-- Oil Pan -->
                         <g id="engine-oil-pan">
-                            <path d="M48 160 L48 176 Q48 188 60 188 L140 188 Q152 188 152 176 L152 160" fill="url(#oil-pan-3d)" stroke="#1f2937" stroke-width="2" filter="url(#drop-shadow-3d)"/>
-                            <!-- Drain plug with 3D effect -->
-                            <rect x="88" y="180" width="24" height="10" rx="3" fill="url(#chrome-highlight)" stroke="#374151"/>
-                            <rect x="90" y="181" width="20" height="3" rx="1" fill="rgba(255,255,255,0.2)"/>
+                            <path d="M50 160 L50 175 Q50 185 60 185 L140 185 Q150 185 150 175 L150 160" fill="#1a202c" stroke="#2d3748" stroke-width="2"/>
+                            <rect x="90" y="178" width="20" height="12" rx="2" fill="#2d3748"/>
                         </g>
                         
-                        <!-- LAYER 6: 3D Bolts with depth -->
-                        <g id="engine-bolts">
-                            <circle cx="55" cy="67" r="4" fill="url(#bolt-3d)" stroke="#374151" stroke-width="0.5"/>
-                            <circle cx="54" cy="66" r="1.5" fill="rgba(255,255,255,0.3)"/>
-                            <circle cx="145" cy="67" r="4" fill="url(#bolt-3d)" stroke="#374151" stroke-width="0.5"/>
-                            <circle cx="144" cy="66" r="1.5" fill="rgba(255,255,255,0.3)"/>
-                            <circle cx="55" cy="153" r="4" fill="url(#bolt-3d)" stroke="#374151" stroke-width="0.5"/>
-                            <circle cx="54" cy="152" r="1.5" fill="rgba(255,255,255,0.3)"/>
-                            <circle cx="145" cy="153" r="4" fill="url(#bolt-3d)" stroke="#374151" stroke-width="0.5"/>
-                            <circle cx="144" cy="152" r="1.5" fill="rgba(255,255,255,0.3)"/>
-                            <!-- Additional Detail Bolts -->
-                            <circle cx="100" cy="67" r="3" fill="url(#bolt-3d)" stroke="#374151" stroke-width="0.5"/>
-                            <circle cx="67" cy="137" r="2.5" fill="url(#bolt-3d)"/>
-                            <circle cx="133" cy="137" r="2.5" fill="url(#bolt-3d)"/>
+                        <!-- Bolts/Details -->
+                        <g id="engine-details">
+                            <circle cx="55" cy="67" r="3" fill="#718096"/>
+                            <circle cx="145" cy="67" r="3" fill="#718096"/>
+                            <circle cx="55" cy="153" r="3" fill="#718096"/>
+                            <circle cx="145" cy="153" r="3" fill="#718096"/>
                         </g>
                         
-                        <!-- LAYER 7: Status Indicator (glowing) -->
-                        <g id="status-indicator">
-                            <circle cx="100" cy="130" r="8" fill="#065f46" opacity="0.5"/>
-                            <circle id="status-light" cx="100" cy="130" r="5" fill="#00ff88" filter="url(#soft-glow)">
-                                <animate attributeName="opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite"/>
-                            </circle>
-                            <circle cx="99" cy="129" r="2" fill="rgba(255,255,255,0.4)"/>
-                        </g>
+                        <!-- Status indicator light -->
+                        <circle id="status-light" cx="100" cy="130" r="6" fill="#00ff88" opacity="0.8">
+                            <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite"/>
+                        </circle>
                     </svg>
                     
                     <!-- SVG Smoke Animation -->
@@ -650,8 +556,86 @@
                     <span class="metric-value">SHARED STATE</span>
                 </div>
             </div>
+            
+            <!-- XAI Explanation Panel -->
+            <div class="explanation-panel" id="explanation-panel" style="display: none;">
+                <div class="panel-title">
+                    <span>🔍</span> Root Cause Analysis
+                </div>
+                <div class="explanation-content">
+                    <div class="contribution-bars" id="contribution-bars">
+                        <!-- Feature contribution bars will be inserted here -->
+                    </div>
+                    <div class="explanation-text" id="explanation-text">
+                        <!-- Natural language explanation will be inserted here -->
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+    
+    <style>
+        /* XAI Explanation Panel Styles */
+        .explanation-panel {
+            background: rgba(255, 50, 50, 0.1);
+            border-radius: 12px;
+            border: 2px solid rgba(255, 68, 68, 0.5);
+            padding: 15px;
+            margin-top: 15px;
+            animation: pulse-border 2s ease-in-out infinite;
+        }
+        @keyframes pulse-border {
+            0%, 100% { border-color: rgba(255, 68, 68, 0.5); }
+            50% { border-color: rgba(255, 68, 68, 0.9); }
+        }
+        .explanation-panel .panel-title {
+            color: #ff6b6b;
+            margin-bottom: 15px;
+        }
+        .contribution-bars {
+            margin-bottom: 15px;
+        }
+        .contribution-bar-item {
+            margin-bottom: 10px;
+        }
+        .contribution-bar-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #ccc;
+            margin-bottom: 4px;
+        }
+        .contribution-bar-label .feature-name {
+            text-transform: capitalize;
+        }
+        .contribution-bar-label .contribution-pct {
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+        .contribution-bar-bg {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            height: 8px;
+            overflow: hidden;
+        }
+        .contribution-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        .contribution-bar-fill.high { background: linear-gradient(90deg, #ff4444, #ff6b6b); }
+        .contribution-bar-fill.medium { background: linear-gradient(90deg, #ff8800, #ffaa44); }
+        .contribution-bar-fill.low { background: linear-gradient(90deg, #44aa44, #66cc66); }
+        .explanation-text {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #eee;
+            border-left: 3px solid #ff6b6b;
+        }
+    </style>
 
     <script>
         // Component name for API calls
@@ -756,6 +740,9 @@
                 document.getElementById('sensor-temp').classList.add('anomaly');
                 document.getElementById('sensor-oil').classList.add('anomaly');
                 document.getElementById('sensor-fuel').classList.add('anomaly');
+                
+                // Show XAI explanation
+                renderExplanation(data.root_cause_numeric, data.root_cause_text);
             } else {
                 statusBox.className = 'component-status status-normal';
                 statusText.textContent = 'NORMAL';
@@ -767,6 +754,9 @@
                 document.getElementById('sensor-temp').classList.remove('anomaly');
                 document.getElementById('sensor-oil').classList.remove('anomaly');
                 document.getElementById('sensor-fuel').classList.remove('anomaly');
+                
+                // Hide XAI explanation
+                document.getElementById('explanation-panel').style.display = 'none';
             }
             
             // Update charts with time series data
@@ -802,6 +792,45 @@
             } catch (error) {
                 console.error('Error fetching live state:', error);
             }
+        }
+        
+        // XAI: Render explanation when anomaly detected
+        function renderExplanation(rootCauseNumeric, rootCauseText) {
+            const panel = document.getElementById('explanation-panel');
+            const barsContainer = document.getElementById('contribution-bars');
+            const textContainer = document.getElementById('explanation-text');
+            
+            if (!rootCauseNumeric || rootCauseNumeric.length === 0) {
+                panel.style.display = 'none';
+                return;
+            }
+            
+            // Show panel
+            panel.style.display = 'block';
+            
+            // Build contribution bars HTML
+            let barsHTML = '';
+            rootCauseNumeric.forEach(item => {
+                const featureName = item.feature.replace(/_/g, ' ');
+                const pct = item.contribution;
+                const barClass = pct >= 40 ? 'high' : (pct >= 20 ? 'medium' : 'low');
+                
+                barsHTML += `
+                    <div class="contribution-bar-item">
+                        <div class="contribution-bar-label">
+                            <span class="feature-name">${featureName}</span>
+                            <span class="contribution-pct">${pct.toFixed(1)}%</span>
+                        </div>
+                        <div class="contribution-bar-bg">
+                            <div class="contribution-bar-fill ${barClass}" style="width: ${pct}%"></div>
+                        </div>
+                    </div>
+                `;
+            });
+            barsContainer.innerHTML = barsHTML;
+            
+            // Set explanation text
+            textContainer.textContent = rootCauseText || 'Anomaly detected. Analyzing root cause...';
         }
         
         // Initialize - MUST run after DOM ready

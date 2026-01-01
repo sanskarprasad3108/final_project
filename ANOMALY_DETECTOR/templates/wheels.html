@@ -256,186 +256,92 @@
             <div class="image-panel">
                 <div class="panel-title"><span>🛞</span> Wheel Assembly</div>
                 <div class="component-image-container">
-                    <!-- WHEELS SVG - 3D Industrial Illustration with Depth -->
+                    <!-- Professional Wheel Assembly SVG -->
                     <svg id="wheels-svg" class="component-svg svg-normal" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                         <defs>
-                            <!-- 3D Tire Radial Gradient (rubber depth) -->
-                            <radialGradient id="tire-3d" cx="40%" cy="40%" r="60%">
-                                <stop offset="0%" style="stop-color:#4a4a4a"/>
-                                <stop offset="40%" style="stop-color:#2d2d2d"/>
-                                <stop offset="70%" style="stop-color:#1a1a1a"/>
-                                <stop offset="100%" style="stop-color:#0d0d0d"/>
-                            </radialGradient>
-                            <!-- Tire Sidewall Gradient -->
-                            <radialGradient id="sidewall-3d" cx="50%" cy="50%" r="50%">
-                                <stop offset="60%" style="stop-color:#2a2a2a"/>
-                                <stop offset="80%" style="stop-color:#1f1f1f"/>
-                                <stop offset="100%" style="stop-color:#151515"/>
-                            </radialGradient>
-                            <!-- 3D Metallic Rim Gradient -->
-                            <linearGradient id="rim-3d" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#e5e7eb"/>
-                                <stop offset="20%" style="stop-color:#d1d5db"/>
-                                <stop offset="40%" style="stop-color:#9ca3af"/>
-                                <stop offset="60%" style="stop-color:#6b7280"/>
-                                <stop offset="80%" style="stop-color:#9ca3af"/>
-                                <stop offset="100%" style="stop-color:#4b5563"/>
+                            <linearGradient id="tireGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#3a3a3a"/>
+                                <stop offset="50%" style="stop-color:#1a1a1a"/>
+                                <stop offset="100%" style="stop-color:#2a2a2a"/>
                             </linearGradient>
-                            <!-- Rim Inner Shadow -->
-                            <radialGradient id="rim-inner" cx="50%" cy="50%" r="50%">
-                                <stop offset="0%" style="stop-color:#9ca3af"/>
-                                <stop offset="70%" style="stop-color:#6b7280"/>
-                                <stop offset="100%" style="stop-color:#374151"/>
+                            <linearGradient id="rimGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#c0c0c0"/>
+                                <stop offset="50%" style="stop-color:#808080"/>
+                                <stop offset="100%" style="stop-color:#a0a0a0"/>
+                            </linearGradient>
+                            <linearGradient id="hubGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#ffd700"/>
+                                <stop offset="100%" style="stop-color:#b8860b"/>
+                            </linearGradient>
+                            <radialGradient id="brakeGlow" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" style="stop-color:#ff6600;stop-opacity:0.8"/>
+                                <stop offset="100%" style="stop-color:#ff3300;stop-opacity:0"/>
                             </radialGradient>
-                            <!-- Brake Disc Gradient -->
-                            <radialGradient id="brake-disc-3d" cx="45%" cy="45%" r="55%">
-                                <stop offset="0%" style="stop-color:#6b7280"/>
-                                <stop offset="50%" style="stop-color:#4b5563"/>
-                                <stop offset="100%" style="stop-color:#374151"/>
-                            </radialGradient>
-                            <!-- Hub 3D Gradient -->
-                            <radialGradient id="hub-3d" cx="35%" cy="35%" r="65%">
-                                <stop offset="0%" style="stop-color:#fde047"/>
-                                <stop offset="40%" style="stop-color:#eab308"/>
-                                <stop offset="70%" style="stop-color:#ca8a04"/>
-                                <stop offset="100%" style="stop-color:#a16207"/>
-                            </radialGradient>
-                            <!-- Bolt 3D Gradient -->
-                            <radialGradient id="bolt-wheel-3d" cx="30%" cy="30%" r="70%">
-                                <stop offset="0%" style="stop-color:#9ca3af"/>
-                                <stop offset="50%" style="stop-color:#6b7280"/>
-                                <stop offset="100%" style="stop-color:#374151"/>
-                            </radialGradient>
-                            <!-- Drop Shadow Filter -->
-                            <filter id="wheel-shadow" x="-20%" y="-20%" width="140%" height="140%">
-                                <feDropShadow dx="4" dy="5" stdDeviation="3" flood-color="#000" flood-opacity="0.4"/>
-                            </filter>
-                            <!-- Inner Shadow -->
-                            <filter id="inner-shadow-wheel" x="-50%" y="-50%" width="200%" height="200%">
-                                <feComponentTransfer in="SourceAlpha"><feFuncA type="table" tableValues="1 0"/></feComponentTransfer>
-                                <feGaussianBlur stdDeviation="3"/>
-                                <feOffset dx="2" dy="2"/>
-                                <feComposite in2="SourceAlpha" operator="in"/>
-                                <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.5 0"/>
-                                <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
-                            </filter>
                         </defs>
-                        
-                        <!-- LAYER 1: Background Shadow -->
-                        <ellipse cx="105" cy="105" rx="78" ry="78" fill="#000" opacity="0.3"/>
-                        
                         <!-- Main Wheel Group -->
-                        <g id="wheel-main" transform="translate(100, 100)" filter="url(#wheel-shadow)">
-                            
-                            <!-- LAYER 2: Outer Tire (thick rubber with depth) -->
-                            <circle cx="0" cy="0" r="78" fill="url(#tire-3d)" stroke="#1a1a1a" stroke-width="2"/>
-                            <!-- Tire Highlight (top-left light) -->
-                            <ellipse cx="-25" cy="-30" rx="35" ry="25" fill="rgba(255,255,255,0.05)" transform="rotate(-30)"/>
-                            
-                            <!-- LAYER 3: Tire Tread Pattern (3D grooves) -->
-                            <g id="tire-tread-3d">
-                                <!-- Deep Tread Grooves -->
-                                <g fill="none" stroke="#0a0a0a" stroke-width="4">
-                                    <path d="M0,-78 L0,-62" transform="rotate(0)"/>
-                                    <path d="M0,-78 L0,-62" transform="rotate(30)"/>
-                                    <path d="M0,-78 L0,-62" transform="rotate(60)"/>
-                                    <path d="M0,-78 L0,-62" transform="rotate(90)"/>
-                                    <path d="M0,-78 L0,-62" transform="rotate(120)"/>
-                                    <path d="M0,-78 L0,-62" transform="rotate(150)"/>
-                                    <path d="M0,-78 L0,-62" transform="rotate(180)"/>
-                                    <path d="M0,-78 L0,-62" transform="rotate(210)"/>
-                                    <path d="M0,-78 L0,-62" transform="rotate(240)"/>
-                                    <path d="M0,-78 L0,-62" transform="rotate(270)"/>
-                                    <path d="M0,-78 L0,-62" transform="rotate(300)"/>
-                                    <path d="M0,-78 L0,-62" transform="rotate(330)"/>
-                                </g>
-                                <!-- Tread Highlights -->
-                                <g fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1">
-                                    <path d="M-2,-77 L-2,-63" transform="rotate(0)"/>
-                                    <path d="M-2,-77 L-2,-63" transform="rotate(30)"/>
-                                    <path d="M-2,-77 L-2,-63" transform="rotate(60)"/>
-                                    <path d="M-2,-77 L-2,-63" transform="rotate(90)"/>
-                                </g>
+                        <g id="wheel-main" transform="translate(100, 100)">
+                            <!-- Outer Tire -->
+                            <circle cx="0" cy="0" r="75" fill="url(#tireGradient)" stroke="#2a2a2a" stroke-width="3"/>
+                            <!-- Tire Tread Pattern -->
+                            <g id="tire-tread" fill="none" stroke="#4a4a4a" stroke-width="2">
+                                <path d="M0,-75 L0,-60" transform="rotate(0)"/>
+                                <path d="M0,-75 L0,-60" transform="rotate(30)"/>
+                                <path d="M0,-75 L0,-60" transform="rotate(60)"/>
+                                <path d="M0,-75 L0,-60" transform="rotate(90)"/>
+                                <path d="M0,-75 L0,-60" transform="rotate(120)"/>
+                                <path d="M0,-75 L0,-60" transform="rotate(150)"/>
+                                <path d="M0,-75 L0,-60" transform="rotate(180)"/>
+                                <path d="M0,-75 L0,-60" transform="rotate(210)"/>
+                                <path d="M0,-75 L0,-60" transform="rotate(240)"/>
+                                <path d="M0,-75 L0,-60" transform="rotate(270)"/>
+                                <path d="M0,-75 L0,-60" transform="rotate(300)"/>
+                                <path d="M0,-75 L0,-60" transform="rotate(330)"/>
                             </g>
-                            
-                            <!-- LAYER 4: Tire Inner Sidewall -->
-                            <circle cx="0" cy="0" r="60" fill="url(#sidewall-3d)" stroke="#1a1a1a" stroke-width="1"/>
-                            
-                            <!-- LAYER 5: Metallic Rim (polished alloy) -->
-                            <circle cx="0" cy="0" r="55" fill="url(#rim-3d)" stroke="#4b5563" stroke-width="2"/>
-                            <!-- Rim Inner Bevel -->
-                            <circle cx="0" cy="0" r="52" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
-                            <!-- Rim Spokes (5-spoke design with depth) -->
-                            <g id="rim-spokes">
-                                <path d="M0,-50 L-12,-18 L12,-18 Z" fill="url(#rim-inner)" stroke="#374151" stroke-width="0.5" transform="rotate(0)"/>
-                                <path d="M0,-50 L-12,-18 L12,-18 Z" fill="url(#rim-inner)" stroke="#374151" stroke-width="0.5" transform="rotate(72)"/>
-                                <path d="M0,-50 L-12,-18 L12,-18 Z" fill="url(#rim-inner)" stroke="#374151" stroke-width="0.5" transform="rotate(144)"/>
-                                <path d="M0,-50 L-12,-18 L12,-18 Z" fill="url(#rim-inner)" stroke="#374151" stroke-width="0.5" transform="rotate(216)"/>
-                                <path d="M0,-50 L-12,-18 L12,-18 Z" fill="url(#rim-inner)" stroke="#374151" stroke-width="0.5" transform="rotate(288)"/>
-                                <!-- Spoke Highlights -->
-                                <path d="M-2,-48 L-8,-22" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1" transform="rotate(0)"/>
-                                <path d="M-2,-48 L-8,-22" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1" transform="rotate(72)"/>
+                            <!-- Inner Rim -->
+                            <circle cx="0" cy="0" r="55" fill="url(#rimGradient)" stroke="#606060" stroke-width="2"/>
+                            <!-- Brake Disc -->
+                            <circle cx="0" cy="0" r="40" fill="#505050" stroke="#404040" stroke-width="2"/>
+                            <!-- Brake Disc Ventilation -->
+                            <g id="brake-vents" fill="#303030">
+                                <ellipse cx="0" cy="-30" rx="4" ry="8" transform="rotate(0)"/>
+                                <ellipse cx="0" cy="-30" rx="4" ry="8" transform="rotate(45)"/>
+                                <ellipse cx="0" cy="-30" rx="4" ry="8" transform="rotate(90)"/>
+                                <ellipse cx="0" cy="-30" rx="4" ry="8" transform="rotate(135)"/>
+                                <ellipse cx="0" cy="-30" rx="4" ry="8" transform="rotate(180)"/>
+                                <ellipse cx="0" cy="-30" rx="4" ry="8" transform="rotate(225)"/>
+                                <ellipse cx="0" cy="-30" rx="4" ry="8" transform="rotate(270)"/>
+                                <ellipse cx="0" cy="-30" rx="4" ry="8" transform="rotate(315)"/>
                             </g>
-                            
-                            <!-- LAYER 6: Brake Disc (ventilated) -->
-                            <circle cx="0" cy="0" r="42" fill="url(#brake-disc-3d)" stroke="#374151" stroke-width="1.5"/>
-                            <!-- Ventilation Holes with Depth -->
-                            <g id="brake-vents-3d">
-                                <ellipse cx="0" cy="-32" rx="5" ry="9" fill="#1f2937" stroke="#111827" stroke-width="0.5" transform="rotate(0)"/>
-                                <ellipse cx="0" cy="-32" rx="5" ry="9" fill="#1f2937" stroke="#111827" stroke-width="0.5" transform="rotate(45)"/>
-                                <ellipse cx="0" cy="-32" rx="5" ry="9" fill="#1f2937" stroke="#111827" stroke-width="0.5" transform="rotate(90)"/>
-                                <ellipse cx="0" cy="-32" rx="5" ry="9" fill="#1f2937" stroke="#111827" stroke-width="0.5" transform="rotate(135)"/>
-                                <ellipse cx="0" cy="-32" rx="5" ry="9" fill="#1f2937" stroke="#111827" stroke-width="0.5" transform="rotate(180)"/>
-                                <ellipse cx="0" cy="-32" rx="5" ry="9" fill="#1f2937" stroke="#111827" stroke-width="0.5" transform="rotate(225)"/>
-                                <ellipse cx="0" cy="-32" rx="5" ry="9" fill="#1f2937" stroke="#111827" stroke-width="0.5" transform="rotate(270)"/>
-                                <ellipse cx="0" cy="-32" rx="5" ry="9" fill="#1f2937" stroke="#111827" stroke-width="0.5" transform="rotate(315)"/>
+                            <!-- Hub Center -->
+                            <circle cx="0" cy="0" r="18" fill="url(#hubGradient)" stroke="#8B4513" stroke-width="2"/>
+                            <!-- Lug Nuts -->
+                            <g id="lug-nuts" fill="#404040" stroke="#303030" stroke-width="1">
+                                <circle cx="0" cy="-12" r="4"/>
+                                <circle cx="10.4" cy="-6" r="4"/>
+                                <circle cx="10.4" cy="6" r="4"/>
+                                <circle cx="0" cy="12" r="4"/>
+                                <circle cx="-10.4" cy="6" r="4"/>
+                                <circle cx="-10.4" cy="-6" r="4"/>
                             </g>
-                            
-                            <!-- LAYER 7: Hub Center (golden/brass) -->
-                            <circle cx="0" cy="0" r="20" fill="url(#hub-3d)" stroke="#92400e" stroke-width="2" filter="url(#inner-shadow-wheel)"/>
-                            <!-- Hub Highlight -->
-                            <ellipse cx="-5" cy="-6" rx="8" ry="6" fill="rgba(255,255,255,0.25)"/>
-                            
-                            <!-- LAYER 8: Lug Nuts (3D bolts) -->
-                            <g id="lug-nuts-3d">
-                                <circle cx="0" cy="-13" r="4.5" fill="url(#bolt-wheel-3d)" stroke="#1f2937" stroke-width="0.5"/>
-                                <circle cx="-1" cy="-14" r="1.5" fill="rgba(255,255,255,0.3)"/>
-                                <circle cx="12.4" cy="-4" r="4.5" fill="url(#bolt-wheel-3d)" stroke="#1f2937" stroke-width="0.5"/>
-                                <circle cx="11.4" cy="-5" r="1.5" fill="rgba(255,255,255,0.3)"/>
-                                <circle cx="7.6" cy="10.5" r="4.5" fill="url(#bolt-wheel-3d)" stroke="#1f2937" stroke-width="0.5"/>
-                                <circle cx="6.6" cy="9.5" r="1.5" fill="rgba(255,255,255,0.3)"/>
-                                <circle cx="-7.6" cy="10.5" r="4.5" fill="url(#bolt-wheel-3d)" stroke="#1f2937" stroke-width="0.5"/>
-                                <circle cx="-8.6" cy="9.5" r="1.5" fill="rgba(255,255,255,0.3)"/>
-                                <circle cx="-12.4" cy="-4" r="4.5" fill="url(#bolt-wheel-3d)" stroke="#1f2937" stroke-width="0.5"/>
-                                <circle cx="-13.4" cy="-5" r="1.5" fill="rgba(255,255,255,0.3)"/>
-                            </g>
-                            
-                            <!-- LAYER 9: Center Cap -->
-                            <circle cx="0" cy="0" r="7" fill="#7c3aed" stroke="#5b21b6" stroke-width="1.5">
-                                <animate attributeName="fill" values="#7c3aed;#8b5cf6;#7c3aed" dur="2s" repeatCount="indefinite"/>
+                            <!-- Center Cap -->
+                            <circle cx="0" cy="0" r="6" fill="#8a2be2" stroke="#6a1b9a" stroke-width="1">
+                                <animate attributeName="fill" values="#8a2be2;#9932cc;#8a2be2" dur="2s" repeatCount="indefinite"/>
                             </circle>
-                            <circle cx="-2" cy="-2" r="2.5" fill="rgba(255,255,255,0.3)"/>
                         </g>
-                        
                         <!-- Status Indicator Light -->
-                        <g id="status-indicator">
-                            <circle cx="175" cy="25" r="10" fill="#065f46" opacity="0.4"/>
-                            <circle id="status-light" cx="175" cy="25" r="7" fill="#00ff88">
-                                <animate attributeName="opacity" values="1;0.5;1" dur="1.5s" repeatCount="indefinite"/>
-                            </circle>
-                            <circle cx="173" cy="23" r="2.5" fill="rgba(255,255,255,0.35)"/>
-                        </g>
-                        
-                        <!-- Speed Lines (motion blur effect) -->
-                        <g id="speed-lines" opacity="0.25">
-                            <line x1="8" y1="100" x2="28" y2="100" stroke="#7c3aed" stroke-width="3" stroke-linecap="round">
-                                <animate attributeName="x1" values="8;3;8" dur="0.5s" repeatCount="indefinite"/>
+                        <circle id="status-light" cx="175" cy="25" r="8" fill="#00ff88">
+                            <animate attributeName="opacity" values="1;0.5;1" dur="1.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <!-- Speed Lines (animated) -->
+                        <g id="speed-lines" opacity="0.3">
+                            <line x1="10" y1="100" x2="30" y2="100" stroke="#8a2be2" stroke-width="2">
+                                <animate attributeName="x1" values="10;5;10" dur="0.5s" repeatCount="indefinite"/>
                             </line>
-                            <line x1="12" y1="120" x2="32" y2="120" stroke="#7c3aed" stroke-width="2" stroke-linecap="round">
-                                <animate attributeName="x1" values="12;6;12" dur="0.4s" repeatCount="indefinite"/>
+                            <line x1="15" y1="120" x2="35" y2="120" stroke="#8a2be2" stroke-width="1.5">
+                                <animate attributeName="x1" values="15;8;15" dur="0.4s" repeatCount="indefinite"/>
                             </line>
-                            <line x1="10" y1="80" x2="30" y2="80" stroke="#7c3aed" stroke-width="2" stroke-linecap="round">
-                                <animate attributeName="x1" values="10;5;10" dur="0.6s" repeatCount="indefinite"/>
+                            <line x1="12" y1="80" x2="32" y2="80" stroke="#8a2be2" stroke-width="1.5">
+                                <animate attributeName="x1" values="12;6;12" dur="0.6s" repeatCount="indefinite"/>
                             </line>
                         </g>
                     </svg>
@@ -509,8 +415,47 @@
                     <span class="metric-value">SHARED STATE</span>
                 </div>
             </div>
+            
+            <!-- XAI Explanation Panel -->
+            <div class="explanation-panel" id="explanation-panel" style="display: none;">
+                <div class="panel-title">
+                    <span>🔍</span> Root Cause Analysis
+                </div>
+                <div class="explanation-content">
+                    <div class="contribution-bars" id="contribution-bars"></div>
+                    <div class="explanation-text" id="explanation-text"></div>
+                </div>
+            </div>
         </div>
     </div>
+    
+    <style>
+        .explanation-panel {
+            background: rgba(255, 50, 50, 0.1);
+            border-radius: 12px;
+            border: 2px solid rgba(255, 68, 68, 0.5);
+            padding: 15px;
+            margin-top: 15px;
+            animation: pulse-border 2s ease-in-out infinite;
+        }
+        @keyframes pulse-border {
+            0%, 100% { border-color: rgba(255, 68, 68, 0.5); }
+            50% { border-color: rgba(255, 68, 68, 0.9); }
+        }
+        .explanation-panel .panel-title { color: #ff6b6b; margin-bottom: 15px; }
+        .contribution-bars { margin-bottom: 15px; }
+        .contribution-bar-item { margin-bottom: 10px; }
+        .contribution-bar-label { display: flex; justify-content: space-between; font-size: 0.85rem; color: #ccc; margin-bottom: 4px; }
+        .contribution-bar-label .feature-name { text-transform: capitalize; }
+        .contribution-bar-label .contribution-pct { color: #ff6b6b; font-weight: bold; }
+        .contribution-bar-bg { background: rgba(255, 255, 255, 0.1); border-radius: 4px; height: 8px; overflow: hidden; }
+        .contribution-bar-fill { height: 100%; border-radius: 4px; transition: width 0.3s ease; }
+        .contribution-bar-fill.high { background: linear-gradient(90deg, #ff4444, #ff6b6b); }
+        .contribution-bar-fill.medium { background: linear-gradient(90deg, #ff8800, #ffaa44); }
+        .contribution-bar-fill.low { background: linear-gradient(90deg, #44aa44, #66cc66); }
+        .explanation-text { background: rgba(0, 0, 0, 0.3); border-radius: 8px; padding: 12px; font-size: 0.9rem; line-height: 1.5; color: #eee; border-left: 3px solid #ff6b6b; }
+    </style>
+    
     <script>
         const COMPONENT = 'wheels';
         
@@ -571,6 +516,7 @@
                 document.getElementById('sensor-vibration').classList.add('anomaly');
                 document.getElementById('sensor-brake').classList.add('anomaly');
                 document.getElementById('sensor-speed').classList.add('anomaly');
+                renderExplanation(data.root_cause_numeric, data.root_cause_text);
             } else {
                 statusBox.className = 'component-status status-normal';
                 statusText.textContent = 'NORMAL';
@@ -580,6 +526,7 @@
                 document.getElementById('sensor-vibration').classList.remove('anomaly');
                 document.getElementById('sensor-brake').classList.remove('anomaly');
                 document.getElementById('sensor-speed').classList.remove('anomaly');
+                document.getElementById('explanation-panel').style.display = 'none';
             }
             
             if (ts.timestamps && ts.timestamps.length > 0) {
@@ -607,6 +554,40 @@
             } catch (error) {
                 console.error('Error fetching live state:', error);
             }
+        }
+        
+        // XAI: Render explanation when anomaly detected
+        function renderExplanation(rootCauseNumeric, rootCauseText) {
+            const panel = document.getElementById('explanation-panel');
+            const barsContainer = document.getElementById('contribution-bars');
+            const textContainer = document.getElementById('explanation-text');
+            
+            if (!rootCauseNumeric || rootCauseNumeric.length === 0) {
+                panel.style.display = 'none';
+                return;
+            }
+            
+            panel.style.display = 'block';
+            
+            let barsHTML = '';
+            rootCauseNumeric.forEach(item => {
+                const featureName = item.feature.replace(/_/g, ' ');
+                const pct = item.contribution;
+                const barClass = pct >= 40 ? 'high' : (pct >= 20 ? 'medium' : 'low');
+                barsHTML += `
+                    <div class="contribution-bar-item">
+                        <div class="contribution-bar-label">
+                            <span class="feature-name">${featureName}</span>
+                            <span class="contribution-pct">${pct.toFixed(1)}%</span>
+                        </div>
+                        <div class="contribution-bar-bg">
+                            <div class="contribution-bar-fill ${barClass}" style="width: ${pct}%"></div>
+                        </div>
+                    </div>
+                `;
+            });
+            barsContainer.innerHTML = barsHTML;
+            textContainer.textContent = rootCauseText || 'Anomaly detected. Analyzing root cause...';
         }
         
         // Initialize - MUST run after DOM ready
