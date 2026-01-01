@@ -256,105 +256,211 @@
             <div class="image-panel">
                 <div class="panel-title"><span>🏗️</span> Chassis Frame</div>
                 <div class="component-image-container">
-                    <!-- Professional Chassis Frame SVG -->
+                    <!-- CHASSIS SVG - 3D Industrial Illustration with Depth -->
                     <svg id="chassis-svg" class="component-svg svg-normal" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                         <defs>
-                            <linearGradient id="frameGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#ffd700"/>
-                                <stop offset="50%" style="stop-color:#b8860b"/>
-                                <stop offset="100%" style="stop-color:#daa520"/>
+                            <!-- 3D Steel Frame Gradient (I-beam effect) -->
+                            <linearGradient id="frame-steel-3d" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#fde047"/>
+                                <stop offset="15%" style="stop-color:#eab308"/>
+                                <stop offset="50%" style="stop-color:#ca8a04"/>
+                                <stop offset="85%" style="stop-color:#a16207"/>
+                                <stop offset="100%" style="stop-color:#854d0e"/>
                             </linearGradient>
-                            <linearGradient id="steelGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" style="stop-color:#606060"/>
-                                <stop offset="50%" style="stop-color:#808080"/>
-                                <stop offset="100%" style="stop-color:#606060"/>
+                            <!-- Cross Member Steel Gradient -->
+                            <linearGradient id="crossmember-3d" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:#4b5563"/>
+                                <stop offset="20%" style="stop-color:#6b7280"/>
+                                <stop offset="50%" style="stop-color:#9ca3af"/>
+                                <stop offset="80%" style="stop-color:#6b7280"/>
+                                <stop offset="100%" style="stop-color:#4b5563"/>
                             </linearGradient>
-                            <linearGradient id="mountGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" style="stop-color:#4a4a4a"/>
-                                <stop offset="100%" style="stop-color:#2a2a2a"/>
+                            <!-- Mount Bracket Gradient -->
+                            <linearGradient id="mount-3d" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#6b7280"/>
+                                <stop offset="50%" style="stop-color:#4b5563"/>
+                                <stop offset="100%" style="stop-color:#374151"/>
                             </linearGradient>
-                            <pattern id="reinforcePattern" patternUnits="userSpaceOnUse" width="10" height="10">
-                                <line x1="0" y1="10" x2="10" y2="0" stroke="#555" stroke-width="1"/>
+                            <!-- Bushing Radial Gradient -->
+                            <radialGradient id="bushing-3d" cx="35%" cy="35%" r="65%">
+                                <stop offset="0%" style="stop-color:#9ca3af"/>
+                                <stop offset="50%" style="stop-color:#6b7280"/>
+                                <stop offset="100%" style="stop-color:#374151"/>
+                            </radialGradient>
+                            <!-- Rivet 3D Gradient -->
+                            <radialGradient id="rivet-3d" cx="30%" cy="30%" r="70%">
+                                <stop offset="0%" style="stop-color:#d1d5db"/>
+                                <stop offset="50%" style="stop-color:#6b7280"/>
+                                <stop offset="100%" style="stop-color:#374151"/>
+                            </radialGradient>
+                            <!-- Drop Shadow Filter -->
+                            <filter id="frame-shadow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feDropShadow dx="3" dy="4" stdDeviation="2" flood-color="#000" flood-opacity="0.4"/>
+                            </filter>
+                            <!-- Inner Bevel Filter -->
+                            <filter id="bevel-3d" x="-10%" y="-10%" width="120%" height="120%">
+                                <feGaussianBlur in="SourceAlpha" stdDeviation="1" result="blur"/>
+                                <feOffset dx="1" dy="1" result="offset"/>
+                                <feComposite in="SourceGraphic" in2="offset" operator="over"/>
+                            </filter>
+                            <!-- Reinforcement Pattern -->
+                            <pattern id="reinforce-3d" patternUnits="userSpaceOnUse" width="8" height="8">
+                                <path d="M0,8 L8,0" stroke="#78350f" stroke-width="0.5" opacity="0.4"/>
+                                <path d="M-2,2 L2,-2" stroke="#78350f" stroke-width="0.5" opacity="0.4"/>
                             </pattern>
                         </defs>
                         
-                        <!-- Main Frame Rails -->
-                        <g id="chassis-main">
-                            <!-- Left Rail -->
-                            <rect x="20" y="70" width="160" height="20" rx="3" fill="url(#frameGradient)" stroke="#8B4513" stroke-width="2"/>
-                            <!-- Right Rail -->
-                            <rect x="20" y="110" width="160" height="20" rx="3" fill="url(#frameGradient)" stroke="#8B4513" stroke-width="2"/>
-                            
-                            <!-- Cross Members -->
-                            <rect x="35" y="70" width="15" height="60" rx="2" fill="url(#steelGradient)" stroke="#505050" stroke-width="1"/>
-                            <rect x="75" y="70" width="15" height="60" rx="2" fill="url(#steelGradient)" stroke="#505050" stroke-width="1"/>
-                            <rect x="110" y="70" width="15" height="60" rx="2" fill="url(#steelGradient)" stroke="#505050" stroke-width="1"/>
-                            <rect x="150" y="70" width="15" height="60" rx="2" fill="url(#steelGradient)" stroke="#505050" stroke-width="1"/>
-                            
-                            <!-- Reinforcement Plates -->
-                            <rect x="20" y="85" width="30" height="30" fill="url(#reinforcePattern)" opacity="0.5"/>
-                            <rect x="150" y="85" width="30" height="30" fill="url(#reinforcePattern)" opacity="0.5"/>
-                            
-                            <!-- Front Axle Mount -->
-                            <g id="front-mount">
-                                <rect x="25" y="60" width="25" height="15" rx="3" fill="url(#mountGradient)" stroke="#333" stroke-width="1"/>
-                                <circle cx="37" cy="55" r="6" fill="#404040" stroke="#303030" stroke-width="1"/>
-                                <rect x="25" y="125" width="25" height="15" rx="3" fill="url(#mountGradient)" stroke="#333" stroke-width="1"/>
-                                <circle cx="37" cy="145" r="6" fill="#404040" stroke="#303030" stroke-width="1"/>
+                        <!-- LAYER 1: Background Shadow -->
+                        <g id="shadow-layer" opacity="0.3">
+                            <rect x="25" y="75" width="160" height="20" rx="3" fill="#000"/>
+                            <rect x="25" y="115" width="160" height="20" rx="3" fill="#000"/>
+                        </g>
+                        
+                        <!-- LAYER 2: Main Frame Rails (C-channel profile) -->
+                        <g id="chassis-rails" filter="url(#frame-shadow)">
+                            <!-- Top Rail -->
+                            <g id="top-rail">
+                                <!-- Rail Body -->
+                                <rect x="18" y="68" width="164" height="22" rx="3" fill="url(#frame-steel-3d)" stroke="#92400e" stroke-width="1.5"/>
+                                <!-- Top Highlight -->
+                                <rect x="20" y="70" width="160" height="4" rx="2" fill="rgba(255,255,255,0.2)"/>
+                                <!-- C-Channel Inner Shadow -->
+                                <rect x="22" y="76" width="156" height="10" rx="1" fill="rgba(0,0,0,0.15)"/>
+                                <!-- Reinforcement Pattern -->
+                                <rect x="25" y="72" width="150" height="14" fill="url(#reinforce-3d)" opacity="0.3"/>
                             </g>
                             
-                            <!-- Rear Axle Mount -->
-                            <g id="rear-mount">
-                                <rect x="150" y="60" width="25" height="15" rx="3" fill="url(#mountGradient)" stroke="#333" stroke-width="1"/>
-                                <circle cx="162" cy="55" r="6" fill="#404040" stroke="#303030" stroke-width="1"/>
-                                <rect x="150" y="125" width="25" height="15" rx="3" fill="url(#mountGradient)" stroke="#333" stroke-width="1"/>
-                                <circle cx="162" cy="145" r="6" fill="#404040" stroke="#303030" stroke-width="1"/>
-                            </g>
-                            
-                            <!-- Suspension Points -->
-                            <g id="suspension-points" fill="#ffd700" stroke="#b8860b" stroke-width="1">
-                                <circle cx="50" cy="65" r="4">
-                                    <animate attributeName="cy" values="65;63;65" dur="1s" repeatCount="indefinite"/>
-                                </circle>
-                                <circle cx="50" cy="135" r="4">
-                                    <animate attributeName="cy" values="135;137;135" dur="1s" repeatCount="indefinite"/>
-                                </circle>
-                                <circle cx="150" cy="65" r="4">
-                                    <animate attributeName="cy" values="65;63;65" dur="1.2s" repeatCount="indefinite"/>
-                                </circle>
-                                <circle cx="150" cy="135" r="4">
-                                    <animate attributeName="cy" values="135;137;135" dur="1.2s" repeatCount="indefinite"/>
-                                </circle>
-                            </g>
-                            
-                            <!-- Center Load Area -->
-                            <rect x="60" y="75" width="80" height="50" rx="5" fill="none" stroke="#ffd700" stroke-width="1" stroke-dasharray="5,3"/>
-                            <text x="100" y="105" font-size="10" fill="#ffd700" text-anchor="middle" font-family="Arial">LOAD</text>
-                            
-                            <!-- Rivets/Bolts -->
-                            <g id="rivets" fill="#505050">
-                                <circle cx="30" cy="80" r="2"/>
-                                <circle cx="170" cy="80" r="2"/>
-                                <circle cx="30" cy="120" r="2"/>
-                                <circle cx="170" cy="120" r="2"/>
-                                <circle cx="92" cy="80" r="2"/>
-                                <circle cx="108" cy="80" r="2"/>
-                                <circle cx="92" cy="120" r="2"/>
-                                <circle cx="108" cy="120" r="2"/>
+                            <!-- Bottom Rail -->
+                            <g id="bottom-rail">
+                                <rect x="18" y="108" width="164" height="22" rx="3" fill="url(#frame-steel-3d)" stroke="#92400e" stroke-width="1.5"/>
+                                <rect x="20" y="110" width="160" height="4" rx="2" fill="rgba(255,255,255,0.2)"/>
+                                <rect x="22" y="116" width="156" height="10" rx="1" fill="rgba(0,0,0,0.15)"/>
+                                <rect x="25" y="112" width="150" height="14" fill="url(#reinforce-3d)" opacity="0.3"/>
                             </g>
                         </g>
                         
-                        <!-- Status Indicator Light -->
-                        <circle id="status-light" cx="175" cy="25" r="8" fill="#00ff88">
-                            <animate attributeName="opacity" values="1;0.5;1" dur="1.5s" repeatCount="indefinite"/>
-                        </circle>
+                        <!-- LAYER 3: Cross Members (I-beam profile) -->
+                        <g id="cross-members" filter="url(#frame-shadow)">
+                            <!-- Cross Member 1 -->
+                            <g id="xmember-1">
+                                <rect x="33" y="68" width="18" height="62" rx="2" fill="url(#crossmember-3d)" stroke="#374151" stroke-width="1"/>
+                                <rect x="35" y="70" width="3" height="58" rx="1" fill="rgba(255,255,255,0.15)"/>
+                                <rect x="45" y="70" width="4" height="58" rx="1" fill="rgba(0,0,0,0.2)"/>
+                            </g>
+                            <!-- Cross Member 2 -->
+                            <g id="xmember-2">
+                                <rect x="73" y="68" width="18" height="62" rx="2" fill="url(#crossmember-3d)" stroke="#374151" stroke-width="1"/>
+                                <rect x="75" y="70" width="3" height="58" rx="1" fill="rgba(255,255,255,0.15)"/>
+                                <rect x="85" y="70" width="4" height="58" rx="1" fill="rgba(0,0,0,0.2)"/>
+                            </g>
+                            <!-- Cross Member 3 -->
+                            <g id="xmember-3">
+                                <rect x="108" y="68" width="18" height="62" rx="2" fill="url(#crossmember-3d)" stroke="#374151" stroke-width="1"/>
+                                <rect x="110" y="70" width="3" height="58" rx="1" fill="rgba(255,255,255,0.15)"/>
+                                <rect x="120" y="70" width="4" height="58" rx="1" fill="rgba(0,0,0,0.2)"/>
+                            </g>
+                            <!-- Cross Member 4 -->
+                            <g id="xmember-4">
+                                <rect x="148" y="68" width="18" height="62" rx="2" fill="url(#crossmember-3d)" stroke="#374151" stroke-width="1"/>
+                                <rect x="150" y="70" width="3" height="58" rx="1" fill="rgba(255,255,255,0.15)"/>
+                                <rect x="160" y="70" width="4" height="58" rx="1" fill="rgba(0,0,0,0.2)"/>
+                            </g>
+                        </g>
                         
-                        <!-- Structural Integrity Lines -->
-                        <g id="integrity-lines" stroke="#ffd700" stroke-width="0.5" opacity="0.4">
-                            <line x1="37" y1="80" x2="162" y2="80"/>
-                            <line x1="37" y1="120" x2="162" y2="120"/>
-                            <line x1="50" y1="70" x2="50" y2="130"/>
-                            <line x1="150" y1="70" x2="150" y2="130"/>
+                        <!-- LAYER 4: Mount Brackets -->
+                        <g id="mount-brackets" filter="url(#frame-shadow)">
+                            <!-- Front Left Mount -->
+                            <g id="fl-mount">
+                                <rect x="22" y="55" width="28" height="18" rx="4" fill="url(#mount-3d)" stroke="#1f2937" stroke-width="1"/>
+                                <rect x="24" y="57" width="24" height="4" rx="2" fill="rgba(255,255,255,0.1)"/>
+                                <circle cx="36" cy="50" r="7" fill="url(#bushing-3d)" stroke="#1f2937" stroke-width="1"/>
+                                <circle cx="34" cy="48" r="2" fill="rgba(255,255,255,0.25)"/>
+                                <circle cx="36" cy="50" r="3" fill="#1f2937"/>
+                            </g>
+                            <!-- Front Right Mount -->
+                            <g id="fr-mount">
+                                <rect x="22" y="125" width="28" height="18" rx="4" fill="url(#mount-3d)" stroke="#1f2937" stroke-width="1"/>
+                                <rect x="24" y="127" width="24" height="4" rx="2" fill="rgba(255,255,255,0.1)"/>
+                                <circle cx="36" cy="148" r="7" fill="url(#bushing-3d)" stroke="#1f2937" stroke-width="1"/>
+                                <circle cx="34" cy="146" r="2" fill="rgba(255,255,255,0.25)"/>
+                                <circle cx="36" cy="148" r="3" fill="#1f2937"/>
+                            </g>
+                            <!-- Rear Left Mount -->
+                            <g id="rl-mount">
+                                <rect x="150" y="55" width="28" height="18" rx="4" fill="url(#mount-3d)" stroke="#1f2937" stroke-width="1"/>
+                                <rect x="152" y="57" width="24" height="4" rx="2" fill="rgba(255,255,255,0.1)"/>
+                                <circle cx="164" cy="50" r="7" fill="url(#bushing-3d)" stroke="#1f2937" stroke-width="1"/>
+                                <circle cx="162" cy="48" r="2" fill="rgba(255,255,255,0.25)"/>
+                                <circle cx="164" cy="50" r="3" fill="#1f2937"/>
+                            </g>
+                            <!-- Rear Right Mount -->
+                            <g id="rr-mount">
+                                <rect x="150" y="125" width="28" height="18" rx="4" fill="url(#mount-3d)" stroke="#1f2937" stroke-width="1"/>
+                                <rect x="152" y="127" width="24" height="4" rx="2" fill="rgba(255,255,255,0.1)"/>
+                                <circle cx="164" cy="148" r="7" fill="url(#bushing-3d)" stroke="#1f2937" stroke-width="1"/>
+                                <circle cx="162" cy="146" r="2" fill="rgba(255,255,255,0.25)"/>
+                                <circle cx="164" cy="148" r="3" fill="#1f2937"/>
+                            </g>
+                        </g>
+                        
+                        <!-- LAYER 5: Suspension Points (animated) -->
+                        <g id="suspension-3d">
+                            <circle cx="48" cy="63" r="5" fill="#fbbf24" stroke="#d97706" stroke-width="1.5">
+                                <animate attributeName="cy" values="63;61;63" dur="1s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="46" cy="61" r="1.5" fill="rgba(255,255,255,0.4)">
+                                <animate attributeName="cy" values="61;59;61" dur="1s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="48" cy="135" r="5" fill="#fbbf24" stroke="#d97706" stroke-width="1.5">
+                                <animate attributeName="cy" values="135;137;135" dur="1s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="152" cy="63" r="5" fill="#fbbf24" stroke="#d97706" stroke-width="1.5">
+                                <animate attributeName="cy" values="63;61;63" dur="1.2s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="152" cy="135" r="5" fill="#fbbf24" stroke="#d97706" stroke-width="1.5">
+                                <animate attributeName="cy" values="135;137;135" dur="1.2s" repeatCount="indefinite"/>
+                            </circle>
+                        </g>
+                        
+                        <!-- LAYER 6: Load Area Indicator -->
+                        <g id="load-area">
+                            <rect x="58" y="73" width="84" height="52" rx="6" fill="none" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="6,4" opacity="0.7"/>
+                            <rect x="85" y="95" width="30" height="14" rx="3" fill="rgba(251,191,36,0.15)"/>
+                            <text x="100" y="106" font-size="9" fill="#fbbf24" text-anchor="middle" font-family="Arial, sans-serif" font-weight="bold">LOAD</text>
+                        </g>
+                        
+                        <!-- LAYER 7: 3D Rivets -->
+                        <g id="rivets-3d">
+                            <circle cx="28" cy="79" r="3" fill="url(#rivet-3d)" stroke="#1f2937" stroke-width="0.5"/>
+                            <circle cx="27" cy="78" r="1" fill="rgba(255,255,255,0.3)"/>
+                            <circle cx="172" cy="79" r="3" fill="url(#rivet-3d)" stroke="#1f2937" stroke-width="0.5"/>
+                            <circle cx="171" cy="78" r="1" fill="rgba(255,255,255,0.3)"/>
+                            <circle cx="28" cy="119" r="3" fill="url(#rivet-3d)" stroke="#1f2937" stroke-width="0.5"/>
+                            <circle cx="27" cy="118" r="1" fill="rgba(255,255,255,0.3)"/>
+                            <circle cx="172" cy="119" r="3" fill="url(#rivet-3d)" stroke="#1f2937" stroke-width="0.5"/>
+                            <circle cx="171" cy="118" r="1" fill="rgba(255,255,255,0.3)"/>
+                            <!-- Center Rivets -->
+                            <circle cx="90" cy="79" r="2.5" fill="url(#rivet-3d)"/>
+                            <circle cx="110" cy="79" r="2.5" fill="url(#rivet-3d)"/>
+                            <circle cx="90" cy="119" r="2.5" fill="url(#rivet-3d)"/>
+                            <circle cx="110" cy="119" r="2.5" fill="url(#rivet-3d)"/>
+                        </g>
+                        
+                        <!-- LAYER 8: Structural Integrity Lines -->
+                        <g id="integrity-lines" stroke="#fbbf24" stroke-width="0.5" opacity="0.35">
+                            <line x1="36" y1="79" x2="164" y2="79"/>
+                            <line x1="36" y1="119" x2="164" y2="119"/>
+                            <line x1="48" y1="68" x2="48" y2="130"/>
+                            <line x1="152" y1="68" x2="152" y2="130"/>
+                        </g>
+                        
+                        <!-- LAYER 9: Status Indicator -->
+                        <g id="status-indicator">
+                            <circle cx="175" cy="25" r="10" fill="#065f46" opacity="0.4"/>
+                            <circle id="status-light" cx="175" cy="25" r="7" fill="#00ff88">
+                                <animate attributeName="opacity" values="1;0.5;1" dur="1.5s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="173" cy="23" r="2.5" fill="rgba(255,255,255,0.35)"/>
                         </g>
                     </svg>
                     <!-- Smoke/Stress Effect SVG -->
