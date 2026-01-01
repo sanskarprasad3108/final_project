@@ -1,0 +1,1887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dump Truck Anomaly Detection</title>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 50%, #0f0f23 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 300px 1fr 320px;
+            grid-template-rows: auto 1fr;
+            gap: 15px;
+            padding: 15px;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 25px;
+            background: rgba(20, 20, 40, 0.8);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+        }
+
+        .title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .title h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(90deg, #00ff88, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+        }
+
+        .title-icon {
+            font-size: 2rem;
+        }
+
+        /* Status Section */
+        .status-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .system-status {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px 25px;
+            border-radius: 10px;
+            min-width: 200px;
+        }
+
+        .status-label {
+            font-size: 0.75rem;
+            color: #888;
+            margin-bottom: 5px;
+        }
+
+        .status-value {
+            font-size: 1.3rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .status-normal {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 200, 100, 0.1));
+            border: 2px solid #00ff88;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .status-normal .status-value {
+            color: #00ff88;
+        }
+
+        .status-anomaly {
+            background: linear-gradient(135deg, rgba(255, 68, 68, 0.3), rgba(200, 50, 50, 0.1));
+            border: 2px solid #ff4444;
+            box-shadow: 0 0 30px rgba(255, 68, 68, 0.5);
+            animation: pulse-red 0.5s ease-in-out infinite;
+        }
+
+        .status-anomaly .status-value {
+            color: #ff4444;
+        }
+
+        @keyframes pulse-red {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 68, 68, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(255, 68, 68, 0.8); }
+        }
+
+        /* Metrics Display */
+        .metrics {
+            display: flex;
+            gap: 15px;
+        }
+
+        .metric-box {
+            background: rgba(30, 30, 50, 0.8);
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            text-align: center;
+        }
+
+        .metric-label {
+            font-size: 0.7rem;
+            color: #888;
+            text-transform: uppercase;
+        }
+
+        .metric-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #00ff88;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Left Panel */
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Control Panel */
+        .control-panel {
+            background: rgba(20, 20, 40, 0.9);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+        }
+
+        .panel-title {
+            font-size: 1rem;
+            color: #00d4ff;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+            padding-bottom: 10px;
+        }
+
+        .control-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 14px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-normal {
+            background: linear-gradient(135deg, #00aa55, #00ff88);
+            color: #000;
+        }
+
+        .btn-normal:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff4444, #ff6b6b);
+            color: #fff;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 68, 68, 0.4);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ffaa00, #ffcc00);
+            color: #000;
+            animation: pulse-yellow 1s ease-in-out infinite;
+        }
+
+        @keyframes pulse-yellow {
+            0%, 100% { box-shadow: 0 0 10px rgba(255, 170, 0, 0.5); }
+            50% { box-shadow: 0 0 25px rgba(255, 170, 0, 0.8); }
+        }
+
+        .btn-toggle {
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Toggle Status Indicators */
+        .toggle-status {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .status-dot.active {
+            background: #00ff88;
+            box-shadow: 0 0 10px #00ff88;
+        }
+
+        .status-dot.inactive {
+            background: #555;
+        }
+
+        .status-dot.danger {
+            background: #ff4444;
+            box-shadow: 0 0 10px #ff4444;
+            animation: blink 0.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* 3D Plot Panel */
+        .plot-panel {
+            background: rgba(20, 20, 40, 0.9);
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            flex: 1;
+        }
+
+        #pca-plot {
+            width: 100%;
+            height: 280px;
+            border-radius: 8px;
+        }
+
+        /* Center Panel */
+        .center-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Charts */
+        .chart-container {
+            background: rgba(20, 20, 40, 0.9);
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            flex: 1;
+        }
+
+        .chart-title {
+            font-size: 0.9rem;
+            color: #00d4ff;
+            margin-bottom: 10px;
+        }
+
+        #chart-engine, #chart-vibration {
+            width: 100%;
+            height: 200px;
+        }
+
+        /* ========================================
+           TRUCK VISUALIZATION - FLAT VECTOR STYLE
+           Industrial monitoring dashboard design
+           ======================================== */
+        
+        .truck-panel {
+            background: linear-gradient(180deg, rgba(15, 20, 35, 0.95) 0%, rgba(20, 25, 45, 0.95) 100%);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(0, 255, 136, 0.15);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .truck-diagram {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .truck-svg {
+            width: 100%;
+            height: 100%;
+            max-width: 540px;
+        }
+
+        /* ========================================
+           SVG COMPONENT GLOW STATES - CSS APPROACH
+           Applied via JavaScript class toggling
+           ======================================== */
+        
+        /* Anomaly state - RED glow with pulse animation */
+        .svg-anomaly {
+            filter: drop-shadow(0 0 8px #ff0000) 
+                    drop-shadow(0 0 15px #ff3333) 
+                    drop-shadow(0 0 25px #ff5555) !important;
+            animation: svg-red-pulse 0.5s ease-in-out infinite !important;
+        }
+        
+        /* Force anomaly on specific elements by ID */
+        #truck-engine.svg-anomaly,
+        #truck-hydraulics.svg-anomaly,
+        #truck-chassis.svg-anomaly,
+        #truck-wheels.svg-anomaly {
+            filter: drop-shadow(0 0 10px #ff0000) 
+                    drop-shadow(0 0 20px #ff2222) 
+                    drop-shadow(0 0 35px #ff4444) !important;
+        }
+        
+        @keyframes svg-red-pulse {
+            0%, 100% {
+                filter: drop-shadow(0 0 8px #ff0000) 
+                        drop-shadow(0 0 15px #ff3333) 
+                        drop-shadow(0 0 25px #ff5555);
+            }
+            50% {
+                filter: drop-shadow(0 0 15px #ff0000) 
+                        drop-shadow(0 0 30px #ff2222) 
+                        drop-shadow(0 0 50px #ff4444);
+            }
+        }
+        
+        /* Normal state - GREEN glow */
+        .svg-normal {
+            filter: drop-shadow(0 0 5px #00ff88) !important;
+        }
+        
+        #truck-engine.svg-normal,
+        #truck-hydraulics.svg-normal,
+        #truck-chassis.svg-normal,
+        #truck-wheels.svg-normal {
+            filter: drop-shadow(0 0 4px #00ff88) drop-shadow(0 0 8px rgba(0,255,136,0.5)) !important;
+        }
+
+        /* ========================================
+           SMOKE ANIMATION SYSTEM
+           Realistic grey smoke that rises from 
+           components with detected anomalies
+           ======================================== */
+        
+        /* Base smoke group - hidden by default */
+        .smoke-group {
+            display: none;
+            opacity: 0;
+        }
+        
+        /* Active smoke - visible with animation */
+        .smoke-active {
+            display: block !important;
+            opacity: 1;
+        }
+        
+        /* Individual smoke puff animation */
+        .smoke-puff {
+            fill: #8b8b8b;
+            opacity: 0;
+            animation: smokeRise 2.5s ease-out infinite;
+        }
+        
+        .smoke-puff-1 { animation-delay: 0s; }
+        .smoke-puff-2 { animation-delay: 0.4s; }
+        .smoke-puff-3 { animation-delay: 0.8s; }
+        .smoke-puff-4 { animation-delay: 1.2s; }
+        .smoke-puff-5 { animation-delay: 1.6s; }
+        
+        @keyframes smokeRise {
+            0% {
+                opacity: 0;
+                transform: translateY(0) scale(0.5);
+            }
+            15% {
+                opacity: 0.5;
+            }
+            50% {
+                opacity: 0.4;
+                transform: translateY(-25px) scale(1);
+            }
+            80% {
+                opacity: 0.15;
+                transform: translateY(-45px) scale(1.3);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-60px) scale(1.5);
+            }
+        }
+        
+        /* Wispy smoke effect - more random movement */
+        .smoke-wisp {
+            fill: #9ca3af;
+            opacity: 0;
+            animation: smokeWisp 3s ease-out infinite;
+        }
+        
+        .smoke-wisp-1 { animation-delay: 0.2s; }
+        .smoke-wisp-2 { animation-delay: 0.7s; }
+        .smoke-wisp-3 { animation-delay: 1.1s; }
+        
+        @keyframes smokeWisp {
+            0% {
+                opacity: 0;
+                transform: translateY(0) translateX(0) scale(0.4);
+            }
+            20% {
+                opacity: 0.35;
+                transform: translateY(-10px) translateX(3px) scale(0.7);
+            }
+            50% {
+                opacity: 0.3;
+                transform: translateY(-30px) translateX(-5px) scale(1);
+            }
+            75% {
+                opacity: 0.15;
+                transform: translateY(-50px) translateX(8px) scale(1.2);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-70px) translateX(-3px) scale(1.4);
+            }
+        }
+        
+        /* Dark smoke for severe anomalies */
+        .smoke-dark {
+            fill: #6b7280;
+            opacity: 0;
+            animation: smokeDark 2s ease-out infinite;
+        }
+        
+        .smoke-dark-1 { animation-delay: 0.3s; }
+        .smoke-dark-2 { animation-delay: 0.9s; }
+        
+        @keyframes smokeDark {
+            0% {
+                opacity: 0;
+                transform: translateY(0) scale(0.6);
+            }
+            25% {
+                opacity: 0.45;
+            }
+            60% {
+                opacity: 0.35;
+                transform: translateY(-20px) scale(0.9);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-40px) scale(1.2);
+            }
+        }
+
+        /* ========================================
+           COMPONENT LABELS - Floating pill badges
+           ======================================== */
+        
+        .component-label {
+            position: absolute;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(8px);
+            text-transform: uppercase;
+            z-index: 10;
+        }
+
+        .component-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            flex-shrink: 0;
+        }
+
+        /* Normal/Healthy state styling - GREEN */
+        .component-normal {
+            background: rgba(0, 255, 136, 0.15);
+            border: 1.5px solid rgba(0, 255, 136, 0.6);
+            color: #00ff88;
+            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.2);
+        }
+
+        .component-normal .component-dot {
+            background: #00ff88;
+            box-shadow: 0 0 10px #00ff88, 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+
+        /* Fault/Anomaly state styling - RED with pulse */
+        .component-fault {
+            background: rgba(255, 68, 68, 0.25);
+            border: 2px solid rgba(255, 68, 68, 0.9);
+            color: #ff6b6b;
+            box-shadow: 0 4px 25px rgba(255, 68, 68, 0.5);
+            animation: label-pulse-fault 0.5s ease-in-out infinite;
+        }
+
+        .component-fault .component-dot {
+            background: #ff4444;
+            box-shadow: 0 0 15px #ff4444, 0 0 30px rgba(255, 68, 68, 0.8);
+            animation: dot-blink 0.3s ease-in-out infinite;
+        }
+        
+        @keyframes label-pulse-fault {
+            0%, 100% { 
+                box-shadow: 0 4px 20px rgba(255, 68, 68, 0.4);
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 4px 35px rgba(255, 68, 68, 0.7);
+                transform: scale(1.03);
+            }
+        }
+        
+        @keyframes dot-blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        /* Label positioning - optimized for new SVG layout */
+        #engine-label { 
+            top: 25px; 
+            left: 5%; 
+        }
+        #hydraulic-label { 
+            top: 25px; 
+            right: 12%; 
+        }
+        #chassis-label { 
+            bottom: 45px; 
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        #wheels-label { 
+            bottom: 10px; 
+            right: 15%; 
+        }
+        
+        /* Responsive label positioning */
+        @media (max-width: 600px) {
+            #engine-label { left: 2%; top: 20px; }
+            #hydraulic-label { right: 2%; top: 20px; }
+            #chassis-label { bottom: 40px; }
+            #wheels-label { right: 8%; bottom: 5px; }
+        }
+
+        /* ========================================
+           COMPONENT NAVIGATION SECTION
+           Quick access to dedicated component interfaces
+           ======================================== */
+        
+        .component-nav-panel {
+            background: rgba(20, 20, 40, 0.9);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            margin-top: 15px;
+        }
+        
+        .component-nav-title {
+            font-size: 1rem;
+            color: #ffd700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+            padding-bottom: 10px;
+        }
+        
+        .component-nav-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .component-nav-btn {
+            padding: 14px 16px;
+            border: 2px solid rgba(255, 215, 0, 0.4);
+            border-radius: 10px;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 170, 0, 0.05));
+            color: #ffd700;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            transition: all 0.15s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .component-nav-btn:hover {
+            transform: translateY(-2px);
+            border-color: #ffd700;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 170, 0, 0.15));
+            box-shadow: 0 5px 25px rgba(255, 215, 0, 0.35);
+        }
+        
+        .component-nav-btn:active {
+            transform: translateY(0);
+        }
+        
+        .component-nav-icon {
+            font-size: 1.5rem;
+        }
+        
+        .component-nav-label {
+            font-size: 0.75rem;
+        }
+        
+        .component-nav-status {
+            font-size: 0.65rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+        }
+        
+        .component-nav-status.anomaly {
+            background: rgba(255, 68, 68, 0.3);
+            color: #ff4444;
+            animation: status-pulse 0.5s ease-in-out infinite;
+        }
+        
+        @keyframes status-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        /* Right Panel - Sensor Readings */
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .sensor-panel {
+            background: rgba(20, 20, 40, 0.9);
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            flex: 1;
+        }
+
+        .sensor-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .sensor-card {
+            background: rgba(10, 10, 30, 0.8);
+            border-radius: 8px;
+            padding: 12px;
+            border: 1px solid rgba(0, 255, 136, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .sensor-card.anomaly {
+            border-color: #ff4444;
+            background: rgba(255, 68, 68, 0.1);
+            box-shadow: 0 0 15px rgba(255, 68, 68, 0.3);
+        }
+
+        .sensor-name {
+            font-size: 0.65rem;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .sensor-value {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #00ff88;
+            font-family: 'Courier New', monospace;
+        }
+
+        .sensor-card.anomaly .sensor-value {
+            color: #ff4444;
+        }
+
+        /* Simulation Controls */
+        .sim-controls {
+            background: rgba(20, 20, 40, 0.9);
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+        }
+
+        .sim-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .sim-buttons .btn {
+            flex: 1;
+        }
+
+        /* ========================================
+           FAILURE PROBABILITY PANEL
+           Shows weighted failure rates per component
+           ======================================== */
+        .probability-panel {
+            background: rgba(20, 20, 40, 0.9);
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid rgba(255, 170, 0, 0.3);
+        }
+
+        .probability-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .probability-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 10px 12px;
+            background: rgba(10, 10, 30, 0.6);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .probability-item.failing {
+            border-color: #ff4444;
+            background: rgba(255, 68, 68, 0.15);
+            box-shadow: 0 0 15px rgba(255, 68, 68, 0.3);
+        }
+
+        .probability-item.failing .prob-component {
+            color: #ff6b6b;
+        }
+
+        .probability-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .prob-component {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #00d4ff;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .prob-percentage {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #ffaa00;
+            font-family: 'Courier New', monospace;
+        }
+
+        .probability-bar-container {
+            width: 100%;
+            height: 8px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .probability-bar {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease, background 0.3s ease;
+        }
+
+        .probability-bar.engine {
+            background: linear-gradient(90deg, #ff6b6b, #ff4444);
+        }
+
+        .probability-bar.hydraulic {
+            background: linear-gradient(90deg, #ffd93d, #ffaa00);
+        }
+
+        .probability-bar.wheels {
+            background: linear-gradient(90deg, #6bcb77, #4CAF50);
+        }
+
+        .probability-bar.chassis {
+            background: linear-gradient(90deg, #4fc3f7, #00d4ff);
+        }
+
+        .prob-status {
+            font-size: 0.6rem;
+            color: #666;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .prob-status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #00ff88;
+        }
+
+        .prob-status-dot.failing {
+            background: #ff4444;
+            animation: prob-dot-pulse 0.5s ease-in-out infinite;
+        }
+
+        @keyframes prob-dot-pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 4px #ff4444; }
+            50% { opacity: 0.5; box-shadow: 0 0 8px #ff4444; }
+        }
+
+        .probability-legend {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.6rem;
+            color: #666;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        /* Footer */
+        .footer {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 10px;
+            color: #555;
+            font-size: 0.8rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1400px) {
+            .dashboard {
+                grid-template-columns: 280px 1fr 280px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Header -->
+        <div class="header">
+            <div class="title">
+                <span class="title-icon">🚛</span>
+                <h1>Dump Truck Anomaly Detection</h1>
+            </div>
+            
+            <div class="status-section">
+                <div class="metrics">
+                    <div class="metric-box">
+                        <div class="metric-label">Reconstruction Loss</div>
+                        <div class="metric-value" id="recon-error">0.000</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">Threshold</div>
+                        <div class="metric-value" id="threshold-value">0.000</div>
+                    </div>
+                </div>
+                
+                <div class="system-status status-normal" id="system-status">
+                    <div class="status-label">System Status</div>
+                    <div class="status-value" id="status-text">SYSTEM NORMAL</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Left Panel -->
+        <div class="left-panel">
+            <div class="control-panel">
+                <div class="panel-title">
+                    <span>⚙️</span> Simulation Controls
+                </div>
+                <div class="control-buttons">
+                    <button class="btn btn-normal" id="btn-simulate" onclick="toggleSimulation()">
+                        📊 Simulate Normal
+                    </button>
+                    <button class="btn btn-danger" id="btn-inject" onclick="toggleInjection()">
+                        🔥 INJECT FAILURE 🔥
+                    </button>
+                </div>
+                <div class="toggle-status">
+                    <div class="status-item">
+                        <span class="status-dot" id="dot-injection"></span>
+                        <span id="label-injection">Inject Failure: OFF</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-dot" id="dot-auto"></span>
+                        <span id="label-auto">Auto Mode: OFF</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Component Navigation Section -->
+            <div class="component-nav-panel">
+                <div class="component-nav-title">
+                    <span>🚛</span> Dump Truck Components
+                </div>
+                <div class="component-nav-grid">
+                    <a href="/component/engine" class="component-nav-btn">
+                        <span class="component-nav-icon">🔧</span>
+                        <span class="component-nav-label">ENGINE</span>
+                        <span class="component-nav-status" id="nav-status-engine">NORMAL</span>
+                    </a>
+                    <a href="/component/hydraulic" class="component-nav-btn">
+                        <span class="component-nav-icon">⚙️</span>
+                        <span class="component-nav-label">HYDRAULICS</span>
+                        <span class="component-nav-status" id="nav-status-hydraulic">NORMAL</span>
+                    </a>
+                    <a href="/component/wheels" class="component-nav-btn">
+                        <span class="component-nav-icon">🛞</span>
+                        <span class="component-nav-label">WHEELS</span>
+                        <span class="component-nav-status" id="nav-status-wheels">NORMAL</span>
+                    </a>
+                    <a href="/component/chassis" class="component-nav-btn">
+                        <span class="component-nav-icon">🏗️</span>
+                        <span class="component-nav-label">CHASSIS</span>
+                        <span class="component-nav-status" id="nav-status-chassis">NORMAL</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="plot-panel">
+                <div class="panel-title">
+                    <span>🔮</span> 3D Feature Space (PCA)
+                </div>
+                <div id="pca-plot"></div>
+            </div>
+        </div>
+
+        <!-- Center Panel -->
+        <div class="center-panel">
+            <div class="chart-container">
+                <div class="chart-title">📈 Engine Temp & Hydraulic Pressure</div>
+                <div id="chart-engine"></div>
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-title">📊 Vibration & Speed</div>
+                <div id="chart-vibration"></div>
+            </div>
+
+            <div class="truck-panel">
+                <div class="panel-title">
+                    <span>🔧</span> Real-Time Diagnostics
+                </div>
+                <div class="truck-diagram">
+                    <!-- ========================================
+                         REBUILT SVG DUMP TRUCK - Component-Based Glow System
+                         Each component has EXPLICIT IDs for anomaly visualization
+                         GREEN glow = healthy, RED glow = anomaly detected
+                         ======================================== -->
+                    <svg id="dump-truck" class="truck-svg" viewBox="0 0 520 260" preserveAspectRatio="xMidYMid meet">
+                        <defs>
+                            <!-- ============================================
+                                 SVG GLOW FILTERS - WORKING DROP SHADOW APPROACH
+                                 These filters create VISIBLE glow effects
+                                 ============================================ -->
+                            
+                            <!-- GREEN GLOW FILTER - Applied when component is HEALTHY -->
+                            <filter id="glow-green" x="-40%" y="-40%" width="180%" height="180%" filterUnits="objectBoundingBox">
+                                <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#00ff88" flood-opacity="0.8"/>
+                            </filter>
+                            
+                            <!-- RED GLOW FILTER - Applied when ANOMALY DETECTED -->
+                            <filter id="glow-red" x="-50%" y="-50%" width="200%" height="200%" filterUnits="objectBoundingBox">
+                                <feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="#ff0000" flood-opacity="1"/>
+                                <feDropShadow dx="0" dy="0" stdDeviation="15" flood-color="#ff3333" flood-opacity="0.7"/>
+                            </filter>
+                            
+                            <!-- ANIMATED RED PULSE - Using CSS animation instead -->
+                            <filter id="glow-red-pulse" x="-60%" y="-60%" width="220%" height="220%" filterUnits="objectBoundingBox">
+                                <feDropShadow dx="0" dy="0" stdDeviation="10" flood-color="#ff0000" flood-opacity="1"/>
+                                <feDropShadow dx="0" dy="0" stdDeviation="20" flood-color="#ff2222" flood-opacity="0.8"/>
+                                <feDropShadow dx="0" dy="0" stdDeviation="30" flood-color="#ff4444" flood-opacity="0.5"/>
+                            </filter>
+                            
+                            <!-- Gradient definitions for truck parts -->
+                            <linearGradient id="cabinGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#F5A623"/>
+                                <stop offset="100%" stop-color="#D4880F"/>
+                            </linearGradient>
+                            <linearGradient id="bedGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#F7C948"/>
+                                <stop offset="50%" stop-color="#F5B800"/>
+                                <stop offset="100%" stop-color="#D4940A"/>
+                            </linearGradient>
+                            <linearGradient id="chassisGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#5A5A5A"/>
+                                <stop offset="100%" stop-color="#3D3D3D"/>
+                            </linearGradient>
+                            <linearGradient id="wheelGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#4D4D4D"/>
+                                <stop offset="50%" stop-color="#2A2A2A"/>
+                                <stop offset="100%" stop-color="#3A3A3A"/>
+                            </linearGradient>
+                            <linearGradient id="glassGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#87CEEB" stop-opacity="0.9"/>
+                                <stop offset="100%" stop-color="#4AA8D8" stop-opacity="0.9"/>
+                            </linearGradient>
+                            <linearGradient id="loadGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#9E8B7D"/>
+                                <stop offset="100%" stop-color="#7A6B5F"/>
+                            </linearGradient>
+                            
+                            <!-- SMOKE BLUR FILTER - Creates soft, realistic smoke edges -->
+                            <filter id="smokeBlur" x="-50%" y="-50%" width="200%" height="200%">
+                                <feGaussianBlur in="SourceGraphic" stdDeviation="3"/>
+                            </filter>
+                        </defs>
+                        
+                        <!-- ======== GROUND SHADOW ======== -->
+                        <ellipse cx="270" cy="238" rx="210" ry="14" fill="rgba(0,0,0,0.35)"/>
+                        
+                        <!-- ============================================
+                             COMPONENT: CHASSIS
+                             ID: truck-chassis
+                             Sensors: VIBRATION, LOAD
+                             ============================================ -->
+                        <g id="truck-chassis" class="svg-normal">
+                            <!-- Main chassis frame -->
+                            <rect x="55" y="168" width="390" height="22" rx="4" fill="url(#chassisGradient)" stroke="#2D2D2D" stroke-width="2"/>
+                            <!-- Front axle mount -->
+                            <rect x="75" y="183" width="55" height="15" rx="4" fill="#4A4A4A" stroke="#333" stroke-width="1"/>
+                            <!-- Rear axle mount -->
+                            <rect x="290" y="183" width="115" height="15" rx="4" fill="#4A4A4A" stroke="#333" stroke-width="1"/>
+                            <!-- Cross members -->
+                            <rect x="170" y="172" width="8" height="14" fill="#3D3D3D"/>
+                            <rect x="250" y="172" width="8" height="14" fill="#3D3D3D"/>
+                        </g>
+                        
+                        <!-- ============================================
+                             COMPONENT: HYDRAULICS (Dump Bed)
+                             ID: truck-hydraulics  
+                             Sensors: HYDRAULIC PRESSURE, LOAD
+                             ============================================ -->
+                        <g id="truck-hydraulics" class="svg-normal">
+                            <!-- Dump bed body -->
+                            <path d="M185 70 L185 162 L455 162 L485 70 Z" fill="url(#bedGradient)" stroke="#C4A000" stroke-width="2.5"/>
+                            <!-- Bed reinforcement ribs -->
+                            <line x1="215" y1="75" x2="200" y2="157" stroke="#D4940A" stroke-width="4"/>
+                            <line x1="265" y1="75" x2="242" y2="157" stroke="#D4940A" stroke-width="4"/>
+                            <line x1="315" y1="75" x2="284" y2="157" stroke="#D4940A" stroke-width="4"/>
+                            <line x1="365" y1="75" x2="326" y2="157" stroke="#D4940A" stroke-width="4"/>
+                            <line x1="415" y1="75" x2="368" y2="157" stroke="#D4940A" stroke-width="4"/>
+                            <line x1="460" y1="75" x2="405" y2="157" stroke="#D4940A" stroke-width="4"/>
+                            <!-- Top rail -->
+                            <rect x="183" y="62" width="305" height="12" rx="3" fill="#E8B600" stroke="#C4A000" stroke-width="1"/>
+                            <!-- Load material (gravel) -->
+                            <ellipse cx="330" cy="58" rx="125" ry="24" fill="url(#loadGradient)"/>
+                            <ellipse cx="300" cy="50" rx="85" ry="16" fill="#8B7D6B"/>
+                            <ellipse cx="360" cy="52" rx="65" ry="14" fill="#7A6B5F"/>
+                            <!-- Hydraulic cylinder assembly -->
+                            <rect x="190" y="125" width="14" height="42" rx="3" fill="#777" stroke="#555" stroke-width="1"/>
+                            <rect x="187" y="118" width="20" height="10" rx="2" fill="#999" stroke="#666" stroke-width="1"/>
+                            <circle cx="197" cy="123" r="4" fill="#888"/>
+                        </g>
+                        
+                        <!-- ============================================
+                             COMPONENT: ENGINE (Cabin)
+                             ID: truck-engine
+                             Sensors: ENGINE TEMP, OIL PRESSURE, FUEL RATE
+                             ============================================ -->
+                        <g id="truck-engine" class="svg-normal">
+                            <!-- Cabin body -->
+                            <path d="M48 92 L48 165 L180 165 L180 80 L125 55 L68 55 L48 78 Z" fill="url(#cabinGradient)" stroke="#C4880F" stroke-width="2.5"/>
+                            <!-- Cabin roof -->
+                            <rect x="63" y="46" width="68" height="12" rx="5" fill="#E89A1C" stroke="#D4880F" stroke-width="1"/>
+                            <!-- Door outline -->
+                            <rect x="92" y="78" width="82" height="82" rx="3" fill="none" stroke="#C4880F" stroke-width="2"/>
+                            <!-- Door handle -->
+                            <rect x="100" y="118" width="22" height="7" rx="3" fill="#888" stroke="#666" stroke-width="1"/>
+                            <!-- Front windshield -->
+                            <path d="M54 82 L70 60 L120 60 L120 82 Z" fill="url(#glassGradient)" stroke="#4AA8D8" stroke-width="2"/>
+                            <!-- Side window -->
+                            <rect x="98" y="64" width="78" height="48" rx="4" fill="url(#glassGradient)" stroke="#4AA8D8" stroke-width="2"/>
+                            <!-- Window divider -->
+                            <line x1="140" y1="64" x2="140" y2="112" stroke="#C4880F" stroke-width="3"/>
+                            <!-- Headlight -->
+                            <ellipse cx="52" cy="138" rx="10" ry="12" fill="#FFFDE7" stroke="#FFD54F" stroke-width="2"/>
+                            <ellipse cx="52" cy="138" rx="5" ry="6" fill="#FFF9C4"/>
+                            <!-- Side mirror -->
+                            <rect x="38" y="75" width="8" height="24" rx="2" fill="#3A3A3A"/>
+                            <rect x="30" y="79" width="12" height="15" rx="2" fill="#5CB8E8" stroke="#4AA8D8" stroke-width="1"/>
+                            <!-- Exhaust stack -->
+                            <rect x="160" y="32" width="10" height="50" rx="3" fill="#4A4A4A" stroke="#333" stroke-width="1"/>
+                            <ellipse cx="165" cy="32" rx="6" ry="4" fill="#3A3A3A"/>
+                            <!-- Front bumper -->
+                            <rect x="38" y="158" width="145" height="12" rx="4" fill="#3A3A3A" stroke="#2D2D2D" stroke-width="1"/>
+                            <!-- Front grille -->
+                            <rect x="45" y="142" width="30" height="18" rx="3" fill="#2D2D2D"/>
+                            <line x1="50" y1="145" x2="50" y2="157" stroke="#4A4A4A" stroke-width="3"/>
+                            <line x1="58" y1="145" x2="58" y2="157" stroke="#4A4A4A" stroke-width="3"/>
+                            <line x1="66" y1="145" x2="66" y2="157" stroke="#4A4A4A" stroke-width="3"/>
+                            <!-- Engine hood detail -->
+                            <rect x="48" y="130" width="25" height="14" rx="2" fill="#D4880F"/>
+                        </g>
+                        
+                        <!-- ============================================
+                             COMPONENT: WHEELS
+                             ID: truck-wheels
+                             Sensors: VIBRATION, BRAKE TEMP, SPEED
+                             ============================================ -->
+                        <g id="truck-wheels" class="svg-normal">
+                            <!-- FRONT WHEEL -->
+                            <g id="wheel-front">
+                                <circle cx="102" cy="202" r="36" fill="url(#wheelGradient)" stroke="#1A1A1A" stroke-width="4"/>
+                                <circle cx="102" cy="202" r="26" fill="#2D2D2D"/>
+                                <circle cx="102" cy="202" r="14" fill="#4A4A4A" stroke="#5A5A5A" stroke-width="2"/>
+                                <circle cx="102" cy="202" r="6" fill="#6A6A6A"/>
+                                <!-- Tread pattern -->
+                                <circle cx="102" cy="202" r="32" fill="none" stroke="#222" stroke-width="5" stroke-dasharray="10 7"/>
+                            </g>
+                            
+                            <!-- REAR WHEEL 1 -->
+                            <g id="wheel-rear1">
+                                <circle cx="318" cy="202" r="36" fill="url(#wheelGradient)" stroke="#1A1A1A" stroke-width="4"/>
+                                <circle cx="318" cy="202" r="26" fill="#2D2D2D"/>
+                                <circle cx="318" cy="202" r="14" fill="#4A4A4A" stroke="#5A5A5A" stroke-width="2"/>
+                                <circle cx="318" cy="202" r="6" fill="#6A6A6A"/>
+                                <circle cx="318" cy="202" r="32" fill="none" stroke="#222" stroke-width="5" stroke-dasharray="10 7"/>
+                            </g>
+                            
+                            <!-- REAR WHEEL 2 -->
+                            <g id="wheel-rear2">
+                                <circle cx="392" cy="202" r="36" fill="url(#wheelGradient)" stroke="#1A1A1A" stroke-width="4"/>
+                                <circle cx="392" cy="202" r="26" fill="#2D2D2D"/>
+                                <circle cx="392" cy="202" r="14" fill="#4A4A4A" stroke="#5A5A5A" stroke-width="2"/>
+                                <circle cx="392" cy="202" r="6" fill="#6A6A6A"/>
+                                <circle cx="392" cy="202" r="32" fill="none" stroke="#222" stroke-width="5" stroke-dasharray="10 7"/>
+                            </g>
+                        </g>
+                        
+                        <!-- ============================================
+                             SMOKE EFFECTS - Appear on anomaly detection
+                             Each component has its own smoke group
+                             ============================================ -->
+                        
+                        <!-- SMOKE: ENGINE (from exhaust stack area) -->
+                        <g id="smoke-engine" class="smoke-group">
+                            <!-- Main smoke puffs rising from exhaust -->
+                            <ellipse class="smoke-puff smoke-puff-1" cx="165" cy="25" rx="8" ry="6" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-puff smoke-puff-2" cx="162" cy="18" rx="10" ry="7" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-puff smoke-puff-3" cx="168" cy="10" rx="12" ry="8" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-puff smoke-puff-4" cx="160" cy="5" rx="9" ry="6" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-puff smoke-puff-5" cx="170" cy="0" rx="11" ry="7" filter="url(#smokeBlur)"/>
+                            <!-- Wispy secondary smoke -->
+                            <ellipse class="smoke-wisp smoke-wisp-1" cx="158" cy="22" rx="6" ry="5" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-wisp smoke-wisp-2" cx="172" cy="15" rx="7" ry="5" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-wisp smoke-wisp-3" cx="163" cy="8" rx="8" ry="6" filter="url(#smokeBlur)"/>
+                            <!-- Dark smoke particles -->
+                            <ellipse class="smoke-dark smoke-dark-1" cx="165" cy="20" rx="5" ry="4" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-dark smoke-dark-2" cx="167" cy="12" rx="6" ry="4" filter="url(#smokeBlur)"/>
+                        </g>
+                        
+                        <!-- SMOKE: HYDRAULICS (from hydraulic cylinder area) -->
+                        <g id="smoke-hydraulics" class="smoke-group">
+                            <!-- Smoke from hydraulic system -->
+                            <ellipse class="smoke-puff smoke-puff-1" cx="197" cy="110" rx="10" ry="7" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-puff smoke-puff-2" cx="200" cy="100" rx="12" ry="8" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-puff smoke-puff-3" cx="195" cy="90" rx="14" ry="9" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-puff smoke-puff-4" cx="202" cy="80" rx="11" ry="7" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-puff smoke-puff-5" cx="193" cy="70" rx="13" ry="8" filter="url(#smokeBlur)"/>
+                            <!-- Wispy smoke -->
+                            <ellipse class="smoke-wisp smoke-wisp-1" cx="190" cy="105" rx="7" ry="5" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-wisp smoke-wisp-2" cx="205" cy="95" rx="8" ry="6" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-wisp smoke-wisp-3" cx="188" cy="85" rx="9" ry="6" filter="url(#smokeBlur)"/>
+                            <!-- Dark particles -->
+                            <ellipse class="smoke-dark smoke-dark-1" cx="197" cy="98" rx="6" ry="5" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-dark smoke-dark-2" cx="200" cy="88" rx="7" ry="5" filter="url(#smokeBlur)"/>
+                        </g>
+                        
+                        <!-- SMOKE: CHASSIS (from center chassis area) -->
+                        <g id="smoke-chassis" class="smoke-group">
+                            <!-- Smoke rising from chassis -->
+                            <ellipse class="smoke-puff smoke-puff-1" cx="220" cy="160" rx="12" ry="8" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-puff smoke-puff-2" cx="225" cy="148" rx="14" ry="9" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-puff smoke-puff-3" cx="218" cy="135" rx="16" ry="10" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-puff smoke-puff-4" cx="228" cy="122" rx="13" ry="8" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-puff smoke-puff-5" cx="215" cy="110" rx="15" ry="9" filter="url(#smokeBlur)"/>
+                            <!-- Wispy secondary -->
+                            <ellipse class="smoke-wisp smoke-wisp-1" cx="210" cy="155" rx="8" ry="6" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-wisp smoke-wisp-2" cx="235" cy="140" rx="9" ry="6" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-wisp smoke-wisp-3" cx="212" cy="128" rx="10" ry="7" filter="url(#smokeBlur)"/>
+                            <!-- Dark smoke -->
+                            <ellipse class="smoke-dark smoke-dark-1" cx="222" cy="145" rx="7" ry="5" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-dark smoke-dark-2" cx="220" cy="130" rx="8" ry="6" filter="url(#smokeBlur)"/>
+                        </g>
+                        
+                        <!-- SMOKE: WHEELS (from wheel/brake area) -->
+                        <g id="smoke-wheels" class="smoke-group">
+                            <!-- Front wheel smoke -->
+                            <ellipse class="smoke-puff smoke-puff-1" cx="102" cy="165" rx="10" ry="7" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-puff smoke-puff-2" cx="100" cy="152" rx="12" ry="8" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-puff smoke-puff-3" cx="105" cy="140" rx="14" ry="9" filter="url(#smokeBlur)"/>
+                            <!-- Rear wheel 1 smoke -->
+                            <ellipse class="smoke-puff smoke-puff-4" cx="318" cy="165" rx="10" ry="7" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-puff smoke-puff-5" cx="320" cy="152" rx="12" ry="8" filter="url(#smokeBlur)"/>
+                            <!-- Rear wheel 2 smoke -->
+                            <ellipse class="smoke-wisp smoke-wisp-1" cx="392" cy="165" rx="10" ry="7" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-wisp smoke-wisp-2" cx="390" cy="152" rx="12" ry="8" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-wisp smoke-wisp-3" cx="395" cy="140" rx="14" ry="9" filter="url(#smokeBlur)"/>
+                            <!-- Dark particles from brakes -->
+                            <ellipse class="smoke-dark smoke-dark-1" cx="102" cy="158" rx="6" ry="5" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-dark smoke-dark-2" cx="355" cy="158" rx="8" ry="6" filter="url(#smokeBlur)"/>
+                        </g>
+                    </svg>
+                    
+                    <!-- ======== FLOATING DIAGNOSTIC LABELS ======== -->
+                    <div class="component-label component-normal" id="engine-label">
+                        <span class="component-dot"></span>ENGINE
+                    </div>
+                    <div class="component-label component-normal" id="hydraulic-label">
+                        <span class="component-dot"></span>HYDRAULICS
+                    </div>
+                    <div class="component-label component-normal" id="chassis-label">
+                        <span class="component-dot"></span>CHASSIS
+                    </div>
+                    <div class="component-label component-normal" id="wheels-label">
+                        <span class="component-dot"></span>WHEELS
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="right-panel">
+            <div class="sensor-panel">
+                <div class="panel-title">
+                    <span>📡</span> Sensor Readings
+                </div>
+                <div class="sensor-grid" id="sensor-grid">
+                    <!-- Sensors will be dynamically populated -->
+                </div>
+            </div>
+
+            <!-- Failure Probability Panel -->
+            <div class="probability-panel">
+                <div class="panel-title">
+                    <span>📊</span> Failure Probability
+                </div>
+                <div class="probability-grid" id="probability-grid">
+                    <!-- Engine -->
+                    <div class="probability-item" id="prob-engine">
+                        <div class="probability-header">
+                            <span class="prob-component">🔥 Engine</span>
+                            <span class="prob-percentage" id="prob-engine-pct">40%</span>
+                        </div>
+                        <div class="probability-bar-container">
+                            <div class="probability-bar engine" id="prob-engine-bar" style="width: 40%;"></div>
+                        </div>
+                        <div class="prob-status">
+                            <span class="prob-status-dot" id="prob-engine-dot"></span>
+                            <span id="prob-engine-status">Normal</span>
+                        </div>
+                    </div>
+                    <!-- Hydraulic -->
+                    <div class="probability-item" id="prob-hydraulic">
+                        <div class="probability-header">
+                            <span class="prob-component">💧 Hydraulics</span>
+                            <span class="prob-percentage" id="prob-hydraulic-pct">30%</span>
+                        </div>
+                        <div class="probability-bar-container">
+                            <div class="probability-bar hydraulic" id="prob-hydraulic-bar" style="width: 30%;"></div>
+                        </div>
+                        <div class="prob-status">
+                            <span class="prob-status-dot" id="prob-hydraulic-dot"></span>
+                            <span id="prob-hydraulic-status">Normal</span>
+                        </div>
+                    </div>
+                    <!-- Wheels -->
+                    <div class="probability-item" id="prob-wheels">
+                        <div class="probability-header">
+                            <span class="prob-component">⚙️ Wheels</span>
+                            <span class="prob-percentage" id="prob-wheels-pct">20%</span>
+                        </div>
+                        <div class="probability-bar-container">
+                            <div class="probability-bar wheels" id="prob-wheels-bar" style="width: 20%;"></div>
+                        </div>
+                        <div class="prob-status">
+                            <span class="prob-status-dot" id="prob-wheels-dot"></span>
+                            <span id="prob-wheels-status">Normal</span>
+                        </div>
+                    </div>
+                    <!-- Chassis -->
+                    <div class="probability-item" id="prob-chassis">
+                        <div class="probability-header">
+                            <span class="prob-component">🛡️ Chassis</span>
+                            <span class="prob-percentage" id="prob-chassis-pct">10%</span>
+                        </div>
+                        <div class="probability-bar-container">
+                            <div class="probability-bar chassis" id="prob-chassis-bar" style="width: 10%;"></div>
+                        </div>
+                        <div class="prob-status">
+                            <span class="prob-status-dot" id="prob-chassis-dot"></span>
+                            <span id="prob-chassis-status">Normal</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="probability-legend">
+                    ⚠️ Higher % = More likely to fail when injection is active
+                </div>
+            </div>
+
+            <div class="sim-controls">
+                <div class="panel-title">
+                    <span>🎮</span> Quick Controls
+                </div>
+                <div class="sim-buttons">
+                    <button class="btn btn-normal" onclick="startStream()">▶ Start Stream</button>
+                    <button class="btn btn-danger" onclick="stopStream()">⏹ Stop</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let simulationInterval = null;
+        let isStreaming = false;
+        let injectionActive = false;
+        let activeFailedComponents = [];  // Track which components are currently failing
+        
+        // PCA scatter data
+        let pcaNormalX = [], pcaNormalY = [], pcaNormalZ = [];
+        let pcaAnomalyX = [], pcaAnomalyY = [], pcaAnomalyZ = [];
+        const MAX_PCA_POINTS = 200;
+
+        // Initialize plots
+        function initPlots() {
+            // PCA 3D Plot
+            const pcaLayout = {
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(10,10,30,0.5)',
+                margin: { l: 0, r: 0, t: 0, b: 0 },
+                scene: {
+                    xaxis: { 
+                        title: '', 
+                        showgrid: true, 
+                        gridcolor: '#1a3a5c',
+                        zerolinecolor: '#1a3a5c',
+                        showticklabels: false
+                    },
+                    yaxis: { 
+                        title: '', 
+                        showgrid: true, 
+                        gridcolor: '#1a3a5c',
+                        zerolinecolor: '#1a3a5c',
+                        showticklabels: false
+                    },
+                    zaxis: { 
+                        title: '', 
+                        showgrid: true, 
+                        gridcolor: '#1a3a5c',
+                        zerolinecolor: '#1a3a5c',
+                        showticklabels: false
+                    },
+                    bgcolor: 'rgba(10,10,30,0.5)',
+                    camera: {
+                        eye: { x: 1.5, y: 1.5, z: 1.2 }
+                    }
+                },
+                showlegend: false
+            };
+
+            Plotly.newPlot('pca-plot', [
+                {
+                    x: [], y: [], z: [],
+                    mode: 'markers',
+                    type: 'scatter3d',
+                    marker: { size: 4, color: '#00ff88', opacity: 0.7 },
+                    name: 'Normal'
+                },
+                {
+                    x: [], y: [], z: [],
+                    mode: 'markers',
+                    type: 'scatter3d',
+                    marker: { size: 6, color: '#ff4444', opacity: 0.9 },
+                    name: 'Anomaly'
+                }
+            ], pcaLayout, { responsive: true, displayModeBar: false });
+
+            // Time series charts
+            const chartLayout = {
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(10,10,30,0.3)',
+                margin: { l: 40, r: 10, t: 10, b: 30 },
+                xaxis: { 
+                    showgrid: true, 
+                    gridcolor: '#1a3a5c',
+                    color: '#888'
+                },
+                yaxis: { 
+                    showgrid: true, 
+                    gridcolor: '#1a3a5c',
+                    color: '#888'
+                },
+                showlegend: true,
+                legend: { 
+                    x: 0, 
+                    y: 1, 
+                    font: { color: '#888', size: 10 },
+                    bgcolor: 'rgba(0,0,0,0)'
+                }
+            };
+
+            Plotly.newPlot('chart-engine', [
+                { x: [], y: [], mode: 'lines', name: 'Engine Temp', line: { color: '#ff6b6b', width: 2 } },
+                { x: [], y: [], mode: 'lines', name: 'Hydraulic', line: { color: '#ffd93d', width: 2 } }
+            ], chartLayout, { responsive: true, displayModeBar: false });
+
+            Plotly.newPlot('chart-vibration', [
+                { x: [], y: [], mode: 'lines', name: 'Vibration', line: { color: '#ff6b6b', width: 2 } },
+                { x: [], y: [], mode: 'lines', name: 'Speed', line: { color: '#6bcb77', width: 2 } }
+            ], chartLayout, { responsive: true, displayModeBar: false });
+        }
+
+        // Update PCA plot
+        function updatePCAPlot(coords, isAnomaly) {
+            if (isAnomaly) {
+                pcaAnomalyX.push(coords[0]);
+                pcaAnomalyY.push(coords[1]);
+                pcaAnomalyZ.push(coords[2]);
+                
+                if (pcaAnomalyX.length > MAX_PCA_POINTS / 4) {
+                    pcaAnomalyX.shift();
+                    pcaAnomalyY.shift();
+                    pcaAnomalyZ.shift();
+                }
+            } else {
+                pcaNormalX.push(coords[0]);
+                pcaNormalY.push(coords[1]);
+                pcaNormalZ.push(coords[2]);
+                
+                if (pcaNormalX.length > MAX_PCA_POINTS) {
+                    pcaNormalX.shift();
+                    pcaNormalY.shift();
+                    pcaNormalZ.shift();
+                }
+            }
+
+            Plotly.update('pca-plot', {
+                x: [pcaNormalX, pcaAnomalyX],
+                y: [pcaNormalY, pcaAnomalyY],
+                z: [pcaNormalZ, pcaAnomalyZ]
+            });
+        }
+
+        // Update time series charts
+        function updateCharts(timeSeries) {
+            const timestamps = timeSeries.timestamps;
+            
+            Plotly.update('chart-engine', {
+                x: [timestamps, timestamps],
+                y: [timeSeries.engine_temp, timeSeries.hydraulic_pressure]
+            });
+
+            Plotly.update('chart-vibration', {
+                x: [timestamps, timestamps],
+                y: [timeSeries.vibration, timeSeries.speed]
+            });
+        }
+
+        // Update sensor readings with PER-SENSOR anomaly highlighting
+        // Only sensors in anomalousParams will turn RED, others stay GREEN
+        function updateSensorReadings(sensors, isAnomaly, anomalousParams = []) {
+            const grid = document.getElementById('sensor-grid');
+            grid.innerHTML = '';
+            
+            for (const [name, value] of Object.entries(sensors)) {
+                const card = document.createElement('div');
+                // Check if THIS SPECIFIC sensor is in the anomalous list
+                const isSensorAnomalous = anomalousParams.includes(name);
+                card.className = 'sensor-card' + (isSensorAnomalous ? ' anomaly' : '');
+                card.innerHTML = `
+                    <div class="sensor-name">${name}</div>
+                    <div class="sensor-value">${value.toFixed(2)}</div>
+                `;
+                grid.appendChild(card);
+            }
+        }
+
+        // Update system status
+        function updateSystemStatus(isAnomaly, reconError, threshold) {
+            const statusBox = document.getElementById('system-status');
+            const statusText = document.getElementById('status-text');
+            const reconDisplay = document.getElementById('recon-error');
+            const thresholdDisplay = document.getElementById('threshold-value');
+
+            reconDisplay.textContent = reconError.toFixed(4);
+            thresholdDisplay.textContent = threshold.toFixed(4);
+
+            if (isAnomaly) {
+                statusBox.className = 'system-status status-anomaly';
+                statusText.textContent = '⚠️ ANOMALY DETECTED';
+            } else {
+                statusBox.className = 'system-status status-normal';
+                statusText.textContent = 'SYSTEM NORMAL';
+            }
+        }
+
+        // ============================================================
+        // UPDATE TRUCK COMPONENTS - APPLY GLOW VIA CSS CLASSES ONLY
+        // CSS drop-shadow is more reliable than SVG filters
+        // Also controls SMOKE visibility for each component
+        // ============================================================
+        function updateTruckComponents(affected) {
+            // EXACT MAPPING: Backend key → SVG group ID
+            const COMPONENT_MAP = {
+                'engine': 'truck-engine',
+                'hydraulic': 'truck-hydraulics',
+                'chassis': 'truck-chassis',
+                'wheels': 'truck-wheels'
+            };
+            
+            // EXACT MAPPING: Backend key → Label ID
+            const LABEL_MAP = {
+                'engine': 'engine-label',
+                'hydraulic': 'hydraulic-label',
+                'chassis': 'chassis-label',
+                'wheels': 'wheels-label'
+            };
+            
+            // EXACT MAPPING: Backend key → Smoke group ID
+            const SMOKE_MAP = {
+                'engine': 'smoke-engine',
+                'hydraulic': 'smoke-hydraulics',
+                'chassis': 'smoke-chassis',
+                'wheels': 'smoke-wheels'
+            };
+            
+            // Debug: Log what we received from backend
+            console.log('[updateTruckComponents] affected_components:', JSON.stringify(affected));
+            
+            // Process EACH component independently
+            Object.keys(COMPONENT_MAP).forEach(componentKey => {
+                const svgGroupId = COMPONENT_MAP[componentKey];
+                const labelId = LABEL_MAP[componentKey];
+                const smokeId = SMOKE_MAP[componentKey];
+                
+                // Get DOM elements
+                const svgGroup = document.getElementById(svgGroupId);
+                const label = document.getElementById(labelId);
+                const smokeGroup = document.getElementById(smokeId);
+                
+                // Determine if this component has an anomaly
+                const hasAnomaly = affected && affected[componentKey] === true;
+                
+                // =====================================================
+                // APPLY GLOW USING CSS CLASSES ONLY (more reliable)
+                // =====================================================
+                if (svgGroup) {
+                    // Remove SVG filter attribute completely
+                    svgGroup.removeAttribute('filter');
+                    
+                    // Remove all glow classes first
+                    svgGroup.classList.remove('svg-anomaly', 'svg-normal');
+                    
+                    if (hasAnomaly) {
+                        // ANOMALY: Apply RED glow via CSS class
+                        svgGroup.classList.add('svg-anomaly');
+                        console.log(`✅ [${componentKey}] RED GLOW APPLIED`);
+                    } else {
+                        // HEALTHY: Apply GREEN glow via CSS class
+                        svgGroup.classList.add('svg-normal');
+                    }
+                } else {
+                    console.error(`❌ [${componentKey}] SVG group NOT FOUND: ${svgGroupId}`);
+                }
+                
+                // =====================================================
+                // SMOKE EFFECT - Show only when anomaly detected
+                // =====================================================
+                if (smokeGroup) {
+                    if (hasAnomaly) {
+                        // ANOMALY: Show smoke animation
+                        smokeGroup.classList.add('smoke-active');
+                        console.log(`💨 [${componentKey}] SMOKE ACTIVATED`);
+                    } else {
+                        // HEALTHY: Hide smoke immediately
+                        smokeGroup.classList.remove('smoke-active');
+                    }
+                } else {
+                    console.warn(`⚠️ [${componentKey}] Smoke group NOT FOUND: ${smokeId}`);
+                }
+                
+                // Update floating label
+                if (label) {
+                    if (hasAnomaly) {
+                        label.className = 'component-label component-fault';
+                    } else {
+                        label.className = 'component-label component-normal';
+                    }
+                }
+            });
+        }
+
+        // ============================================================
+        // UPDATE FAILURE PROBABILITY PANEL
+        // Shows weighted probabilities and highlights failing components
+        // ============================================================
+        function updateFailureProbabilities(probabilities, failedComponents) {
+            const components = ['engine', 'hydraulic', 'wheels', 'chassis'];
+            
+            components.forEach(comp => {
+                const item = document.getElementById(`prob-${comp}`);
+                const pctElement = document.getElementById(`prob-${comp}-pct`);
+                const barElement = document.getElementById(`prob-${comp}-bar`);
+                const dotElement = document.getElementById(`prob-${comp}-dot`);
+                const statusElement = document.getElementById(`prob-${comp}-status`);
+                
+                if (!item || !probabilities) return;
+                
+                // Get probability for this component
+                const probability = probabilities[comp] || 0;
+                const pctValue = Math.round(probability * 100);
+                
+                // Update percentage display
+                pctElement.textContent = `${pctValue}%`;
+                
+                // Update bar width
+                barElement.style.width = `${pctValue}%`;
+                
+                // Check if this component is currently failing
+                const isFailing = failedComponents && failedComponents.includes(comp);
+                
+                // Update visual state
+                if (isFailing) {
+                    item.classList.add('failing');
+                    dotElement.classList.add('failing');
+                    statusElement.textContent = '⚠️ FAILING';
+                    statusElement.style.color = '#ff6b6b';
+                } else {
+                    item.classList.remove('failing');
+                    dotElement.classList.remove('failing');
+                    statusElement.textContent = 'Normal';
+                    statusElement.style.color = '#666';
+                }
+            });
+        }
+
+        // Toggle injection
+        async function toggleInjection() {
+            try {
+                const response = await fetch('/toggle_injection', { method: 'POST' });
+                const data = await response.json();
+                injectionActive = data.inject_anomaly;
+                activeFailedComponents = data.failed_components || [];
+                updateInjectionUI();
+            } catch (error) {
+                console.error('Error toggling injection:', error);
+            }
+        }
+
+        // Update injection UI with component-based failure display
+        function updateInjectionUI() {
+            const btn = document.getElementById('btn-inject');
+            const dot = document.getElementById('dot-injection');
+            const label = document.getElementById('label-injection');
+
+            if (injectionActive) {
+                btn.className = 'btn btn-warning';
+                // Show which components are failing
+                const failureText = activeFailedComponents.length > 0 
+                    ? activeFailedComponents.map(c => c.toUpperCase()).join(' + ')
+                    : 'ACTIVE';
+                btn.innerHTML = `🛑 STOP: ${failureText} 🛑`;
+                dot.className = 'status-dot danger';
+                label.textContent = `Failing: ${failureText}`;
+            } else {
+                btn.className = 'btn btn-danger';
+                btn.innerHTML = '🔥 INJECT FAILURE 🔥';
+                dot.className = 'status-dot inactive';
+                label.textContent = 'Inject Failure: OFF';
+                activeFailedComponents = [];
+            }
+        }
+
+        // Toggle simulation
+        function toggleSimulation() {
+            if (isStreaming) {
+                stopStream();
+            } else {
+                startStream();
+            }
+        }
+
+        // Fetch data
+        async function fetchData() {
+            try {
+                const response = await fetch('/simulate_data');
+                const data = await response.json();
+                
+                // Update injection state from server
+                injectionActive = data.inject_active;
+                // Update active failed components list from server
+                if (data.failed_components) {
+                    activeFailedComponents = data.failed_components;
+                }
+                updateInjectionUI();
+                
+                // Update all visualizations
+                updateSystemStatus(data.is_anomaly, data.reconstruction_error, data.threshold);
+                // Pass anomalous_parameters for per-sensor highlighting
+                updateSensorReadings(data.sensor_readings, data.is_anomaly, data.anomalous_parameters || []);
+                updatePCAPlot(data.pca_coords, data.is_anomaly);
+                updateCharts(data.time_series);
+                updateTruckComponents(data.affected_components);
+                
+                // Update failure probability panel
+                updateFailureProbabilities(data.failure_probabilities, data.failed_components);
+                
+                // Update component navigation status indicators
+                updateComponentNavStatus(data.affected_components || {});
+                
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        // Start streaming
+        function startStream() {
+            if (simulationInterval) {
+                clearInterval(simulationInterval);
+            }
+            
+            isStreaming = true;
+            simulationInterval = setInterval(fetchData, 400);
+            
+            const btn = document.getElementById('btn-simulate');
+            btn.innerHTML = '⏸ Pause Stream';
+            
+            const dotAuto = document.getElementById('dot-auto');
+            const labelAuto = document.getElementById('label-auto');
+            dotAuto.className = 'status-dot active';
+            labelAuto.textContent = 'Auto Mode: ON';
+        }
+
+        // Stop streaming
+        function stopStream() {
+            if (simulationInterval) {
+                clearInterval(simulationInterval);
+                simulationInterval = null;
+            }
+            
+            isStreaming = false;
+            
+            const btn = document.getElementById('btn-simulate');
+            btn.innerHTML = '📊 Simulate Normal';
+            
+            const dotAuto = document.getElementById('dot-auto');
+            const labelAuto = document.getElementById('label-auto');
+            dotAuto.className = 'status-dot inactive';
+            labelAuto.textContent = 'Auto Mode: OFF';
+        }
+
+        // Update component navigation status indicators
+        function updateComponentNavStatus(affectedComponents) {
+            const componentMap = {
+                'engine': 'nav-status-engine',
+                'hydraulic': 'nav-status-hydraulic',
+                'hydraulics': 'nav-status-hydraulic',
+                'wheels': 'nav-status-wheels',
+                'chassis': 'nav-status-chassis'
+            };
+            
+            // Reset all to normal first
+            Object.values(componentMap).forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.textContent = 'NORMAL';
+                    el.classList.remove('anomaly');
+                }
+            });
+            
+            // Mark anomalies
+            if (affectedComponents) {
+                Object.entries(affectedComponents).forEach(([comp, isAffected]) => {
+                    const statusId = componentMap[comp.toLowerCase()];
+                    const el = document.getElementById(statusId);
+                    if (el && isAffected) {
+                        el.textContent = '⚠️ ALERT';
+                        el.classList.add('anomaly');
+                    }
+                });
+            }
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', () => {
+            initPlots();
+            
+            // Get initial injection state including any active failures and probabilities
+            fetch('/get_injection_state')
+                .then(r => r.json())
+                .then(data => {
+                    injectionActive = data.inject_anomaly;
+                    activeFailedComponents = data.failed_components || [];
+                    updateInjectionUI();
+                    // Update probability panel with initial data
+                    if (data.failure_probabilities) {
+                        updateFailureProbabilities(data.failure_probabilities, data.failed_components);
+                    }
+                });
+            
+            // Also fetch probability data separately to ensure it's displayed
+            fetch('/get_failure_probabilities')
+                .then(r => r.json())
+                .then(data => {
+                    if (data.probabilities) {
+                        updateFailureProbabilities(data.probabilities, activeFailedComponents);
+                    }
+                });
+        });
+    </script>
+</body>
+</html>

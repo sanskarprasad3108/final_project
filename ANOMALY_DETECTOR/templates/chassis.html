@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chassis Diagnostics - Dump Truck</title>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 50%, #0f0f23 100%);
+            color: #ffffff;
+            min-height: 100vh;
+        }
+        .component-dashboard {
+            display: grid;
+            grid-template-columns: 350px 1fr 320px;
+            grid-template-rows: auto 1fr;
+            gap: 15px;
+            padding: 15px;
+            min-height: 100vh;
+        }
+        .header {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 25px;
+            background: rgba(20, 20, 40, 0.8);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 215, 0, 0.4);
+        }
+        .title { display: flex; align-items: center; gap: 15px; }
+        .title h1 {
+            font-size: 1.6rem;
+            background: linear-gradient(90deg, #ffd700, #ffaa00);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .back-btn {
+            padding: 10px 20px;
+            background: rgba(0, 255, 136, 0.2);
+            border: 1px solid #00ff88;
+            color: #00ff88;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        .back-btn:hover {
+            background: rgba(0, 255, 136, 0.4);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+        .status-section { display: flex; align-items: center; gap: 20px; }
+        .component-status { padding: 12px 30px; border-radius: 10px; text-align: center; }
+        .status-label { font-size: 0.75rem; color: #888; margin-bottom: 5px; }
+        .status-value { font-size: 1.3rem; font-weight: bold; letter-spacing: 2px; }
+        .status-normal {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 200, 100, 0.1));
+            border: 2px solid #00ff88;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+        .status-normal .status-value { color: #00ff88; }
+        .status-anomaly {
+            background: linear-gradient(135deg, rgba(255, 68, 68, 0.3), rgba(200, 50, 50, 0.1));
+            border: 2px solid #ff4444;
+            box-shadow: 0 0 30px rgba(255, 68, 68, 0.5);
+            animation: pulse-red 0.5s ease-in-out infinite;
+        }
+        .status-anomaly .status-value { color: #ff4444; }
+        @keyframes pulse-red {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 68, 68, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(255, 68, 68, 0.8); }
+        }
+        .left-panel { display: flex; flex-direction: column; gap: 15px; }
+        .image-panel {
+            background: rgba(20, 20, 40, 0.8);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            padding: 15px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .panel-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #ffd700;
+        }
+        .component-image-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        .component-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: filter 0.3s ease;
+        }
+        .image-normal { filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5)); }
+        .image-anomaly {
+            filter: drop-shadow(0 0 15px rgba(255, 0, 0, 0.8)) drop-shadow(0 0 30px rgba(255, 50, 50, 0.6));
+            animation: image-pulse 0.5s ease-in-out infinite;
+        }
+        @keyframes image-pulse {
+            0%, 100% { filter: drop-shadow(0 0 15px rgba(255, 0, 0, 0.8)) drop-shadow(0 0 30px rgba(255, 50, 50, 0.6)); }
+            50% { filter: drop-shadow(0 0 25px rgba(255, 0, 0, 1)) drop-shadow(0 0 50px rgba(255, 50, 50, 0.8)); }
+        }
+        .smoke-container {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .smoke-active { opacity: 1; }
+        .smoke-particle {
+            position: absolute;
+            background: radial-gradient(ellipse at center, rgba(128, 128, 128, 0.6) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: smoke-rise 3s ease-out infinite;
+        }
+        .smoke-particle:nth-child(1) { left: 30%; width: 60px; height: 50px; animation-delay: 0s; }
+        .smoke-particle:nth-child(2) { left: 50%; width: 80px; height: 60px; animation-delay: 0.5s; }
+        .smoke-particle:nth-child(3) { left: 40%; width: 50px; height: 40px; animation-delay: 1s; }
+        .smoke-particle:nth-child(4) { left: 60%; width: 70px; height: 55px; animation-delay: 1.5s; }
+        .smoke-particle:nth-child(5) { left: 35%; width: 55px; height: 45px; animation-delay: 2s; }
+        @keyframes smoke-rise {
+            0% { bottom: 10%; opacity: 0; transform: scale(0.5) translateX(0); }
+            20% { opacity: 0.6; }
+            100% { bottom: 90%; opacity: 0; transform: scale(1.5) translateX(20px); }
+        }
+        .center-panel { display: flex; flex-direction: column; gap: 15px; }
+        .chart-panel {
+            background: rgba(20, 20, 40, 0.8);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            padding: 15px;
+            flex: 1;
+        }
+        .chart-container { height: 100%; min-height: 250px; }
+        .right-panel { display: flex; flex-direction: column; gap: 15px; }
+        .sensor-panel {
+            background: rgba(20, 20, 40, 0.8);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            padding: 15px;
+        }
+        .sensor-grid { display: flex; flex-direction: column; gap: 12px; }
+        .sensor-card {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            transition: all 0.3s ease;
+        }
+        .sensor-card.anomaly {
+            background: rgba(255, 68, 68, 0.2);
+            border-color: #ff4444;
+            box-shadow: 0 0 15px rgba(255, 68, 68, 0.3);
+        }
+        .sensor-name { font-size: 0.75rem; color: #888; margin-bottom: 5px; text-transform: uppercase; }
+        .sensor-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #00ff88;
+            font-family: 'Courier New', monospace;
+        }
+        .sensor-card.anomaly .sensor-value { color: #ff4444; }
+        .metrics-panel {
+            background: rgba(20, 20, 40, 0.8);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            padding: 15px;
+        }
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .metric-row:last-child { border-bottom: none; }
+        .metric-label { color: #888; font-size: 0.85rem; }
+        .metric-value { color: #ffd700; font-weight: bold; font-family: 'Courier New', monospace; }
+        .nav-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+        .nav-btn {
+            padding: 8px 16px;
+            background: rgba(100, 100, 100, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #aaa;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        .nav-btn:hover {
+            background: rgba(255, 215, 0, 0.3);
+            border-color: #ffd700;
+            color: #ffd700;
+        }
+        .nav-btn.active {
+            background: rgba(255, 215, 0, 0.4);
+            border-color: #ffd700;
+            color: #ffd700;
+        }
+    </style>
+</head>
+<body>
+    <div class="component-dashboard">
+        <header class="header">
+            <div class="title">
+                <span style="font-size: 2rem;">🏗️</span>
+                <h1>CHASSIS DIAGNOSTICS</h1>
+            </div>
+            <div class="nav-buttons">
+                <a href="/" class="back-btn">← Dashboard</a>
+                <a href="/component/engine" class="nav-btn">Engine</a>
+                <a href="/component/hydraulic" class="nav-btn">Hydraulics</a>
+                <a href="/component/wheels" class="nav-btn">Wheels</a>
+                <a href="/component/chassis" class="nav-btn active">Chassis</a>
+            </div>
+            <div class="status-section">
+                <div class="component-status status-normal" id="component-status">
+                    <div class="status-label">Chassis Status</div>
+                    <div class="status-value" id="status-text">NORMAL</div>
+                </div>
+            </div>
+        </header>
+        <div class="left-panel">
+            <div class="image-panel">
+                <div class="panel-title"><span>🏗️</span> Chassis Frame</div>
+                <div class="component-image-container">
+                    <img src="/static/images/chassis.png" alt="Chassis" class="component-image image-normal" id="component-image">
+                    <div class="smoke-container" id="smoke-container">
+                        <div class="smoke-particle"></div>
+                        <div class="smoke-particle"></div>
+                        <div class="smoke-particle"></div>
+                        <div class="smoke-particle"></div>
+                        <div class="smoke-particle"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="center-panel">
+            <div class="chart-panel">
+                <div class="panel-title"><span>📳</span> Structural Vibration</div>
+                <div id="chart-vibration" class="chart-container"></div>
+            </div>
+            <div class="chart-panel">
+                <div class="panel-title"><span>⚖️</span> Load Stress</div>
+                <div id="chart-load" class="chart-container"></div>
+            </div>
+        </div>
+        <div class="right-panel">
+            <div class="sensor-panel">
+                <div class="panel-title"><span>📡</span> Chassis Sensors</div>
+                <div class="sensor-grid" id="sensor-grid">
+                    <div class="sensor-card" id="sensor-vibration">
+                        <div class="sensor-name">VIBRATION MM/S</div>
+                        <div class="sensor-value" id="value-vibration">--</div>
+                    </div>
+                    <div class="sensor-card" id="sensor-load">
+                        <div class="sensor-name">LOAD TONS</div>
+                        <div class="sensor-value" id="value-load">--</div>
+                    </div>
+                </div>
+            </div>
+            <div class="metrics-panel">
+                <div class="panel-title"><span>📊</span> Model Metrics</div>
+                <div class="metric-row">
+                    <span class="metric-label">Reconstruction Error</span>
+                    <span class="metric-value" id="recon-error">0.0000</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Threshold</span>
+                    <span class="metric-value" id="threshold">0.0000</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Data Source</span>
+                    <span class="metric-value">SHARED STATE</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const COMPONENT = 'chassis';
+        
+        function initCharts() {
+            const chartLayout = {
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                font: { color: '#888' },
+                margin: { t: 10, r: 10, b: 40, l: 50 },
+                xaxis: { gridcolor: 'rgba(255,255,255,0.1)', title: 'Time' },
+                yaxis: { gridcolor: 'rgba(255,255,255,0.1)' },
+                showlegend: false
+            };
+            
+            Plotly.newPlot('chart-vibration', [{
+                x: [], y: [],
+                type: 'scatter', mode: 'lines',
+                line: { color: '#ffd700', width: 2 },
+                fill: 'tozeroy',
+                fillcolor: 'rgba(255, 215, 0, 0.1)'
+            }], { ...chartLayout, yaxis: { ...chartLayout.yaxis, title: 'Vibration (mm/s)' } }, { responsive: true });
+            
+            Plotly.newPlot('chart-load', [{
+                x: [], y: [],
+                type: 'scatter', mode: 'lines',
+                line: { color: '#00ff88', width: 2 },
+                fill: 'tozeroy',
+                fillcolor: 'rgba(0, 255, 136, 0.1)'
+            }], { ...chartLayout, yaxis: { ...chartLayout.yaxis, title: 'Load (tons)' } }, { responsive: true });
+        }
+        
+        function updateUI(data) {
+            const sensors = data.sensors || {};
+            const anomaly = data.anomaly;
+            const ts = data.time_series || {};
+            
+            document.getElementById('value-vibration').textContent = sensors['VIBRATION MM/S']?.toFixed(2) || '--';
+            document.getElementById('value-load').textContent = sensors['LOAD TONS']?.toFixed(2) || '--';
+            
+            document.getElementById('recon-error').textContent = (data.reconstruction_error || 0).toFixed(4);
+            document.getElementById('threshold').textContent = (data.threshold || 0).toFixed(4);
+            
+            const statusBox = document.getElementById('component-status');
+            const statusText = document.getElementById('status-text');
+            const componentImage = document.getElementById('component-image');
+            const smokeContainer = document.getElementById('smoke-container');
+            
+            if (anomaly) {
+                statusBox.className = 'component-status status-anomaly';
+                statusText.textContent = '⚠️ ANOMALY';
+                componentImage.className = 'component-image image-anomaly';
+                smokeContainer.classList.add('smoke-active');
+                document.getElementById('sensor-vibration').classList.add('anomaly');
+                document.getElementById('sensor-load').classList.add('anomaly');
+            } else {
+                statusBox.className = 'component-status status-normal';
+                statusText.textContent = 'NORMAL';
+                componentImage.className = 'component-image image-normal';
+                smokeContainer.classList.remove('smoke-active');
+                document.getElementById('sensor-vibration').classList.remove('anomaly');
+                document.getElementById('sensor-load').classList.remove('anomaly');
+            }
+            
+            if (ts.timestamps && ts.timestamps.length > 0) {
+                Plotly.update('chart-vibration', { x: [ts.timestamps], y: [ts.vibration] });
+                Plotly.update('chart-load', { x: [ts.timestamps], y: [ts.load] });
+            }
+        }
+        
+        async function fetchData() {
+            try {
+                const response = await fetch(`/api/component/${COMPONENT}`);
+                const data = await response.json();
+                updateUI(data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            initCharts();
+            fetchData();
+            setInterval(fetchData, 500);
+        });
+    </script>
+</body>
+</html>
