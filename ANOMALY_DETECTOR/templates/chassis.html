@@ -367,20 +367,35 @@
             }
         }
         
+        // Fetch data from UNIFIED live state endpoint
         async function fetchData() {
+            console.log("FETCHING LIVE STATE"); // MANDATORY DEBUG LOG
             try {
-                const response = await fetch(`/api/component/${COMPONENT}`);
-                const data = await response.json();
-                updateUI(data);
+                const response = await fetch('/api/live_state');
+                const fullState = await response.json();
+                
+                // Extract ONLY chassis component slice
+                const data = fullState.chassis;
+                console.log("CHASSIS DATA:", data); // MANDATORY DEBUG LOG
+                
+                if (data && data.sensors) {
+                    updateUI(data);
+                } else {
+                    console.warn("No chassis data received:", data);
+                }
             } catch (error) {
-                console.error('Error fetching data:', error);
+                console.error('Error fetching live state:', error);
             }
         }
         
+        // Initialize - MUST run after DOM ready
         document.addEventListener('DOMContentLoaded', () => {
+            console.log("CHASSIS DASHBOARD INITIALIZED");
             initCharts();
-            fetchData();
-            setInterval(fetchData, 500);
+            
+            // Start DEDICATED setInterval loop for this page
+            fetchData(); // Initial fetch
+            setInterval(fetchData, 500); // Continuous polling
         });
     </script>
 </body>

@@ -296,6 +296,9 @@ SENSOR_DISPLAY_NAMES = {
     'Engine_Temp_C': 'ENGINE TEMP °C'
 }
 
+# Create case-insensitive lookup for display names
+SENSOR_DISPLAY_NAMES_LOWER = {k.lower(): v for k, v in SENSOR_DISPLAY_NAMES.items()}
+
 import random
 
 def select_failure_scenario():
@@ -400,7 +403,8 @@ def simulate_data():
     anomalous_sensors = []
     
     for i, col in enumerate(sensor_cols):
-        display_name = SENSOR_DISPLAY_NAMES.get(col, col)
+        # Case-insensitive lookup for display name
+        display_name = SENSOR_DISPLAY_NAMES_LOWER.get(col.lower(), col)
         value = float(raw_data[i])
         all_sensors[display_name] = round(value, 2)
         
@@ -412,17 +416,42 @@ def simulate_data():
     global_recon_error = 0.0
     global_pca_coords = [0, 0, 0]
     
-    if main_model is not None:
+    # DEBUG: Check model/scaler status
+    model_loaded = main_model is not None
+    scaler_loaded = main_scaler is not None
+    
+    if model_loaded and scaler_loaded:
         try:
-            X_scaled = main_scaler.transform(raw_data.reshape(1, -1))
+            # Step 1: Scale the raw data
+            X_input = raw_data.reshape(1, -1)
+            X_scaled = main_scaler.transform(X_input)
+            
+            # Step 2: Get model prediction (reconstruction)
             X_pred = main_model.predict(X_scaled, verbose=0)
-            global_recon_error = float(np.mean(np.square(X_scaled - X_pred)))
+            
+            # Step 3: Calculate reconstruction error CORRECTLY
+            diff = X_scaled - X_pred
+            squared_diff = np.square(diff)
+            global_recon_error = float(np.mean(squared_diff))
+            
+            # Step 4: Determine anomaly status
             global_anomaly = global_recon_error > main_threshold
-            global_pca_coords = main_pca.transform(X_scaled)[0].tolist()
+            
+            # Step 5: PCA coordinates
+            if main_pca is not None:
+                global_pca_coords = main_pca.transform(X_scaled)[0].tolist()
+            
+            # DEBUG LOG (every 200 ticks to reduce spam)
+            if shared_state.tick_count % 200 == 0:
+                print(f"\n[TICK {shared_state.tick_count}] Injection={inject}, Failures={active_failures}, Error={global_recon_error:.6f}, Threshold={main_threshold:.6f}, Anomaly={global_anomaly}")
+                
         except Exception as e:
             print(f"Main model error: {e}")
+            import traceback
+            traceback.print_exc()
             global_anomaly = inject
     else:
+        print(f"[WARNING] Model loaded: {model_loaded}, Scaler loaded: {scaler_loaded}")
         global_anomaly = inject
         global_pca_coords = [np.random.randn() * 5 for _ in range(3)]
     
@@ -448,16 +477,30 @@ def simulate_data():
         comp_threshold = 0.0
         comp_pca = [0, 0, 0]
         
+        # Skip if no sensor values found (defensive)
+        if len(comp_raw) == 0:
+            component_states[comp_name] = {
+                'sensors': comp_sensors,
+                'anomaly': False,
+                'reconstruction_error': 0.0,
+                'threshold': 0.0,
+                'pca_coords': [0, 0, 0]
+            }
+            continue
+        
         if component_models.get(comp_name) is not None:
             try:
                 model_info = component_models[comp_name]
-                comp_threshold = model_info['threshold']
+                comp_threshold = float(model_info['threshold'])
                 
-                # Scale and predict
-                X_comp = np.array(comp_raw).reshape(1, -1)
+                # Scale and predict using CORRECT formula
+                X_comp = np.array(comp_raw, dtype=np.float32).reshape(1, -1)
                 X_comp_scaled = model_info['scaler'].transform(X_comp)
                 X_comp_pred = model_info['model'].predict(X_comp_scaled, verbose=0)
-                comp_recon_error = float(np.mean(np.square(X_comp_scaled - X_comp_pred)))
+                
+                # Calculate reconstruction error: mean((X_scaled - X_reconstructed)^2)
+                comp_diff = X_comp_scaled - X_comp_pred
+                comp_recon_error = float(np.mean(np.square(comp_diff)))
                 comp_anomaly = comp_recon_error > comp_threshold
                 
                 # PCA coordinates
@@ -466,6 +509,9 @@ def simulate_data():
                 comp_pca = pca_result + [0] * (3 - len(pca_result))
                 
             except Exception as e:
+                print(f"[{comp_name}] Model error: {e}")
+                import traceback
+                traceback.print_exc()
                 # Fallback: use injection state
                 comp_anomaly = comp_name in active_failures if inject else False
         else:
@@ -543,14 +589,18 @@ def simulate_data():
 def api_component_data(component_name):
     """
     API endpoint for component-specific data.
-    Reads from SHARED STATE - no independent data generation.
-    Instant response (<10ms).
+    TRIGGERS data generation to ensure SharedState is fresh,
+    then returns component-specific slice.
     """
     valid_components = ['engine', 'hydraulic', 'wheels', 'chassis']
     if component_name not in valid_components:
         return jsonify({'error': 'Invalid component'}), 404
     
-    # Read from shared state (thread-safe)
+    # CRITICAL: Generate fresh data first!
+    # This ensures SharedState.components has sensor data
+    simulate_data()
+    
+    # Now read from updated shared state (thread-safe)
     state = shared_state.get_state()
     comp_state = state['components'].get(component_name, {})
     
@@ -578,19 +628,135 @@ def api_component_data(component_name):
         'timestamp': state['timestamp'],
         'component': component_name,
         'sensors': comp_state.get('sensors', {}),
-        'anomaly': comp_state.get('anomaly', False),
-        'reconstruction_error': comp_state.get('reconstruction_error', 0),
-        'threshold': comp_state.get('threshold', 0),
+        'anomaly': bool(comp_state.get('anomaly', False)),
+        'reconstruction_error': float(comp_state.get('reconstruction_error', 0)),
+        'threshold': float(comp_state.get('threshold', 0)),
         'pca_coords': comp_state.get('pca_coords', [0, 0, 0]),
         'time_series': comp_time_series,
         'inject_active': state['inject_anomaly'],
         'is_failing': component_name in state['active_failures']
     })
 
+@app.route('/api/live_state')
+def api_live_state():
+    """
+    UNIFIED LIVE STATE ENDPOINT
+    ==========================
+    This is THE endpoint that ALL dashboards must call.
+    It triggers data generation AND returns complete state.
+    
+    Response structure:
+    {
+        "timestamp": "...",
+        "engine": { "sensors": {...}, "anomaly": true/false, ... },
+        "hydraulic": { "sensors": {...}, "anomaly": true/false, ... },
+        "wheels": { "sensors": {...}, "anomaly": true/false, ... },
+        "chassis": { "sensors": {...}, "anomaly": true/false, ... },
+        "global": { ... }
+    }
+    """
+    # First, generate fresh data by calling simulate_data logic internally
+    # This ensures SharedState is always up-to-date
+    sim_response = simulate_data()
+    sim_data = sim_response.get_json()
+    
+    # Get the updated shared state
+    state = shared_state.get_state()
+    ts = state['time_series']
+    
+    # Build component-specific responses
+    response = {
+        'timestamp': state['timestamp'],
+        'inject_active': state['inject_anomaly'],
+        'failed_components': state['active_failures'],
+        
+        # Engine component
+        'engine': {
+            'sensors': state['components']['engine'].get('sensors', {}),
+            'anomaly': bool(state['components']['engine'].get('anomaly', False)),
+            'reconstruction_error': float(state['components']['engine'].get('reconstruction_error', 0)),
+            'threshold': float(state['components']['engine'].get('threshold', 0)),
+            'pca_coords': state['components']['engine'].get('pca_coords', [0, 0, 0]),
+            'time_series': {
+                'timestamps': ts['timestamps'][-100:],
+                'engine_temp': ts['engine_temp'][-100:],
+                'oil_pressure': ts['oil_pressure'][-100:],
+                'fuel_rate': ts['fuel_rate'][-100:]
+            }
+        },
+        
+        # Hydraulic component  
+        'hydraulic': {
+            'sensors': state['components']['hydraulic'].get('sensors', {}),
+            'anomaly': bool(state['components']['hydraulic'].get('anomaly', False)),
+            'reconstruction_error': float(state['components']['hydraulic'].get('reconstruction_error', 0)),
+            'threshold': float(state['components']['hydraulic'].get('threshold', 0)),
+            'pca_coords': state['components']['hydraulic'].get('pca_coords', [0, 0, 0]),
+            'time_series': {
+                'timestamps': ts['timestamps'][-100:],
+                'hydraulic_pressure': ts['hydraulic_pressure'][-100:],
+                'load': ts['load'][-100:]
+            }
+        },
+        
+        # Wheels component
+        'wheels': {
+            'sensors': state['components']['wheels'].get('sensors', {}),
+            'anomaly': bool(state['components']['wheels'].get('anomaly', False)),
+            'reconstruction_error': float(state['components']['wheels'].get('reconstruction_error', 0)),
+            'threshold': float(state['components']['wheels'].get('threshold', 0)),
+            'pca_coords': state['components']['wheels'].get('pca_coords', [0, 0, 0]),
+            'time_series': {
+                'timestamps': ts['timestamps'][-100:],
+                'vibration': ts['vibration'][-100:],
+                'brake_temp': ts['brake_temp'][-100:],
+                'speed': ts['speed'][-100:]
+            }
+        },
+        
+        # Chassis component
+        'chassis': {
+            'sensors': state['components']['chassis'].get('sensors', {}),
+            'anomaly': bool(state['components']['chassis'].get('anomaly', False)),
+            'reconstruction_error': float(state['components']['chassis'].get('reconstruction_error', 0)),
+            'threshold': float(state['components']['chassis'].get('threshold', 0)),
+            'pca_coords': state['components']['chassis'].get('pca_coords', [0, 0, 0]),
+            'time_series': {
+                'timestamps': ts['timestamps'][-100:],
+                'vibration': ts['vibration'][-100:],
+                'load': ts['load'][-100:]
+            }
+        },
+        
+        # Global state (for main dashboard)
+        'global': {
+            'sensor_readings': sim_data.get('sensor_readings', {}),
+            'anomalous_parameters': sim_data.get('anomalous_parameters', []),
+            'reconstruction_error': sim_data.get('reconstruction_error', 0),
+            'threshold': sim_data.get('threshold', 0),
+            'is_anomaly': sim_data.get('is_anomaly', False),
+            'pca_coords': sim_data.get('pca_coords', [0, 0, 0]),
+            'affected_components': sim_data.get('affected_components', {}),
+            'time_series': sim_data.get('time_series', {})
+        }
+    }
+    
+    return jsonify(response)
+
 @app.route('/api/state')
 def api_full_state():
     """Get complete shared state for debugging/monitoring."""
-    return jsonify(shared_state.get_state())
+    state = shared_state.get_state()
+    # Convert numpy booleans to Python booleans for JSON serialization
+    def convert_numpy(obj):
+        if isinstance(obj, dict):
+            return {k: convert_numpy(v) for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [convert_numpy(i) for i in obj]
+        elif isinstance(obj, (np.bool_, np.integer, np.floating)):
+            return obj.item()
+        return obj
+    return jsonify(convert_numpy(state))
 
 @app.route('/reset_buffer', methods=['POST'])
 def reset_buffer():
@@ -615,4 +781,4 @@ def get_failure_probabilities():
     })
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000, threaded=True)
+    app.run(debug=True, host='0.0.0.0', port=5000, threaded=True, use_reloader=False)
