@@ -533,7 +533,8 @@ def simulate_data():
     
     # Update time series
     ts = shared_state.time_series
-    current_tick = len(ts['timestamps'])
+    # Use global tick_count as timestamp (NOT len() which stays at max_points after buffer fills)
+    current_tick = shared_state.tick_count
     
     ts['timestamps'].append(current_tick)
     ts['engine_temp'].append(float(raw_data[7]))
