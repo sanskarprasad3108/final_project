@@ -419,11 +419,11 @@ except Exception as e:
 for component in ['engine', 'hydraulic', 'wheels', 'chassis']:
     print(f"\n[{component.upper()} MODEL]")
     try:
-        model_path = os.path.join(BASE_DIR, 'models', f'{component}_autoencoder.h5')
-        scaler_path = os.path.join(BASE_DIR, 'models', f'{component}_scaler.pkl')
-        pca_path = os.path.join(BASE_DIR, 'models', f'{component}_pca.pkl')
-        threshold_path = os.path.join(BASE_DIR, 'models', f'{component}_threshold.pkl')
-        stats_path = os.path.join(BASE_DIR, 'models', f'{component}_stats.pkl')
+        model_path = os.path.join(BASE_DIR, f'{component}_autoencoder.h5')
+        scaler_path = os.path.join(BASE_DIR, f'{component}_scaler.pkl')
+        pca_path = os.path.join(BASE_DIR, f'{component}_pca.pkl')
+        threshold_path = os.path.join(BASE_DIR, f'{component}_threshold.pkl')
+        stats_path = os.path.join(BASE_DIR, f'{component}_stats.pkl')
         
         component_models[component] = {
             'model': keras.models.load_model(model_path, compile=False),
