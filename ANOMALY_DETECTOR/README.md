@@ -82,7 +82,7 @@ This system addresses all three challenges through:
 - Configurable noise levels and operational parameters
 
 ### Component-Wise Anomaly Detection
-- Independent autoencoder models for each subsystem (Engine, Hydraulic, Wheels, Chassis)
+- Independent autoencoder models for each subsystem (Engine, Hydraulic, Tyres, Chassis)
 - Parallel anomaly evaluation with component-specific thresholds
 - Global anomaly aggregation for system-wide health assessment
 
@@ -131,7 +131,7 @@ The application follows a modular architecture with clear separation between dat
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                              CLIENT LAYER                                    │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐        │
-│  │   Main      │  │   Engine    │  │  Hydraulic  │  │   Wheels    │        │
+│  │   Main      │  │   Engine    │  │  Hydraulic  │  │   Tyres     │        │
 │  │ Dashboard   │  │  Dashboard  │  │  Dashboard  │  │  Dashboard  │        │
 │  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘        │
 │         │                │                │                │                │
@@ -181,7 +181,7 @@ The application follows a modular architecture with clear separation between dat
 │  └─────────────────────────────────────────────────────────────────────────┘│
 │                                   │                                          │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐        │
-│  │   Engine    │  │  Hydraulic  │  │   Wheels    │  │   Chassis   │        │
+│  │   Engine    │  │  Hydraulic  │  │   Tyres     │  │   Chassis   │        │
 │  │ Autoencoder │  │ Autoencoder │  │ Autoencoder │  │ Autoencoder │        │
 │  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘        │
 │         │                │                │                │                │
@@ -299,7 +299,7 @@ Where:
 | `load_tons` | Current payload weight | Tons | 45-65 |
 | `label` | Anomaly indicator | binary | 0/1 |
 
-#### Wheels Dataset (`datasets/wheels.csv`)
+#### Tyres Dataset (`datasets/wheels.csv`)
 
 | Column | Description | Unit | Normal Range |
 |--------|-------------|------|--------------|
@@ -520,7 +520,7 @@ affected_components = {
     'engine': False,
     'hydraulic': False,
     'chassis': False,
-    'wheels': False
+    'tyres': False
 }
 
 for comp_name in components:
@@ -711,7 +711,7 @@ The primary interface provides a holistic view of truck health:
 Each component has a dedicated interface accessible via:
 - `/component/engine` - Engine monitoring
 - `/component/hydraulic` - Hydraulic system monitoring
-- `/component/wheels` - Wheel assembly monitoring
+- `/component/tyres` - Tyre assembly monitoring
 - `/component/chassis` - Chassis monitoring
 
 **Features:**
@@ -781,11 +781,11 @@ Scenarios are selected based on realistic probability weights:
 FAILURE_SCENARIOS = [
     (['engine'], 0.30),                  # 30% - Engine-only failure
     (['hydraulic'], 0.22),               # 22% - Hydraulic-only failure
-    (['wheels'], 0.13),                  # 13% - Wheels-only failure
+    (['tyres'], 0.13),                   # 13% - Tyres-only failure
     (['chassis'], 0.05),                 # 5%  - Chassis-only failure
     (['engine', 'hydraulic'], 0.12),     # 12% - Engine + Hydraulic
-    (['wheels', 'chassis'], 0.10),       # 10% - Wheels + Chassis
-    (['hydraulic', 'wheels'], 0.08)      # 8%  - Hydraulic + Wheels
+    (['tyres', 'chassis'], 0.10),        # 10% - Tyres + Chassis
+    (['hydraulic', 'tyres'], 0.08)       # 8%  - Hydraulic + Tyres
 ]
 ```
 
