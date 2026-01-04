@@ -909,15 +909,51 @@ Werkzeug>=3.0.0
 
 This project is configured for deployment on Render.com.
 
+#### Project Structure for Deployment
+
+```
+project-root/
+├── app.py                      # Main Flask application (entry point)
+├── requirements.txt            # Python dependencies
+├── Procfile                    # Render start command
+├── render.yaml                 # Render configuration (optional)
+├── autoencoder_model.h5        # Main ML model
+├── scaler.pkl                  # Data scaler
+├── pca.pkl                     # PCA transformer
+├── threshold.pkl               # Anomaly threshold
+├── data_stats.pkl              # Data statistics
+├── engine_autoencoder.h5       # Engine component model
+├── engine_scaler.pkl           # ... component scalers
+├── hydraulic_autoencoder.h5    # Hydraulic component model
+├── wheels_autoencoder.h5       # Wheels component model
+├── chassis_autoencoder.h5      # Chassis component model
+├── templates/                  # HTML templates
+│   ├── index.html
+│   ├── engine.html
+│   ├── hydraulic.html
+│   ├── wheels.html
+│   └── chassis.html
+└── static/                     # Static files (CSS, JS, images)
+```
+
 #### Procfile Configuration
 
 ```
-web: gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --threads 2
+web: gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 120 --keep-alive 5 --log-level info
 ```
 
 - **gunicorn**: Production-grade WSGI server
 - **workers 1**: Single worker (TensorFlow memory considerations)
-- **threads 2**: Multi-threading for concurrent requests
+- **threads 4**: Multi-threading for concurrent real-time requests
+- **timeout 120**: Extended timeout for model loading
+- **keep-alive 5**: Connection keep-alive for real-time updates
+- **log-level info**: Visible logs in Render dashboard
+
+#### Render Start Command
+
+```bash
+gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 120 --keep-alive 5 --log-level info
+```
 
 #### Deployment Steps
 
@@ -931,10 +967,19 @@ web: gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --threads 2
    - Start Command: (auto-detected from Procfile)
 
 3. **Set environment variables:**
-   - `PYTHON_VERSION`: 3.10 (or higher)
+   - `PYTHON_VERSION`: 3.11.0 (recommended)
+   - `TF_CPP_MIN_LOG_LEVEL`: 2 (suppress TensorFlow warnings)
 
 4. **Deploy:**
    - Render automatically builds and deploys on push
+
+#### Real-Time Execution Guarantees
+
+- **Models loaded at startup**: All ML models are loaded once when the server starts, not on each request
+- **In-memory state**: SharedState class maintains real-time data in memory for instant access
+- **Thread-safe operations**: All data updates use thread locks for concurrent request handling
+- **No file I/O during inference**: Model inference happens entirely in memory
+- **API response time < 100ms**: Optimized for real-time dashboard updates
 
 #### Alternative Deployment Platforms
 

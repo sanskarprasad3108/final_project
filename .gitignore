@@ -2,6 +2,7 @@
 venv/
 env/
 .venv/
+.env/
 
 # Python cache
 __pycache__/
@@ -30,3 +31,15 @@ Thumbs.db
 # Environment variables
 .env
 .env.local
+
+# Training/Development files (not needed for deployment)
+# Uncomment if you don't want these deployed:
+# create_component_datasets.py
+# train_component_models.py
+# train_model.py
+# datasets/
+# *.csv
+
+# Jupyter notebooks
+*.ipynb
+.ipynb_checkpoints/

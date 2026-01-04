@@ -17,6 +17,17 @@ PERFORMANCE GUARANTEES:
 """
 
 import os
+import sys
+import logging
+
+# Configure logging for Render visibility
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    stream=sys.stdout
+)
+logger = logging.getLogger(__name__)
+
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 from flask import Flask, render_template, jsonify, request
@@ -383,9 +394,9 @@ FAILURE_SCENARIOS = [
 # ============================================================
 # LOAD ALL MODELS AT STARTUP
 # ============================================================
-print("=" * 60)
-print("LOADING ALL MODEL ARTIFACTS")
-print("=" * 60)
+logger.info("=" * 60)
+logger.info("LOADING ALL MODEL ARTIFACTS")
+logger.info("=" * 60)
 
 # Main model (for global anomaly detection)
 main_model = None
@@ -399,15 +410,15 @@ component_models = {}
 
 try:
     # Load main model
-    print("\n[MAIN MODEL]")
+    logger.info("[MAIN MODEL]")
     main_model = keras.models.load_model(os.path.join(BASE_DIR, 'autoencoder_model.h5'), compile=False)
     main_scaler = joblib.load(os.path.join(BASE_DIR, 'scaler.pkl'))
     main_pca = joblib.load(os.path.join(BASE_DIR, 'pca.pkl'))
     main_threshold = joblib.load(os.path.join(BASE_DIR, 'threshold.pkl'))
     main_stats = joblib.load(os.path.join(BASE_DIR, 'data_stats.pkl'))
-    print(f"  ✅ Loaded main autoencoder (threshold: {main_threshold:.4f})")
+    logger.info(f"  ✅ Loaded main autoencoder (threshold: {main_threshold:.4f})")
 except Exception as e:
-    print(f"  ⚠️ Main model not loaded: {e}")
+    logger.warning(f"  ⚠️ Main model not loaded: {e}")
     main_stats = {
         'mean': [35, 55, 45, 120, 2.5, 4.5, 210, 85],
         'std': [5, 10, 8, 15, 0.5, 0.8, 20, 10],
@@ -417,7 +428,7 @@ except Exception as e:
 
 # Load component models
 for component in ['engine', 'hydraulic', 'wheels', 'chassis']:
-    print(f"\n[{component.upper()} MODEL]")
+    logger.info(f"[{component.upper()} MODEL]")
     try:
         model_path = os.path.join(BASE_DIR, f'{component}_autoencoder.h5')
         scaler_path = os.path.join(BASE_DIR, f'{component}_scaler.pkl')
@@ -432,14 +443,14 @@ for component in ['engine', 'hydraulic', 'wheels', 'chassis']:
             'threshold': joblib.load(threshold_path),
             'stats': joblib.load(stats_path)
         }
-        print(f"  ✅ Loaded (threshold: {component_models[component]['threshold']:.4f})")
+        logger.info(f"  ✅ Loaded (threshold: {component_models[component]['threshold']:.4f})")
     except Exception as e:
-        print(f"  ⚠️ Not loaded: {e}")
+        logger.warning(f"  ⚠️ Not loaded: {e}")
         component_models[component] = None
 
-print("\n" + "=" * 60)
-print("MODEL LOADING COMPLETE")
-print("=" * 60)
+logger.info("=" * 60)
+logger.info("MODEL LOADING COMPLETE")
+logger.info("=" * 60)
 
 # Sensor display name mapping
 SENSOR_DISPLAY_NAMES = {
@@ -504,11 +515,11 @@ def toggle_injection():
         if current_state:
             shared_state.active_failures = select_failure_scenario()
             shared_state.failure_locked = True
-            print(f"[INJECTION ON] Failing: {shared_state.active_failures}")
+            logger.info(f"[INJECTION ON] Failing: {shared_state.active_failures}")
         else:
             shared_state.active_failures = []
             shared_state.failure_locked = False
-            print("[INJECTION OFF] All normal")
+            logger.info("[INJECTION OFF] All normal")
     
     return jsonify({
         'inject_anomaly': current_state,
@@ -600,15 +611,15 @@ def simulate_data():
             
             # DEBUG LOG (every 200 ticks to reduce spam)
             if shared_state.tick_count % 200 == 0:
-                print(f"\n[TICK {shared_state.tick_count}] Injection={inject}, Failures={active_failures}, Error={global_recon_error:.6f}, Threshold={main_threshold:.6f}, Anomaly={global_anomaly}")
+                logger.debug(f"[TICK {shared_state.tick_count}] Injection={inject}, Failures={active_failures}, Error={global_recon_error:.6f}, Threshold={main_threshold:.6f}, Anomaly={global_anomaly}")
                 
         except Exception as e:
-            print(f"Main model error: {e}")
+            logger.error(f"Main model error: {e}")
             import traceback
             traceback.print_exc()
             global_anomaly = inject
     else:
-        print(f"[WARNING] Model loaded: {model_loaded}, Scaler loaded: {scaler_loaded}")
+        logger.warning(f"[WARNING] Model loaded: {model_loaded}, Scaler loaded: {scaler_loaded}")
         global_anomaly = inject
         global_pca_coords = [np.random.randn() * 5 for _ in range(3)]
     
@@ -672,7 +683,7 @@ def simulate_data():
                 )
                 
             except Exception as e:
-                print(f"[{comp_name}] Model error: {e}")
+                logger.error(f"[{comp_name}] Model error: {e}")
                 import traceback
                 traceback.print_exc()
                 # Fallback: use injection state
@@ -964,4 +975,9 @@ def get_failure_probabilities():
     })
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000, threaded=True, use_reloader=False)
+    # Use PORT environment variable for Render deployment
+    port = int(os.environ.get('PORT', 5000))
+    debug_mode = os.environ.get('FLASK_DEBUG', 'false').lower() == 'true'
+    logger.info(f"Starting server on port {port}")
+    logger.info(f"Debug mode: {debug_mode}")
+    app.run(debug=debug_mode, host='0.0.0.0', port=port, threaded=True, use_reloader=False)
