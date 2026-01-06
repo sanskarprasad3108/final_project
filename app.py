@@ -42,7 +42,7 @@ from datetime import datetime
 # Base directory for resolving paths
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder=BASE_DIR, static_folder=BASE_DIR)
 
 # ============================================================
 # SHARED REAL-TIME STATE - SINGLE SOURCE OF TRUTH

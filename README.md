@@ -841,9 +841,10 @@ The system guarantees sub-100ms response to injection toggle:
 
 ### Prerequisites
 
-- Python 3.10 or higher
+- Python 3.10 or higher (for local development)
 - pip package manager
 - Git (optional, for cloning)
+- Docker (optional, for containerized deployment)
 
 ### Local Installation
 
@@ -851,7 +852,7 @@ The system guarantees sub-100ms response to injection toggle:
 
 ```bash
 git clone <repository-url>
-cd ANOMALY_DETECTOR
+cd dump-truck-anomaly-detector
 ```
 
 2. **Create virtual environment:**
@@ -888,6 +889,44 @@ python app.py
 
 Open a browser and navigate to: `http://127.0.0.1:5000`
 
+### Docker Installation (Recommended)
+
+1. **Clone the repository:**
+
+```bash
+git clone <repository-url>
+cd dump-truck-anomaly-detector
+```
+
+2. **Build the Docker image:**
+
+```bash
+docker build -t anomaly-detector:latest .
+```
+
+3. **Run the container:**
+
+```bash
+docker run -d -p 5000:5000 --name anomaly-detector anomaly-detector:latest
+```
+
+4. **Access the dashboard:**
+
+Open a browser and navigate to: `http://127.0.0.1:5000`
+
+#### Docker Commands
+
+- **Stop container:** `docker stop anomaly-detector`
+- **Start container:** `docker start anomaly-detector`
+- **View logs:** `docker logs -f anomaly-detector`
+- **Remove container:** `docker rm -f anomaly-detector`
+
+#### Using Docker Compose
+
+```bash
+docker-compose up --build
+```
+
 ### Requirements File
 
 ```
@@ -915,6 +954,9 @@ This project is configured for deployment on Render.com.
 project-root/
 ├── app.py                      # Main Flask application (entry point)
 ├── requirements.txt            # Python dependencies
+├── Dockerfile                  # Docker configuration
+├── docker-compose.yaml         # Docker Compose for local testing
+├── .dockerignore               # Docker ignore file
 ├── Procfile                    # Render start command
 ├── render.yaml                 # Render configuration (optional)
 ├── autoencoder_model.h5        # Main ML model
@@ -927,13 +969,13 @@ project-root/
 ├── hydraulic_autoencoder.h5    # Hydraulic component model
 ├── wheels_autoencoder.h5       # Wheels component model
 ├── chassis_autoencoder.h5      # Chassis component model
-├── templates/                  # HTML templates
-│   ├── index.html
-│   ├── engine.html
-│   ├── hydraulic.html
-│   ├── wheels.html
-│   └── chassis.html
-└── static/                     # Static files (CSS, JS, images)
+├── index.html                  # Main dashboard template
+├── engine.html                 # Engine component template
+├── hydraulic.html              # Hydraulic component template
+├── wheels.html                 # Wheels component template
+├── chassis.html                # Chassis component template
+├── *.png                       # Static images
+└── *.csv                       # Dataset files
 ```
 
 #### Procfile Configuration
@@ -985,9 +1027,14 @@ gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 120 --ke
 
 The application can also be deployed on:
 
+- **Docker Hub**: Pull and run the containerized application
+  ```bash
+  docker pull sanskar3108/anomaly-detector:latest
+  docker run -d -p 5000:5000 sanskar3108/anomaly-detector:latest
+  ```
 - **Heroku**: Same Procfile configuration
 - **AWS Elastic Beanstalk**: Add `.ebextensions` configuration
-- **Google Cloud Run**: Containerize with Dockerfile
+- **Google Cloud Run**: Use the provided Dockerfile
 - **Azure App Service**: Configure Python web app
 
 ---
