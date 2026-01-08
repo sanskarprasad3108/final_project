@@ -322,7 +322,7 @@
         .truck-diagram {
             position: relative;
             width: 100%;
-            height: 300px;
+            height: 320px;
             margin: 15px 0;
             display: flex;
             align-items: center;
@@ -1016,189 +1016,455 @@
                 </div>
                 <div class="truck-diagram">
                     <!-- ========================================
-                         REBUILT SVG DUMP TRUCK - Component-Based Glow System
-                         Each component has EXPLICIT IDs for anomaly visualization
+                         REALISTIC 3D SVG DUMP TRUCK - Heavy Mining Style
+                         Photorealistic industrial dump truck with detailed components
                          GREEN glow = healthy, RED glow = anomaly detected
                          ======================================== -->
-                    <svg id="dump-truck" class="truck-svg" viewBox="0 0 520 260" preserveAspectRatio="xMidYMid meet">
+                    <svg id="dump-truck" class="truck-svg" viewBox="0 0 520 280" preserveAspectRatio="xMidYMid meet">
                         <defs>
                             <!-- ============================================
                                  SVG GLOW FILTERS - WORKING DROP SHADOW APPROACH
-                                 These filters create VISIBLE glow effects
                                  ============================================ -->
-                            
-                            <!-- GREEN GLOW FILTER - Applied when component is HEALTHY -->
                             <filter id="glow-green" x="-40%" y="-40%" width="180%" height="180%" filterUnits="objectBoundingBox">
                                 <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#00ff88" flood-opacity="0.8"/>
                             </filter>
-                            
-                            <!-- RED GLOW FILTER - Applied when ANOMALY DETECTED -->
                             <filter id="glow-red" x="-50%" y="-50%" width="200%" height="200%" filterUnits="objectBoundingBox">
                                 <feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="#ff0000" flood-opacity="1"/>
                                 <feDropShadow dx="0" dy="0" stdDeviation="15" flood-color="#ff3333" flood-opacity="0.7"/>
                             </filter>
-                            
-                            <!-- ANIMATED RED PULSE - Using CSS animation instead -->
                             <filter id="glow-red-pulse" x="-60%" y="-60%" width="220%" height="220%" filterUnits="objectBoundingBox">
                                 <feDropShadow dx="0" dy="0" stdDeviation="10" flood-color="#ff0000" flood-opacity="1"/>
                                 <feDropShadow dx="0" dy="0" stdDeviation="20" flood-color="#ff2222" flood-opacity="0.8"/>
                                 <feDropShadow dx="0" dy="0" stdDeviation="30" flood-color="#ff4444" flood-opacity="0.5"/>
                             </filter>
                             
-                            <!-- Gradient definitions for truck parts -->
-                            <linearGradient id="cabinGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#F5A623"/>
-                                <stop offset="100%" stop-color="#D4880F"/>
-                            </linearGradient>
-                            <linearGradient id="bedGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" stop-color="#F7C948"/>
-                                <stop offset="50%" stop-color="#F5B800"/>
-                                <stop offset="100%" stop-color="#D4940A"/>
-                            </linearGradient>
-                            <linearGradient id="chassisGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" stop-color="#5A5A5A"/>
-                                <stop offset="100%" stop-color="#3D3D3D"/>
-                            </linearGradient>
-                            <linearGradient id="wheelGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" stop-color="#4D4D4D"/>
-                                <stop offset="50%" stop-color="#2A2A2A"/>
-                                <stop offset="100%" stop-color="#3A3A3A"/>
-                            </linearGradient>
-                            <linearGradient id="glassGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#87CEEB" stop-opacity="0.9"/>
-                                <stop offset="100%" stop-color="#4AA8D8" stop-opacity="0.9"/>
-                            </linearGradient>
-                            <linearGradient id="loadGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" stop-color="#9E8B7D"/>
-                                <stop offset="100%" stop-color="#7A6B5F"/>
-                            </linearGradient>
-                            
-                            <!-- SMOKE BLUR FILTER - Creates soft, realistic smoke edges -->
+                            <!-- SMOKE BLUR FILTER -->
                             <filter id="smokeBlur" x="-50%" y="-50%" width="200%" height="200%">
                                 <feGaussianBlur in="SourceGraphic" stdDeviation="3"/>
                             </filter>
+                            
+                            <!-- 3D SHADOW FILTER -->
+                            <filter id="dropShadow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feDropShadow dx="3" dy="4" stdDeviation="3" flood-color="#000" flood-opacity="0.4"/>
+                            </filter>
+                            
+                            <!-- INNER SHADOW FILTER -->
+                            <filter id="innerShadow" x="-50%" y="-50%" width="200%" height="200%">
+                                <feComponentTransfer in="SourceAlpha">
+                                    <feFuncA type="table" tableValues="1 0"/>
+                                </feComponentTransfer>
+                                <feGaussianBlur stdDeviation="3"/>
+                                <feOffset dx="2" dy="3" result="offsetblur"/>
+                                <feFlood flood-color="#000" flood-opacity="0.5"/>
+                                <feComposite in2="offsetblur" operator="in"/>
+                                <feMerge>
+                                    <feMergeNode/>
+                                    <feMergeNode in="SourceGraphic"/>
+                                </feMerge>
+                            </filter>
+                            
+                            <!-- METALLIC HIGHLIGHT FILTER -->
+                            <filter id="metallic">
+                                <feSpecularLighting result="specOut" specularExponent="20" lighting-color="#fff">
+                                    <fePointLight x="-5000" y="-10000" z="20000"/>
+                                </feSpecularLighting>
+                                <feComposite in="SourceGraphic" in2="specOut" operator="arithmetic" k1="0" k2="1" k3="1" k4="0"/>
+                            </filter>
+                            
+                            <!-- REALISTIC CABIN GRADIENT - Yellow/Orange Industrial -->
+                            <linearGradient id="cabinGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#FFD54F"/>
+                                <stop offset="25%" stop-color="#FFCA28"/>
+                                <stop offset="50%" stop-color="#FFC107"/>
+                                <stop offset="75%" stop-color="#FFB300"/>
+                                <stop offset="100%" stop-color="#FF8F00"/>
+                            </linearGradient>
+                            
+                            <!-- CABIN SIDE GRADIENT - Darker for depth -->
+                            <linearGradient id="cabinSideGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#FF8F00"/>
+                                <stop offset="50%" stop-color="#EF6C00"/>
+                                <stop offset="100%" stop-color="#E65100"/>
+                            </linearGradient>
+                            
+                            <!-- DUMP BED GRADIENT - Steel/Iron look -->
+                            <linearGradient id="bedGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#FFD54F"/>
+                                <stop offset="15%" stop-color="#FFCA28"/>
+                                <stop offset="40%" stop-color="#FFC107"/>
+                                <stop offset="70%" stop-color="#FFB300"/>
+                                <stop offset="100%" stop-color="#E65100"/>
+                            </linearGradient>
+                            
+                            <!-- BED INNER SHADOW GRADIENT -->
+                            <linearGradient id="bedInnerGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#5D4037"/>
+                                <stop offset="100%" stop-color="#3E2723"/>
+                            </linearGradient>
+                            
+                            <!-- CHASSIS GRADIENT - Heavy steel -->
+                            <linearGradient id="chassisGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#616161"/>
+                                <stop offset="30%" stop-color="#424242"/>
+                                <stop offset="70%" stop-color="#303030"/>
+                                <stop offset="100%" stop-color="#212121"/>
+                            </linearGradient>
+                            
+                            <!-- CHASSIS TOP HIGHLIGHT -->
+                            <linearGradient id="chassisTopGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#757575"/>
+                                <stop offset="100%" stop-color="#424242"/>
+                            </linearGradient>
+                            
+                            <!-- TIRE GRADIENT - Rubber texture -->
+                            <radialGradient id="tireGradient" cx="30%" cy="30%" r="70%" fx="30%" fy="30%">
+                                <stop offset="0%" stop-color="#4A4A4A"/>
+                                <stop offset="50%" stop-color="#2D2D2D"/>
+                                <stop offset="85%" stop-color="#1A1A1A"/>
+                                <stop offset="100%" stop-color="#0D0D0D"/>
+                            </radialGradient>
+                            
+                            <!-- WHEEL RIM GRADIENT - Chrome/Steel -->
+                            <radialGradient id="rimGradient" cx="35%" cy="35%" r="65%" fx="35%" fy="35%">
+                                <stop offset="0%" stop-color="#E0E0E0"/>
+                                <stop offset="30%" stop-color="#BDBDBD"/>
+                                <stop offset="60%" stop-color="#9E9E9E"/>
+                                <stop offset="100%" stop-color="#616161"/>
+                            </radialGradient>
+                            
+                            <!-- HUB CAP GRADIENT -->
+                            <radialGradient id="hubGradient" cx="40%" cy="40%" r="60%" fx="40%" fy="40%">
+                                <stop offset="0%" stop-color="#FAFAFA"/>
+                                <stop offset="40%" stop-color="#BDBDBD"/>
+                                <stop offset="100%" stop-color="#757575"/>
+                            </radialGradient>
+                            
+                            <!-- GLASS GRADIENT - Reflective windshield -->
+                            <linearGradient id="glassGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#E3F2FD" stop-opacity="0.95"/>
+                                <stop offset="30%" stop-color="#90CAF9" stop-opacity="0.85"/>
+                                <stop offset="60%" stop-color="#64B5F6" stop-opacity="0.9"/>
+                                <stop offset="100%" stop-color="#42A5F5" stop-opacity="0.85"/>
+                            </linearGradient>
+                            
+                            <!-- GLASS REFLECTION -->
+                            <linearGradient id="glassReflection" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#fff" stop-opacity="0.6"/>
+                                <stop offset="50%" stop-color="#fff" stop-opacity="0"/>
+                            </linearGradient>
+                            
+                            <!-- DIRT/GRAVEL LOAD GRADIENT -->
+                            <linearGradient id="loadGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#A1887F"/>
+                                <stop offset="30%" stop-color="#8D6E63"/>
+                                <stop offset="70%" stop-color="#6D4C41"/>
+                                <stop offset="100%" stop-color="#5D4037"/>
+                            </linearGradient>
+                            
+                            <!-- HYDRAULIC CYLINDER GRADIENT -->
+                            <linearGradient id="hydraulicGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#78909C"/>
+                                <stop offset="30%" stop-color="#B0BEC5"/>
+                                <stop offset="50%" stop-color="#CFD8DC"/>
+                                <stop offset="70%" stop-color="#B0BEC5"/>
+                                <stop offset="100%" stop-color="#607D8B"/>
+                            </linearGradient>
+                            
+                            <!-- EXHAUST PIPE GRADIENT -->
+                            <linearGradient id="exhaustGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#424242"/>
+                                <stop offset="30%" stop-color="#616161"/>
+                                <stop offset="50%" stop-color="#757575"/>
+                                <stop offset="70%" stop-color="#616161"/>
+                                <stop offset="100%" stop-color="#424242"/>
+                            </linearGradient>
+                            
+                            <!-- HEADLIGHT GLOW -->
+                            <radialGradient id="headlightGlow" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stop-color="#FFFDE7"/>
+                                <stop offset="40%" stop-color="#FFF9C4"/>
+                                <stop offset="100%" stop-color="#FFF176"/>
+                            </radialGradient>
+                            
+                            <!-- TIRE TREAD PATTERN -->
+                            <pattern id="treadPattern" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
+                                <rect width="8" height="8" fill="#1A1A1A"/>
+                                <rect x="1" y="1" width="3" height="6" fill="#2A2A2A"/>
+                            </pattern>
                         </defs>
                         
-                        <!-- ======== GROUND SHADOW ======== -->
-                        <ellipse cx="270" cy="238" rx="210" ry="14" fill="rgba(0,0,0,0.35)"/>
+                        <!-- ======== GROUND SHADOW - More realistic ======== -->
+                        <ellipse cx="270" cy="258" rx="230" ry="18" fill="rgba(0,0,0,0.5)">
+                            <animate attributeName="opacity" values="0.5;0.4;0.5" dur="2s" repeatCount="indefinite"/>
+                        </ellipse>
+                        <ellipse cx="270" cy="256" rx="200" ry="12" fill="rgba(0,0,0,0.3)"/>
                         
                         <!-- ============================================
-                             COMPONENT: CHASSIS
+                             COMPONENT: CHASSIS - Heavy duty steel frame
                              ID: truck-chassis
-                             Sensors: VIBRATION, LOAD
                              ============================================ -->
-                        <g id="truck-chassis" class="svg-normal">
-                            <!-- Main chassis frame -->
-                            <rect x="55" y="168" width="390" height="22" rx="4" fill="url(#chassisGradient)" stroke="#2D2D2D" stroke-width="2"/>
-                            <!-- Front axle mount -->
-                            <rect x="75" y="183" width="55" height="15" rx="4" fill="#4A4A4A" stroke="#333" stroke-width="1"/>
-                            <!-- Rear axle mount -->
-                            <rect x="290" y="183" width="115" height="15" rx="4" fill="#4A4A4A" stroke="#333" stroke-width="1"/>
-                            <!-- Cross members -->
-                            <rect x="170" y="172" width="8" height="14" fill="#3D3D3D"/>
-                            <rect x="250" y="172" width="8" height="14" fill="#3D3D3D"/>
+                        <g id="truck-chassis" class="svg-normal" filter="url(#dropShadow)">
+                            <!-- Main chassis beam - I-beam style -->
+                            <rect x="45" y="175" width="420" height="28" rx="3" fill="url(#chassisGradient)"/>
+                            <rect x="45" y="175" width="420" height="6" rx="2" fill="url(#chassisTopGradient)"/>
+                            
+                            <!-- Cross members with rivets -->
+                            <rect x="130" y="178" width="12" height="22" fill="#37474F"/>
+                            <circle cx="136" cy="182" r="2" fill="#546E7A"/>
+                            <circle cx="136" cy="196" r="2" fill="#546E7A"/>
+                            
+                            <rect x="200" y="178" width="12" height="22" fill="#37474F"/>
+                            <circle cx="206" cy="182" r="2" fill="#546E7A"/>
+                            <circle cx="206" cy="196" r="2" fill="#546E7A"/>
+                            
+                            <rect x="270" y="178" width="12" height="22" fill="#37474F"/>
+                            <circle cx="276" cy="182" r="2" fill="#546E7A"/>
+                            <circle cx="276" cy="196" r="2" fill="#546E7A"/>
+                            
+                            <!-- Front axle housing -->
+                            <rect x="75" y="195" width="65" height="20" rx="5" fill="#37474F"/>
+                            <rect x="75" y="195" width="65" height="5" rx="3" fill="#546E7A"/>
+                            <ellipse cx="107" cy="205" rx="8" ry="5" fill="#263238"/>
+                            
+                            <!-- Rear tandem axle housing -->
+                            <rect x="300" y="195" width="140" height="20" rx="5" fill="#37474F"/>
+                            <rect x="300" y="195" width="140" height="5" rx="3" fill="#546E7A"/>
+                            <ellipse cx="340" cy="205" rx="8" ry="5" fill="#263238"/>
+                            <ellipse cx="400" cy="205" rx="8" ry="5" fill="#263238"/>
+                            
+                            <!-- Suspension leaf springs -->
+                            <path d="M80 190 Q107 185, 135 190" stroke="#455A64" stroke-width="4" fill="none"/>
+                            <path d="M305 190 Q370 182, 435 190" stroke="#455A64" stroke-width="4" fill="none"/>
                         </g>
                         
                         <!-- ============================================
-                             COMPONENT: HYDRAULICS (Dump Bed)
-                             ID: truck-hydraulics  
-                             Sensors: HYDRAULIC PRESSURE, LOAD
+                             COMPONENT: HYDRAULICS - Dump Bed with cylinder
+                             ID: truck-hydraulics
                              ============================================ -->
-                        <g id="truck-hydraulics" class="svg-normal">
-                            <!-- Dump bed body -->
-                            <path d="M185 70 L185 162 L455 162 L485 70 Z" fill="url(#bedGradient)" stroke="#C4A000" stroke-width="2.5"/>
-                            <!-- Bed reinforcement ribs -->
-                            <line x1="215" y1="75" x2="200" y2="157" stroke="#D4940A" stroke-width="4"/>
-                            <line x1="265" y1="75" x2="242" y2="157" stroke="#D4940A" stroke-width="4"/>
-                            <line x1="315" y1="75" x2="284" y2="157" stroke="#D4940A" stroke-width="4"/>
-                            <line x1="365" y1="75" x2="326" y2="157" stroke="#D4940A" stroke-width="4"/>
-                            <line x1="415" y1="75" x2="368" y2="157" stroke="#D4940A" stroke-width="4"/>
-                            <line x1="460" y1="75" x2="405" y2="157" stroke="#D4940A" stroke-width="4"/>
-                            <!-- Top rail -->
-                            <rect x="183" y="62" width="305" height="12" rx="3" fill="#E8B600" stroke="#C4A000" stroke-width="1"/>
-                            <!-- Load material (gravel) -->
-                            <ellipse cx="330" cy="58" rx="125" ry="24" fill="url(#loadGradient)"/>
-                            <ellipse cx="300" cy="50" rx="85" ry="16" fill="#8B7D6B"/>
-                            <ellipse cx="360" cy="52" rx="65" ry="14" fill="#7A6B5F"/>
-                            <!-- Hydraulic cylinder assembly -->
-                            <rect x="190" y="125" width="14" height="42" rx="3" fill="#777" stroke="#555" stroke-width="1"/>
-                            <rect x="187" y="118" width="20" height="10" rx="2" fill="#999" stroke="#666" stroke-width="1"/>
-                            <circle cx="197" cy="123" r="4" fill="#888"/>
-                        </g>
-                        
-                        <!-- ============================================
-                             COMPONENT: ENGINE (Cabin)
-                             ID: truck-engine
-                             Sensors: ENGINE TEMP, OIL PRESSURE, FUEL RATE
-                             ============================================ -->
-                        <g id="truck-engine" class="svg-normal">
-                            <!-- Cabin body -->
-                            <path d="M48 92 L48 165 L180 165 L180 80 L125 55 L68 55 L48 78 Z" fill="url(#cabinGradient)" stroke="#C4880F" stroke-width="2.5"/>
-                            <!-- Cabin roof -->
-                            <rect x="63" y="46" width="68" height="12" rx="5" fill="#E89A1C" stroke="#D4880F" stroke-width="1"/>
-                            <!-- Door outline -->
-                            <rect x="92" y="78" width="82" height="82" rx="3" fill="none" stroke="#C4880F" stroke-width="2"/>
-                            <!-- Door handle -->
-                            <rect x="100" y="118" width="22" height="7" rx="3" fill="#888" stroke="#666" stroke-width="1"/>
-                            <!-- Front windshield -->
-                            <path d="M54 82 L70 60 L120 60 L120 82 Z" fill="url(#glassGradient)" stroke="#4AA8D8" stroke-width="2"/>
-                            <!-- Side window -->
-                            <rect x="98" y="64" width="78" height="48" rx="4" fill="url(#glassGradient)" stroke="#4AA8D8" stroke-width="2"/>
-                            <!-- Window divider -->
-                            <line x1="140" y1="64" x2="140" y2="112" stroke="#C4880F" stroke-width="3"/>
-                            <!-- Headlight -->
-                            <ellipse cx="52" cy="138" rx="10" ry="12" fill="#FFFDE7" stroke="#FFD54F" stroke-width="2"/>
-                            <ellipse cx="52" cy="138" rx="5" ry="6" fill="#FFF9C4"/>
-                            <!-- Side mirror -->
-                            <rect x="38" y="75" width="8" height="24" rx="2" fill="#3A3A3A"/>
-                            <rect x="30" y="79" width="12" height="15" rx="2" fill="#5CB8E8" stroke="#4AA8D8" stroke-width="1"/>
-                            <!-- Exhaust stack -->
-                            <rect x="160" y="32" width="10" height="50" rx="3" fill="#4A4A4A" stroke="#333" stroke-width="1"/>
-                            <ellipse cx="165" cy="32" rx="6" ry="4" fill="#3A3A3A"/>
-                            <!-- Front bumper -->
-                            <rect x="38" y="158" width="145" height="12" rx="4" fill="#3A3A3A" stroke="#2D2D2D" stroke-width="1"/>
-                            <!-- Front grille -->
-                            <rect x="45" y="142" width="30" height="18" rx="3" fill="#2D2D2D"/>
-                            <line x1="50" y1="145" x2="50" y2="157" stroke="#4A4A4A" stroke-width="3"/>
-                            <line x1="58" y1="145" x2="58" y2="157" stroke="#4A4A4A" stroke-width="3"/>
-                            <line x1="66" y1="145" x2="66" y2="157" stroke="#4A4A4A" stroke-width="3"/>
-                            <!-- Engine hood detail -->
-                            <rect x="48" y="130" width="25" height="14" rx="2" fill="#D4880F"/>
-                        </g>
-                        
-                        <!-- ============================================
-                             COMPONENT: WHEELS
-                             ID: truck-wheels
-                             Sensors: VIBRATION, BRAKE TEMP, SPEED
-                             ============================================ -->
-                        <g id="truck-wheels" class="svg-normal">
-                            <!-- FRONT WHEEL -->
-                            <g id="wheel-front">
-                                <circle cx="102" cy="202" r="36" fill="url(#wheelGradient)" stroke="#1A1A1A" stroke-width="4"/>
-                                <circle cx="102" cy="202" r="26" fill="#2D2D2D"/>
-                                <circle cx="102" cy="202" r="14" fill="#4A4A4A" stroke="#5A5A5A" stroke-width="2"/>
-                                <circle cx="102" cy="202" r="6" fill="#6A6A6A"/>
-                                <!-- Tread pattern -->
-                                <circle cx="102" cy="202" r="32" fill="none" stroke="#222" stroke-width="5" stroke-dasharray="10 7"/>
+                        <g id="truck-hydraulics" class="svg-normal" filter="url(#dropShadow)">
+                            <!-- Dump bed - angled with depth -->
+                            <path d="M175 75 L175 168 L475 168 L495 75 Z" fill="url(#bedGradient)" stroke="#E65100" stroke-width="2"/>
+                            
+                            <!-- Inner bed shadow for depth -->
+                            <path d="M180 80 L180 163 L470 163 L488 80 Z" fill="url(#bedInnerGradient)" opacity="0.3"/>
+                            
+                            <!-- Bed reinforcement ribs - 3D style -->
+                            <g stroke="#E65100" stroke-width="3">
+                                <line x1="210" y1="80" x2="195" y2="163"/>
+                                <line x1="255" y1="80" x2="235" y2="163"/>
+                                <line x1="300" y1="80" x2="275" y2="163"/>
+                                <line x1="345" y1="80" x2="315" y2="163"/>
+                                <line x1="390" y1="80" x2="355" y2="163"/>
+                                <line x1="435" y1="80" x2="395" y2="163"/>
+                                <line x1="475" y1="80" x2="430" y2="163"/>
                             </g>
                             
-                            <!-- REAR WHEEL 1 -->
-                            <g id="wheel-rear1">
-                                <circle cx="318" cy="202" r="36" fill="url(#wheelGradient)" stroke="#1A1A1A" stroke-width="4"/>
-                                <circle cx="318" cy="202" r="26" fill="#2D2D2D"/>
-                                <circle cx="318" cy="202" r="14" fill="#4A4A4A" stroke="#5A5A5A" stroke-width="2"/>
-                                <circle cx="318" cy="202" r="6" fill="#6A6A6A"/>
-                                <circle cx="318" cy="202" r="32" fill="none" stroke="#222" stroke-width="5" stroke-dasharray="10 7"/>
+                            <!-- Rib highlights -->
+                            <g stroke="#FFE082" stroke-width="1" opacity="0.5">
+                                <line x1="212" y1="80" x2="197" y2="163"/>
+                                <line x1="257" y1="80" x2="237" y2="163"/>
+                                <line x1="302" y1="80" x2="277" y2="163"/>
+                            </g>
+                            
+                            <!-- Top rail with 3D effect -->
+                            <rect x="173" y="65" width="325" height="14" rx="3" fill="#FFB300"/>
+                            <rect x="173" y="65" width="325" height="5" rx="2" fill="#FFCA28"/>
+                            
+                            <!-- Tailgate -->
+                            <rect x="470" y="75" width="8" height="93" fill="#E65100"/>
+                            <rect x="470" y="75" width="3" height="93" fill="#FF8F00"/>
+                            
+                            <!-- Dirt/Rock Load - realistic mound -->
+                            <ellipse cx="335" cy="62" rx="135" ry="28" fill="url(#loadGradient)"/>
+                            <ellipse cx="310" cy="55" rx="95" ry="18" fill="#795548"/>
+                            <ellipse cx="370" cy="52" rx="70" ry="15" fill="#6D4C41"/>
+                            <!-- Rock details -->
+                            <circle cx="280" cy="58" r="8" fill="#5D4037"/>
+                            <circle cx="350" cy="50" r="6" fill="#4E342E"/>
+                            <circle cx="400" cy="55" r="7" fill="#5D4037"/>
+                            <circle cx="320" cy="48" r="5" fill="#3E2723"/>
+                            
+                            <!-- HYDRAULIC SYSTEM - Main cylinder -->
+                            <g>
+                                <!-- Cylinder mount bracket -->
+                                <rect x="185" y="155" width="25" height="18" rx="3" fill="#455A64"/>
+                                <rect x="185" y="155" width="25" height="5" rx="2" fill="#607D8B"/>
+                                
+                                <!-- Main hydraulic cylinder -->
+                                <rect x="190" y="115" width="16" height="45" rx="4" fill="url(#hydraulicGradient)"/>
+                                
+                                <!-- Piston rod -->
+                                <rect x="194" y="85" width="8" height="35" rx="2" fill="#CFD8DC"/>
+                                <rect x="194" y="85" width="3" height="35" fill="#ECEFF1"/>
+                                
+                                <!-- Cylinder cap -->
+                                <ellipse cx="198" cy="85" rx="10" ry="5" fill="#78909C"/>
+                                <ellipse cx="198" cy="85" rx="6" ry="3" fill="#B0BEC5"/>
+                                
+                                <!-- Hydraulic lines -->
+                                <path d="M200 160 Q215 165, 230 160" stroke="#37474F" stroke-width="3" fill="none"/>
+                                <path d="M200 165 Q220 172, 240 165" stroke="#37474F" stroke-width="2" fill="none"/>
+                            </g>
+                        </g>
+                        
+                        <!-- ============================================
+                             COMPONENT: ENGINE - Realistic Cabin
+                             ID: truck-engine
+                             ============================================ -->
+                        <g id="truck-engine" class="svg-normal" filter="url(#dropShadow)">
+                            <!-- Cabin main body -->
+                            <path d="M42 95 L42 172 L175 172 L175 82 L130 52 L65 52 L42 80 Z" fill="url(#cabinGradient)" stroke="#E65100" stroke-width="2"/>
+                            
+                            <!-- Cabin side panel (darker) -->
+                            <path d="M42 95 L42 172 L50 172 L50 90 Z" fill="url(#cabinSideGradient)"/>
+                            
+                            <!-- Cabin roof with sunvisor -->
+                            <rect x="60" y="42" width="75" height="14" rx="4" fill="#FFA000"/>
+                            <rect x="60" y="42" width="75" height="5" rx="3" fill="#FFB300"/>
+                            <rect x="55" y="50" width="85" height="6" rx="2" fill="#E65100"/>
+                            
+                            <!-- Front windshield - curved with reflection -->
+                            <path d="M50 85 L68 56 L125 56 L125 85 Z" fill="url(#glassGradient)" stroke="#1565C0" stroke-width="2"/>
+                            <path d="M55 82 L70 60 L95 60 L95 75 Z" fill="url(#glassReflection)"/>
+                            
+                            <!-- Side window with frame -->
+                            <rect x="95" y="62" width="75" height="50" rx="4" fill="url(#glassGradient)" stroke="#1565C0" stroke-width="2"/>
+                            <path d="M100 67 L130 67 L130 90 L100 90 Z" fill="url(#glassReflection)"/>
+                            
+                            <!-- Window divider -->
+                            <rect x="138" y="62" width="4" height="50" fill="#E65100"/>
+                            
+                            <!-- Door with handle and details -->
+                            <rect x="90" y="80" width="80" height="88" rx="3" fill="none" stroke="#E65100" stroke-width="3"/>
+                            <!-- Door handle assembly -->
+                            <rect x="98" y="122" width="28" height="10" rx="4" fill="#455A64"/>
+                            <rect x="98" y="122" width="28" height="4" rx="2" fill="#607D8B"/>
+                            <rect x="102" y="120" width="8" height="14" rx="2" fill="#37474F"/>
+                            
+                            <!-- Door hinges -->
+                            <rect x="168" y="90" width="4" height="12" rx="1" fill="#455A64"/>
+                            <rect x="168" y="130" width="4" height="12" rx="1" fill="#455A64"/>
+                            
+                            <!-- Headlight assembly - realistic -->
+                            <ellipse cx="48" cy="140" rx="14" ry="16" fill="#263238"/>
+                            <ellipse cx="48" cy="140" rx="12" ry="14" fill="url(#headlightGlow)"/>
+                            <ellipse cx="46" cy="138" rx="6" ry="7" fill="#fff"/>
+                            <ellipse cx="44" cy="136" rx="2" ry="3" fill="#FFEB3B"/>
+                            
+                            <!-- Turn signal -->
+                            <rect x="36" y="155" width="16" height="8" rx="2" fill="#FF9800"/>
+                            <rect x="36" y="155" width="16" height="3" rx="1" fill="#FFB74D"/>
+                            
+                            <!-- Side mirror - chrome style -->
+                            <rect x="32" y="72" width="10" height="28" rx="3" fill="#37474F"/>
+                            <rect x="22" y="78" width="16" height="18" rx="3" fill="#64B5F6" stroke="#455A64" stroke-width="2"/>
+                            <rect x="24" y="80" width="8" height="10" fill="#E3F2FD" opacity="0.5"/>
+                            
+                            <!-- EXHAUST STACK - Vertical chrome pipe -->
+                            <rect x="158" y="25" width="14" height="58" rx="4" fill="url(#exhaustGradient)"/>
+                            <rect x="160" y="25" width="4" height="58" fill="#9E9E9E" opacity="0.4"/>
+                            <ellipse cx="165" cy="25" rx="8" ry="5" fill="#424242"/>
+                            <ellipse cx="165" cy="25" rx="5" ry="3" fill="#212121"/>
+                            
+                            <!-- Rain cap on exhaust -->
+                            <ellipse cx="165" cy="22" rx="10" ry="4" fill="#616161"/>
+                            
+                            <!-- Front bumper - heavy duty -->
+                            <rect x="32" y="165" width="150" height="15" rx="4" fill="#37474F"/>
+                            <rect x="32" y="165" width="150" height="5" rx="3" fill="#546E7A"/>
+                            
+                            <!-- Front grille - modern style -->
+                            <rect x="40" y="145" width="35" height="22" rx="4" fill="#263238"/>
+                            <line x1="47" y1="148" x2="47" y2="164" stroke="#37474F" stroke-width="4"/>
+                            <line x1="57" y1="148" x2="57" y2="164" stroke="#37474F" stroke-width="4"/>
+                            <line x1="67" y1="148" x2="67" y2="164" stroke="#37474F" stroke-width="4"/>
+                            
+                            <!-- Air intake -->
+                            <rect x="78" y="148" width="18" height="18" rx="3" fill="#263238"/>
+                            <rect x="80" y="150" width="14" height="14" rx="2" fill="#1A1A1A"/>
+                            
+                            <!-- Hood details -->
+                            <rect x="44" y="130" width="30" height="16" rx="3" fill="#FF8F00"/>
+                            <rect x="44" y="130" width="30" height="4" rx="2" fill="#FFA726"/>
+                            
+                            <!-- CAT/Brand badge area -->
+                            <rect x="100" y="142" width="40" height="12" rx="2" fill="#E65100"/>
+                            <rect x="102" y="144" width="36" height="8" rx="1" fill="#FFB300"/>
+                        </g>
+                        
+                        <!-- ============================================
+                             COMPONENT: WHEELS - Heavy duty mining tires
+                             ID: truck-wheels
+                             ============================================ -->
+                        <g id="truck-wheels" class="svg-normal">
+                            <!-- FRONT WHEEL - Large mining tire -->
+                            <g id="wheel-front" filter="url(#dropShadow)">
+                                <!-- Outer tire -->
+                                <circle cx="107" cy="218" r="42" fill="url(#tireGradient)"/>
+                                <!-- Tire sidewall detail -->
+                                <circle cx="107" cy="218" r="38" fill="none" stroke="#3D3D3D" stroke-width="3"/>
+                                <!-- Tread pattern -->
+                                <circle cx="107" cy="218" r="40" fill="none" stroke="#1A1A1A" stroke-width="6" stroke-dasharray="12 6"/>
+                                <circle cx="107" cy="218" r="35" fill="none" stroke="#2D2D2D" stroke-width="4" stroke-dasharray="8 8"/>
+                                <!-- Wheel rim -->
+                                <circle cx="107" cy="218" r="24" fill="url(#rimGradient)"/>
+                                <circle cx="107" cy="218" r="20" fill="#757575"/>
+                                <!-- Hub cap -->
+                                <circle cx="107" cy="218" r="14" fill="url(#hubGradient)"/>
+                                <!-- Lug nuts -->
+                                <circle cx="107" cy="206" r="3" fill="#9E9E9E"/>
+                                <circle cx="107" cy="230" r="3" fill="#9E9E9E"/>
+                                <circle cx="119" cy="218" r="3" fill="#9E9E9E"/>
+                                <circle cx="95" cy="218" r="3" fill="#9E9E9E"/>
+                                <circle cx="115" cy="209" r="3" fill="#9E9E9E"/>
+                                <circle cx="99" cy="227" r="3" fill="#9E9E9E"/>
+                                <!-- Center cap -->
+                                <circle cx="107" cy="218" r="6" fill="#BDBDBD"/>
+                                <circle cx="105" cy="216" r="2" fill="#E0E0E0"/>
+                            </g>
+                            
+                            <!-- REAR WHEEL 1 - Dual tire setup -->
+                            <g id="wheel-rear1" filter="url(#dropShadow)">
+                                <circle cx="340" cy="218" r="42" fill="url(#tireGradient)"/>
+                                <circle cx="340" cy="218" r="38" fill="none" stroke="#3D3D3D" stroke-width="3"/>
+                                <circle cx="340" cy="218" r="40" fill="none" stroke="#1A1A1A" stroke-width="6" stroke-dasharray="12 6"/>
+                                <circle cx="340" cy="218" r="35" fill="none" stroke="#2D2D2D" stroke-width="4" stroke-dasharray="8 8"/>
+                                <circle cx="340" cy="218" r="24" fill="url(#rimGradient)"/>
+                                <circle cx="340" cy="218" r="20" fill="#757575"/>
+                                <circle cx="340" cy="218" r="14" fill="url(#hubGradient)"/>
+                                <circle cx="340" cy="206" r="3" fill="#9E9E9E"/>
+                                <circle cx="340" cy="230" r="3" fill="#9E9E9E"/>
+                                <circle cx="352" cy="218" r="3" fill="#9E9E9E"/>
+                                <circle cx="328" cy="218" r="3" fill="#9E9E9E"/>
+                                <circle cx="348" cy="209" r="3" fill="#9E9E9E"/>
+                                <circle cx="332" cy="227" r="3" fill="#9E9E9E"/>
+                                <circle cx="340" cy="218" r="6" fill="#BDBDBD"/>
+                                <circle cx="338" cy="216" r="2" fill="#E0E0E0"/>
                             </g>
                             
                             <!-- REAR WHEEL 2 -->
-                            <g id="wheel-rear2">
-                                <circle cx="392" cy="202" r="36" fill="url(#wheelGradient)" stroke="#1A1A1A" stroke-width="4"/>
-                                <circle cx="392" cy="202" r="26" fill="#2D2D2D"/>
-                                <circle cx="392" cy="202" r="14" fill="#4A4A4A" stroke="#5A5A5A" stroke-width="2"/>
-                                <circle cx="392" cy="202" r="6" fill="#6A6A6A"/>
-                                <circle cx="392" cy="202" r="32" fill="none" stroke="#222" stroke-width="5" stroke-dasharray="10 7"/>
+                            <g id="wheel-rear2" filter="url(#dropShadow)">
+                                <circle cx="408" cy="218" r="42" fill="url(#tireGradient)"/>
+                                <circle cx="408" cy="218" r="38" fill="none" stroke="#3D3D3D" stroke-width="3"/>
+                                <circle cx="408" cy="218" r="40" fill="none" stroke="#1A1A1A" stroke-width="6" stroke-dasharray="12 6"/>
+                                <circle cx="408" cy="218" r="35" fill="none" stroke="#2D2D2D" stroke-width="4" stroke-dasharray="8 8"/>
+                                <circle cx="408" cy="218" r="24" fill="url(#rimGradient)"/>
+                                <circle cx="408" cy="218" r="20" fill="#757575"/>
+                                <circle cx="408" cy="218" r="14" fill="url(#hubGradient)"/>
+                                <circle cx="408" cy="206" r="3" fill="#9E9E9E"/>
+                                <circle cx="408" cy="230" r="3" fill="#9E9E9E"/>
+                                <circle cx="420" cy="218" r="3" fill="#9E9E9E"/>
+                                <circle cx="396" cy="218" r="3" fill="#9E9E9E"/>
+                                <circle cx="416" cy="209" r="3" fill="#9E9E9E"/>
+                                <circle cx="400" cy="227" r="3" fill="#9E9E9E"/>
+                                <circle cx="408" cy="218" r="6" fill="#BDBDBD"/>
+                                <circle cx="406" cy="216" r="2" fill="#E0E0E0"/>
                             </g>
+                            
+                            <!-- Mud flaps -->
+                            <rect x="145" y="200" width="18" height="35" rx="2" fill="#263238"/>
+                            <rect x="280" y="200" width="18" height="35" rx="2" fill="#263238"/>
+                            <rect x="445" y="200" width="18" height="35" rx="2" fill="#263238"/>
                         </g>
                         
                         <!-- ============================================
@@ -1260,19 +1526,19 @@
                         <!-- SMOKE: WHEELS (from wheel/brake area) -->
                         <g id="smoke-wheels" class="smoke-group">
                             <!-- Front wheel smoke -->
-                            <ellipse class="smoke-puff smoke-puff-1" cx="102" cy="165" rx="10" ry="7" filter="url(#smokeBlur)"/>
-                            <ellipse class="smoke-puff smoke-puff-2" cx="100" cy="152" rx="12" ry="8" filter="url(#smokeBlur)"/>
-                            <ellipse class="smoke-puff smoke-puff-3" cx="105" cy="140" rx="14" ry="9" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-puff smoke-puff-1" cx="107" cy="175" rx="10" ry="7" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-puff smoke-puff-2" cx="105" cy="162" rx="12" ry="8" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-puff smoke-puff-3" cx="110" cy="150" rx="14" ry="9" filter="url(#smokeBlur)"/>
                             <!-- Rear wheel 1 smoke -->
-                            <ellipse class="smoke-puff smoke-puff-4" cx="318" cy="165" rx="10" ry="7" filter="url(#smokeBlur)"/>
-                            <ellipse class="smoke-puff smoke-puff-5" cx="320" cy="152" rx="12" ry="8" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-puff smoke-puff-4" cx="340" cy="175" rx="10" ry="7" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-puff smoke-puff-5" cx="342" cy="162" rx="12" ry="8" filter="url(#smokeBlur)"/>
                             <!-- Rear wheel 2 smoke -->
-                            <ellipse class="smoke-wisp smoke-wisp-1" cx="392" cy="165" rx="10" ry="7" filter="url(#smokeBlur)"/>
-                            <ellipse class="smoke-wisp smoke-wisp-2" cx="390" cy="152" rx="12" ry="8" filter="url(#smokeBlur)"/>
-                            <ellipse class="smoke-wisp smoke-wisp-3" cx="395" cy="140" rx="14" ry="9" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-wisp smoke-wisp-1" cx="408" cy="175" rx="10" ry="7" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-wisp smoke-wisp-2" cx="406" cy="162" rx="12" ry="8" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-wisp smoke-wisp-3" cx="410" cy="150" rx="14" ry="9" filter="url(#smokeBlur)"/>
                             <!-- Dark particles from brakes -->
-                            <ellipse class="smoke-dark smoke-dark-1" cx="102" cy="158" rx="6" ry="5" filter="url(#smokeBlur)"/>
-                            <ellipse class="smoke-dark smoke-dark-2" cx="355" cy="158" rx="8" ry="6" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-dark smoke-dark-1" cx="107" cy="168" rx="6" ry="5" filter="url(#smokeBlur)"/>
+                            <ellipse class="smoke-dark smoke-dark-2" cx="374" cy="168" rx="8" ry="6" filter="url(#smokeBlur)"/>
                         </g>
                     </svg>
                     
