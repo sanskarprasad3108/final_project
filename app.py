@@ -747,6 +747,14 @@ def simulate_data():
     })
     
     # Build response (for main dashboard)
+    # 3D visualization with actual sensor values (not PCA)
+    # X: Engine Temperature, Y: Hydraulic Pressure, Z: Vibration
+    sensor_3d_coords = [
+        float(raw_data[7]),  # Engine Temp (°C)
+        float(raw_data[6]),  # Hydraulic Pressure (bar)
+        float(raw_data[4])   # Vibration (mm/s)
+    ]
+    
     response = {
         'timestamp': shared_state.timestamp,
         'sensor_readings': all_sensors,
@@ -755,6 +763,7 @@ def simulate_data():
         'threshold': round(float(main_threshold), 4),
         'is_anomaly': bool(global_anomaly),
         'pca_coords': global_pca_coords,
+        'sensor_3d_coords': sensor_3d_coords,
         'affected_components': affected_components,
         'failed_components': active_failures,
         'failure_probabilities': COMPONENT_FAILURE_WEIGHTS,

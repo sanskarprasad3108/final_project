@@ -992,7 +992,7 @@
 
             <div class="plot-panel">
                 <div class="panel-title">
-                    <span>🔮</span> 3D Feature Space (PCA)
+                    <span>🔮</span> 3D Sensor Feature Space
                 </div>
                 <div id="pca-plot"></div>
             </div>
@@ -1391,39 +1391,44 @@
         let injectionActive = false;
         let activeFailedComponents = [];  // Track which components are currently failing
         
-        // PCA scatter data
+        // PCA scatter data (now used for actual sensor values)
         let pcaNormalX = [], pcaNormalY = [], pcaNormalZ = [];
         let pcaAnomalyX = [], pcaAnomalyY = [], pcaAnomalyZ = [];
+        // Hover text arrays for showing actual sensor values
+        let pcaNormalHover = [], pcaAnomalyHover = [];
         const MAX_PCA_POINTS = 200;
 
         // Initialize plots
         function initPlots() {
-            // PCA 3D Plot
+            // 3D Sensor Feature Plot (using actual sensor values)
             const pcaLayout = {
                 paper_bgcolor: 'rgba(0,0,0,0)',
                 plot_bgcolor: 'rgba(10,10,30,0.5)',
                 margin: { l: 0, r: 0, t: 0, b: 0 },
                 scene: {
                     xaxis: { 
-                        title: '', 
+                        title: { text: 'Engine Temp (°C)', font: { color: '#888', size: 11 } }, 
                         showgrid: true, 
                         gridcolor: '#1a3a5c',
                         zerolinecolor: '#1a3a5c',
-                        showticklabels: false
+                        showticklabels: true,
+                        tickfont: { color: '#666', size: 9 }
                     },
                     yaxis: { 
-                        title: '', 
+                        title: { text: 'Hydraulic Pressure (bar)', font: { color: '#888', size: 11 } }, 
                         showgrid: true, 
                         gridcolor: '#1a3a5c',
                         zerolinecolor: '#1a3a5c',
-                        showticklabels: false
+                        showticklabels: true,
+                        tickfont: { color: '#666', size: 9 }
                     },
                     zaxis: { 
-                        title: '', 
+                        title: { text: 'Vibration (mm/s)', font: { color: '#888', size: 11 } }, 
                         showgrid: true, 
                         gridcolor: '#1a3a5c',
                         zerolinecolor: '#1a3a5c',
-                        showticklabels: false
+                        showticklabels: true,
+                        tickfont: { color: '#666', size: 9 }
                     },
                     bgcolor: 'rgba(10,10,30,0.5)',
                     camera: {
@@ -1439,14 +1444,22 @@
                     mode: 'markers',
                     type: 'scatter3d',
                     marker: { size: 4, color: '#00ff88', opacity: 0.7 },
-                    name: 'Normal'
+                    name: 'Normal',
+                    hovertemplate: '<b>Normal Reading</b><br>' +
+                        'Engine Temp: %{x:.1f}°C<br>' +
+                        'Hydraulic Pressure: %{y:.1f} bar<br>' +
+                        'Vibration: %{z:.2f} mm/s<extra></extra>'
                 },
                 {
                     x: [], y: [], z: [],
                     mode: 'markers',
                     type: 'scatter3d',
                     marker: { size: 6, color: '#ff4444', opacity: 0.9 },
-                    name: 'Anomaly'
+                    name: 'Anomaly',
+                    hovertemplate: '<b>⚠️ ANOMALY</b><br>' +
+                        'Engine Temp: %{x:.1f}°C<br>' +
+                        'Hydraulic Pressure: %{y:.1f} bar<br>' +
+                        'Vibration: %{z:.2f} mm/s<extra></extra>'
                 }
             ], pcaLayout, { responsive: true, displayModeBar: false });
 
@@ -1485,7 +1498,8 @@
             ], chartLayout, { responsive: true, displayModeBar: false });
         }
 
-        // Update PCA plot
+        // Update 3D Sensor Feature plot with actual sensor values
+        // X: Engine Temperature (°C), Y: Hydraulic Pressure (bar), Z: Vibration (mm/s)
         function updatePCAPlot(coords, isAnomaly) {
             if (isAnomaly) {
                 pcaAnomalyX.push(coords[0]);
@@ -1773,7 +1787,8 @@
                 updateSystemStatus(data.is_anomaly, data.reconstruction_error, data.threshold);
                 // Pass anomalous_parameters for per-sensor highlighting
                 updateSensorReadings(data.sensor_readings, data.is_anomaly, data.anomalous_parameters || []);
-                updatePCAPlot(data.pca_coords, data.is_anomaly);
+                // Use sensor_3d_coords for actual sensor feature visualization
+                updatePCAPlot(data.sensor_3d_coords || data.pca_coords, data.is_anomaly);
                 updateCharts(data.time_series);
                 updateTruckComponents(data.affected_components);
                 
