@@ -948,12 +948,6 @@
                     <button class="btn btn-danger" id="btn-inject" onclick="toggleInjection()">
                         🔥 INJECT FAILURE 🔥
                     </button>
-                    <div id="component-options" style="display: none; margin-top: 10px; display: flex; flex-direction: column; gap: 8px;">
-                        <button class="btn btn-warning" onclick="injectComponent('engine')">🔧 Engine</button>
-                        <button class="btn btn-warning" onclick="injectComponent('wheels')">🛞 Wheels</button>
-                        <button class="btn btn-warning" onclick="injectComponent('chassis')">🛡️ Chassis</button>
-                        <button class="btn btn-warning" onclick="injectComponent('hydraulics')">💧 Hydraulics</button>
-                    </div>
                 </div>
                 <div class="toggle-status">
                     <div class="status-item">
@@ -1729,47 +1723,16 @@
             });
         }
 
-        // Toggle injection UI (show/hide component options)
+        // Toggle injection
         async function toggleInjection() {
-            const options = document.getElementById('component-options');
-            const btn = document.getElementById('btn-inject');
-            
-            if (options.style.display === 'none' || options.style.display === '') {
-                // Show component options
-                options.style.display = 'flex';
-                btn.innerHTML = '⏹ STOP INJECTION';
-            } else {
-                // Hide options and stop injection
-                options.style.display = 'none';
-                btn.innerHTML = '🔥 INJECT FAILURE 🔥';
-                
-                // Stop any active injection
-                try {
-                    const response = await fetch('/toggle_injection', { method: 'POST' });
-                    const data = await response.json();
-                    injectionActive = data.inject_anomaly;
-                    activeFailedComponents = data.failed_components || [];
-                    updateInjectionUI();
-                } catch (error) {
-                    console.error('Error stopping injection:', error);
-                }
-            }
-        }
-
-        // Inject specific component
-        async function injectComponent(component) {
             try {
-                const response = await fetch('/toggle_injection', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ component })
-                });
+                const response = await fetch('/toggle_injection', { method: 'POST' });
                 const data = await response.json();
                 injectionActive = data.inject_anomaly;
                 activeFailedComponents = data.failed_components || [];
                 updateInjectionUI();
             } catch (error) {
-                console.error('Error injecting component:', error);
+                console.error('Error toggling injection:', error);
             }
         }
 
@@ -1778,22 +1741,18 @@
             const btn = document.getElementById('btn-inject');
             const dot = document.getElementById('dot-injection');
             const label = document.getElementById('label-injection');
-            const options = document.getElementById('component-options');
 
             if (injectionActive) {
-                // Keep options visible if injection is active
-                options.style.display = 'flex';
-                btn.innerHTML = '⏹ STOP INJECTION';
-                dot.className = 'status-dot danger';
-                
+                btn.className = 'btn btn-warning';
                 // Show which components are failing
                 const failureText = activeFailedComponents.length > 0 
                     ? activeFailedComponents.map(c => c.toUpperCase()).join(' + ')
                     : 'ACTIVE';
+                btn.innerHTML = `🛑 STOP: ${failureText} 🛑`;
+                dot.className = 'status-dot danger';
                 label.textContent = `Failing: ${failureText}`;
             } else {
-                // Hide options when no injection
-                options.style.display = 'none';
+                btn.className = 'btn btn-danger';
                 btn.innerHTML = '🔥 INJECT FAILURE 🔥';
                 dot.className = 'status-dot inactive';
                 label.textContent = 'Inject Failure: OFF';
