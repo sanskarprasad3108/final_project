@@ -507,22 +507,30 @@ def component_interface(component_name):
 
 @app.route('/toggle_injection', methods=['POST'])
 def toggle_injection():
-    """Toggle anomaly injection state."""
+    """Toggle anomaly injection state or inject specific component."""
+    data = request.get_json() or {}
+    component = data.get('component')
+    
     with shared_state.lock:
-        shared_state.inject_anomaly = not shared_state.inject_anomaly
-        current_state = shared_state.inject_anomaly
-        
-        if current_state:
-            shared_state.active_failures = select_failure_scenario()
-            shared_state.failure_locked = True
-            logger.info(f"[INJECTION ON] Failing: {shared_state.active_failures}")
+        if component:
+            # Inject specific component
+            valid_components = ['engine', 'hydraulic', 'wheels', 'chassis']
+            if component in valid_components:
+                shared_state.inject_anomaly = True
+                shared_state.active_failures = [component]
+                shared_state.failure_locked = True
+                logger.info(f"[INJECTION ON] Failing: {component}")
+            else:
+                return jsonify({'error': 'Invalid component'}), 400
         else:
+            # Stop injection
+            shared_state.inject_anomaly = False
             shared_state.active_failures = []
             shared_state.failure_locked = False
             logger.info("[INJECTION OFF] All normal")
     
     return jsonify({
-        'inject_anomaly': current_state,
+        'inject_anomaly': shared_state.inject_anomaly,
         'failed_components': shared_state.active_failures
     })
 
