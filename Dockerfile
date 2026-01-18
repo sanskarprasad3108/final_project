@@ -12,7 +12,8 @@ FROM python:3.11-slim
 # ---------------------------------------------------------------------------
 LABEL maintainer="Sanskar P"
 LABEL description="Dump Truck Multi-Interface Anomaly Detection System"
-LABEL version="1.0"
+LABEL version="2.0"
+LABEL changelog="Added Past Anomaly History feature with persistence"
 
 # ---------------------------------------------------------------------------
 # ENVIRONMENT VARIABLES
@@ -79,6 +80,13 @@ COPY *.png ./
 
 # Copy main application code
 COPY app.py ./
+
+# ---------------------------------------------------------------------------
+# DATA PERSISTENCE DIRECTORY
+# ---------------------------------------------------------------------------
+# Create directory for anomaly history (will be volume-mounted in production)
+# The anomaly_history.json file will be created at runtime
+RUN mkdir -p /app/data && chmod 755 /app/data
 
 # ---------------------------------------------------------------------------
 # EXPOSE PORT

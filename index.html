@@ -879,6 +879,223 @@
             line-height: 1.4;
         }
 
+        /* ========================================
+           PAST ANOMALY HISTORY PANEL
+           Displays historical anomaly records
+           ======================================== */
+        .history-panel {
+            background: rgba(20, 20, 40, 0.9);
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid rgba(255, 68, 68, 0.3);
+            margin-top: 15px;
+            max-height: 350px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .history-title {
+            font-size: 1rem;
+            color: #ff6b6b;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            border-bottom: 1px solid rgba(255, 68, 68, 0.3);
+            padding-bottom: 10px;
+            flex-shrink: 0;
+        }
+
+        .history-title-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .history-count {
+            font-size: 0.7rem;
+            color: #888;
+            background: rgba(255, 68, 68, 0.2);
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        .history-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .history-btn {
+            padding: 4px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.65rem;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+        }
+
+        .history-btn-export {
+            background: rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+            border: 1px solid rgba(0, 212, 255, 0.4);
+        }
+
+        .history-btn-export:hover {
+            background: rgba(0, 212, 255, 0.4);
+        }
+
+        .history-btn-clear {
+            background: rgba(255, 68, 68, 0.2);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 68, 68, 0.4);
+        }
+
+        .history-btn-clear:hover {
+            background: rgba(255, 68, 68, 0.4);
+        }
+
+        .history-table-container {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 68, 68, 0.5) rgba(0, 0, 0, 0.2);
+        }
+
+        .history-table-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .history-table-container::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 3px;
+        }
+
+        .history-table-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 68, 68, 0.5);
+            border-radius: 3px;
+        }
+
+        .history-table-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 68, 68, 0.7);
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.7rem;
+        }
+
+        .history-table th {
+            background: rgba(255, 68, 68, 0.15);
+            color: #ff6b6b;
+            padding: 8px 6px;
+            text-align: left;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        .history-table td {
+            padding: 8px 6px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: #ccc;
+            vertical-align: middle;
+        }
+
+        .history-table tr:hover td {
+            background: rgba(255, 68, 68, 0.1);
+        }
+
+        .history-component {
+            font-weight: 600;
+            color: #00d4ff;
+        }
+
+        .history-sensor {
+            color: #888;
+            font-size: 0.65rem;
+        }
+
+        .history-value {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #ff6b6b;
+        }
+
+        .history-type {
+            font-size: 0.6rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+
+        .history-type-breach {
+            background: rgba(255, 170, 0, 0.2);
+            color: #ffaa00;
+            border: 1px solid rgba(255, 170, 0, 0.3);
+        }
+
+        .history-type-injected {
+            background: rgba(255, 68, 68, 0.2);
+            color: #ff4444;
+            border: 1px solid rgba(255, 68, 68, 0.3);
+        }
+
+        .history-timestamp {
+            font-size: 0.6rem;
+            color: #666;
+            white-space: nowrap;
+        }
+
+        .history-empty {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        .history-empty-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        /* New entry animation */
+        .history-new-entry {
+            animation: historyHighlight 1.5s ease-out;
+        }
+
+        @keyframes historyHighlight {
+            0% {
+                background: rgba(255, 68, 68, 0.4);
+            }
+            100% {
+                background: transparent;
+            }
+        }
+
+        /* Filter dropdown */
+        .history-filter {
+            padding: 4px 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            background: rgba(0, 0, 0, 0.3);
+            color: #ccc;
+            font-size: 0.65rem;
+            cursor: pointer;
+        }
+
+        .history-filter:focus {
+            outline: none;
+            border-color: rgba(0, 212, 255, 0.5);
+        }
+
         /* Footer */
         .footer {
             grid-column: 1 / -1;
@@ -995,6 +1212,52 @@
                     <span>🔮</span> 3D Sensor Feature Space
                 </div>
                 <div id="pca-plot"></div>
+            </div>
+
+            <!-- Past Anomaly History Panel -->
+            <div class="history-panel">
+                <div class="history-title">
+                    <div class="history-title-left">
+                        <span>📜</span> Past Anomaly History
+                        <span class="history-count" id="history-count">0 records</span>
+                    </div>
+                    <div class="history-controls">
+                        <select class="history-filter" id="history-filter" onchange="filterAnomalyHistory()">
+                            <option value="all">All Components</option>
+                            <option value="Engine">Engine</option>
+                            <option value="Hydraulic">Hydraulics</option>
+                            <option value="Wheels">Wheels</option>
+                            <option value="Chassis">Chassis</option>
+                        </select>
+                        <button class="history-btn history-btn-export" onclick="exportAnomalyHistory()" title="Export as CSV">
+                            📥 Export
+                        </button>
+                        <button class="history-btn history-btn-clear" onclick="clearAnomalyHistory()" title="Clear History">
+                            🗑️ Clear
+                        </button>
+                    </div>
+                </div>
+                <div class="history-table-container" id="history-container">
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Component</th>
+                                <th>Sensor</th>
+                                <th>Value</th>
+                                <th>Type</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-tbody">
+                            <!-- History entries populated by JavaScript -->
+                        </tbody>
+                    </table>
+                    <div class="history-empty" id="history-empty">
+                        <div class="history-empty-icon">📋</div>
+                        <div>No anomaly history yet</div>
+                        <div style="font-size: 0.7rem; margin-top: 5px;">Anomalies will appear here when detected</div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -1664,6 +1927,144 @@
         let pcaNormalHover = [], pcaAnomalyHover = [];
         const MAX_PCA_POINTS = 200;
 
+        // ============================================================
+        // ANOMALY HISTORY MANAGEMENT
+        // ============================================================
+        let anomalyHistoryCache = [];
+        let currentHistoryFilter = 'all';
+        let lastDisplayedHistoryIds = new Set();
+
+        // Load anomaly history from server
+        async function loadAnomalyHistory() {
+            try {
+                const response = await fetch('/api/anomaly_history');
+                const data = await response.json();
+                anomalyHistoryCache = data.history || [];
+                renderAnomalyHistory();
+            } catch (error) {
+                console.error('Error loading anomaly history:', error);
+            }
+        }
+
+        // Render anomaly history table
+        function renderAnomalyHistory() {
+            const tbody = document.getElementById('history-tbody');
+            const emptyDiv = document.getElementById('history-empty');
+            const countSpan = document.getElementById('history-count');
+            
+            if (!tbody) return;
+            
+            // Filter history if needed
+            let filteredHistory = anomalyHistoryCache;
+            if (currentHistoryFilter !== 'all') {
+                filteredHistory = anomalyHistoryCache.filter(
+                    entry => entry.component.toLowerCase() === currentHistoryFilter.toLowerCase()
+                );
+            }
+            
+            // Update count
+            countSpan.textContent = `${filteredHistory.length} records`;
+            
+            // Show/hide empty state
+            if (filteredHistory.length === 0) {
+                tbody.innerHTML = '';
+                emptyDiv.style.display = 'block';
+                return;
+            }
+            emptyDiv.style.display = 'none';
+            
+            // Build table rows
+            const newIds = new Set();
+            tbody.innerHTML = filteredHistory.map(entry => {
+                const isNew = !lastDisplayedHistoryIds.has(entry.id);
+                newIds.add(entry.id);
+                
+                const timestamp = new Date(entry.timestamp);
+                const timeStr = timestamp.toLocaleTimeString('en-US', { 
+                    hour: '2-digit', 
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false 
+                });
+                const dateStr = timestamp.toLocaleDateString('en-US', { 
+                    month: 'short', 
+                    day: 'numeric' 
+                });
+                
+                const typeClass = entry.anomalyType.includes('Inject') ? 'history-type-injected' : 'history-type-breach';
+                const typeText = entry.anomalyType.includes('Inject') ? '🔥 Injected' : '⚠️ Breach';
+                
+                return `
+                    <tr class="${isNew ? 'history-new-entry' : ''}" data-id="${entry.id}">
+                        <td>
+                            <span class="history-component">${entry.component}</span>
+                        </td>
+                        <td>
+                            <span class="history-sensor">${entry.sensor}</span>
+                        </td>
+                        <td>
+                            <span class="history-value">${entry.value}</span>
+                        </td>
+                        <td>
+                            <span class="history-type ${typeClass}">${typeText}</span>
+                        </td>
+                        <td>
+                            <span class="history-timestamp">${dateStr}<br>${timeStr}</span>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            
+            lastDisplayedHistoryIds = newIds;
+        }
+
+        // Filter anomaly history by component
+        function filterAnomalyHistory() {
+            const filterSelect = document.getElementById('history-filter');
+            currentHistoryFilter = filterSelect.value;
+            renderAnomalyHistory();
+        }
+
+        // Clear anomaly history
+        async function clearAnomalyHistory() {
+            if (!confirm('Are you sure you want to clear all anomaly history?')) {
+                return;
+            }
+            
+            try {
+                await fetch('/api/anomaly_history/clear', { method: 'POST' });
+                anomalyHistoryCache = [];
+                lastDisplayedHistoryIds.clear();
+                renderAnomalyHistory();
+            } catch (error) {
+                console.error('Error clearing history:', error);
+            }
+        }
+
+        // Export anomaly history as CSV
+        function exportAnomalyHistory() {
+            window.open('/api/anomaly_history/export', '_blank');
+        }
+
+        // Refresh history (called periodically to get new entries)
+        async function refreshAnomalyHistory() {
+            try {
+                const response = await fetch('/api/anomaly_history');
+                const data = await response.json();
+                const newHistory = data.history || [];
+                
+                // Check if there are new entries
+                if (newHistory.length !== anomalyHistoryCache.length || 
+                    (newHistory.length > 0 && anomalyHistoryCache.length > 0 && 
+                     newHistory[0].id !== anomalyHistoryCache[0].id)) {
+                    anomalyHistoryCache = newHistory;
+                    renderAnomalyHistory();
+                }
+            } catch (error) {
+                console.error('Error refreshing anomaly history:', error);
+            }
+        }
+
         // Initialize plots
         function initPlots() {
             // 3D Sensor Feature Plot (using actual sensor values)
@@ -2064,6 +2465,11 @@
                 // Update component navigation status indicators
                 updateComponentNavStatus(data.affected_components || {});
                 
+                // Refresh anomaly history if anomaly detected
+                if (data.is_anomaly) {
+                    refreshAnomalyHistory();
+                }
+                
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -2141,6 +2547,9 @@
         document.addEventListener('DOMContentLoaded', () => {
             initPlots();
             
+            // Load anomaly history on page load
+            loadAnomalyHistory();
+            
             // Get initial injection state including any active failures and probabilities
             fetch('/get_injection_state')
                 .then(r => r.json())
@@ -2162,6 +2571,9 @@
                         updateFailureProbabilities(data.probabilities, activeFailedComponents);
                     }
                 });
+            
+            // Periodically refresh history to catch any missed updates
+            setInterval(refreshAnomalyHistory, 5000);
         });
     </script>
 </body>

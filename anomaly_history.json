@@ -1,0 +1,1002 @@
+[
+  {
+    "id": "1768575517859_Wheels_SPEED KM/H",
+    "component": "Wheels",
+    "sensor": "SPEED KM/H",
+    "value": 77.49,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:37.856565",
+    "reconstructionError": 49.3899,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575517855_Wheels_BRAKE TEMP \u00b0C",
+    "component": "Wheels",
+    "sensor": "BRAKE TEMP \u00b0C",
+    "value": 175.96,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:37.851955",
+    "reconstructionError": 49.3899,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575517850_Wheels_VIBRATION MM/S",
+    "component": "Wheels",
+    "sensor": "VIBRATION MM/S",
+    "value": 6.88,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:37.850774",
+    "reconstructionError": 49.3899,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575517775_Hydraulic_LOAD TONS",
+    "component": "Hydraulic",
+    "sensor": "LOAD TONS",
+    "value": 91.9,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:37.772518",
+    "reconstructionError": 90.1039,
+    "threshold": 1.836
+  },
+  {
+    "id": "1768575517771_Hydraulic_HYDRAULIC PRESSURE BAR",
+    "component": "Hydraulic",
+    "sensor": "HYDRAULIC PRESSURE BAR",
+    "value": 311.16,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:37.771624",
+    "reconstructionError": 90.1039,
+    "threshold": 1.836
+  },
+  {
+    "id": "1768575516480_Chassis_LOAD TONS",
+    "component": "Chassis",
+    "sensor": "LOAD TONS",
+    "value": 91.67,
+    "anomalyType": "Threshold Breach",
+    "timestamp": "2026-01-16T20:28:36.475553",
+    "reconstructionError": 75.5364,
+    "threshold": 4.3323
+  },
+  {
+    "id": "1768575516474_Chassis_VIBRATION MM/S",
+    "component": "Chassis",
+    "sensor": "VIBRATION MM/S",
+    "value": 7.07,
+    "anomalyType": "Threshold Breach",
+    "timestamp": "2026-01-16T20:28:36.474627",
+    "reconstructionError": 75.5364,
+    "threshold": 4.3323
+  },
+  {
+    "id": "1768575515840_Wheels_SPEED KM/H",
+    "component": "Wheels",
+    "sensor": "SPEED KM/H",
+    "value": 80.15,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:35.837069",
+    "reconstructionError": 54.343,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575515835_Wheels_BRAKE TEMP \u00b0C",
+    "component": "Wheels",
+    "sensor": "BRAKE TEMP \u00b0C",
+    "value": 178.45,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:35.831871",
+    "reconstructionError": 54.343,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575515830_Wheels_VIBRATION MM/S",
+    "component": "Wheels",
+    "sensor": "VIBRATION MM/S",
+    "value": 7.79,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:35.830331",
+    "reconstructionError": 54.343,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575515721_Hydraulic_LOAD TONS",
+    "component": "Hydraulic",
+    "sensor": "LOAD TONS",
+    "value": 101.22,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:35.714300",
+    "reconstructionError": 136.9587,
+    "threshold": 1.836
+  },
+  {
+    "id": "1768575515712_Hydraulic_HYDRAULIC PRESSURE BAR",
+    "component": "Hydraulic",
+    "sensor": "HYDRAULIC PRESSURE BAR",
+    "value": 332.81,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:35.712575",
+    "reconstructionError": 136.9587,
+    "threshold": 1.836
+  },
+  {
+    "id": "1768575514142_Chassis_LOAD TONS",
+    "component": "Chassis",
+    "sensor": "LOAD TONS",
+    "value": 91.16,
+    "anomalyType": "Threshold Breach",
+    "timestamp": "2026-01-16T20:28:34.138521",
+    "reconstructionError": 69.8584,
+    "threshold": 4.3323
+  },
+  {
+    "id": "1768575514137_Chassis_VIBRATION MM/S",
+    "component": "Chassis",
+    "sensor": "VIBRATION MM/S",
+    "value": 6.78,
+    "anomalyType": "Threshold Breach",
+    "timestamp": "2026-01-16T20:28:34.137530",
+    "reconstructionError": 69.8584,
+    "threshold": 4.3323
+  },
+  {
+    "id": "1768575513697_Wheels_SPEED KM/H",
+    "component": "Wheels",
+    "sensor": "SPEED KM/H",
+    "value": 82.33,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:33.688424",
+    "reconstructionError": 49.2289,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575513683_Wheels_BRAKE TEMP \u00b0C",
+    "component": "Wheels",
+    "sensor": "BRAKE TEMP \u00b0C",
+    "value": 171.12,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:33.678506",
+    "reconstructionError": 49.2289,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575513677_Wheels_VIBRATION MM/S",
+    "component": "Wheels",
+    "sensor": "VIBRATION MM/S",
+    "value": 6.64,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:33.677395",
+    "reconstructionError": 49.2289,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575513551_Hydraulic_LOAD TONS",
+    "component": "Hydraulic",
+    "sensor": "LOAD TONS",
+    "value": 91.66,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:33.545431",
+    "reconstructionError": 101.5095,
+    "threshold": 1.836
+  },
+  {
+    "id": "1768575513540_Hydraulic_HYDRAULIC PRESSURE BAR",
+    "component": "Hydraulic",
+    "sensor": "HYDRAULIC PRESSURE BAR",
+    "value": 322.25,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:33.540759",
+    "reconstructionError": 101.5095,
+    "threshold": 1.836
+  },
+  {
+    "id": "1768575511823_Chassis_LOAD TONS",
+    "component": "Chassis",
+    "sensor": "LOAD TONS",
+    "value": 102.84,
+    "anomalyType": "Threshold Breach",
+    "timestamp": "2026-01-16T20:28:31.819547",
+    "reconstructionError": 102.4009,
+    "threshold": 4.3323
+  },
+  {
+    "id": "1768575511817_Chassis_VIBRATION MM/S",
+    "component": "Chassis",
+    "sensor": "VIBRATION MM/S",
+    "value": 7.09,
+    "anomalyType": "Threshold Breach",
+    "timestamp": "2026-01-16T20:28:31.817496",
+    "reconstructionError": 102.4009,
+    "threshold": 4.3323
+  },
+  {
+    "id": "1768575511682_Wheels_SPEED KM/H",
+    "component": "Wheels",
+    "sensor": "SPEED KM/H",
+    "value": 76.97,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:31.676591",
+    "reconstructionError": 65.4161,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575511675_Wheels_BRAKE TEMP \u00b0C",
+    "component": "Wheels",
+    "sensor": "BRAKE TEMP \u00b0C",
+    "value": 188.85,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:31.669857",
+    "reconstructionError": 65.4161,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575511661_Wheels_VIBRATION MM/S",
+    "component": "Wheels",
+    "sensor": "VIBRATION MM/S",
+    "value": 7.09,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:31.660945",
+    "reconstructionError": 65.4161,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575511543_Hydraulic_LOAD TONS",
+    "component": "Hydraulic",
+    "sensor": "LOAD TONS",
+    "value": 102.84,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:31.532589",
+    "reconstructionError": 112.3989,
+    "threshold": 1.836
+  },
+  {
+    "id": "1768575511531_Hydraulic_HYDRAULIC PRESSURE BAR",
+    "component": "Hydraulic",
+    "sensor": "HYDRAULIC PRESSURE BAR",
+    "value": 304.44,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:31.531452",
+    "reconstructionError": 112.3989,
+    "threshold": 1.836
+  },
+  {
+    "id": "1768575509717_Chassis_LOAD TONS",
+    "component": "Chassis",
+    "sensor": "LOAD TONS",
+    "value": 98.29,
+    "anomalyType": "Threshold Breach",
+    "timestamp": "2026-01-16T20:28:29.713809",
+    "reconstructionError": 87.5013,
+    "threshold": 4.3323
+  },
+  {
+    "id": "1768575509712_Chassis_VIBRATION MM/S",
+    "component": "Chassis",
+    "sensor": "VIBRATION MM/S",
+    "value": 6.89,
+    "anomalyType": "Threshold Breach",
+    "timestamp": "2026-01-16T20:28:29.712667",
+    "reconstructionError": 87.5013,
+    "threshold": 4.3323
+  },
+  {
+    "id": "1768575509624_Wheels_SPEED KM/H",
+    "component": "Wheels",
+    "sensor": "SPEED KM/H",
+    "value": 93.28,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:29.620980",
+    "reconstructionError": 62.3387,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575509620_Wheels_BRAKE TEMP \u00b0C",
+    "component": "Wheels",
+    "sensor": "BRAKE TEMP \u00b0C",
+    "value": 170.52,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:29.616542",
+    "reconstructionError": 62.3387,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575509615_Wheels_VIBRATION MM/S",
+    "component": "Wheels",
+    "sensor": "VIBRATION MM/S",
+    "value": 6.89,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:29.615585",
+    "reconstructionError": 62.3387,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575509511_Hydraulic_LOAD TONS",
+    "component": "Hydraulic",
+    "sensor": "LOAD TONS",
+    "value": 98.29,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:29.506108",
+    "reconstructionError": 106.2949,
+    "threshold": 1.836
+  },
+  {
+    "id": "1768575509504_Hydraulic_HYDRAULIC PRESSURE BAR",
+    "component": "Hydraulic",
+    "sensor": "HYDRAULIC PRESSURE BAR",
+    "value": 312.26,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:29.504881",
+    "reconstructionError": 106.2949,
+    "threshold": 1.836
+  },
+  {
+    "id": "1768575507613_Wheels_SPEED KM/H",
+    "component": "Wheels",
+    "sensor": "SPEED KM/H",
+    "value": 87.23,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:27.609386",
+    "reconstructionError": 72.2762,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575507608_Wheels_BRAKE TEMP \u00b0C",
+    "component": "Wheels",
+    "sensor": "BRAKE TEMP \u00b0C",
+    "value": 186.86,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:27.604192",
+    "reconstructionError": 72.2762,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575507602_Wheels_VIBRATION MM/S",
+    "component": "Wheels",
+    "sensor": "VIBRATION MM/S",
+    "value": 8.23,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:27.602362",
+    "reconstructionError": 72.2762,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575507488_Hydraulic_LOAD TONS",
+    "component": "Hydraulic",
+    "sensor": "LOAD TONS",
+    "value": 97.73,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:27.483791",
+    "reconstructionError": 118.4302,
+    "threshold": 1.836
+  },
+  {
+    "id": "1768575507482_Hydraulic_HYDRAULIC PRESSURE BAR",
+    "component": "Hydraulic",
+    "sensor": "HYDRAULIC PRESSURE BAR",
+    "value": 324.84,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:27.482488",
+    "reconstructionError": 118.4302,
+    "threshold": 1.836
+  },
+  {
+    "id": "1768575506655_Chassis_LOAD TONS",
+    "component": "Chassis",
+    "sensor": "LOAD TONS",
+    "value": 95.89,
+    "anomalyType": "Threshold Breach",
+    "timestamp": "2026-01-16T20:28:26.651591",
+    "reconstructionError": 82.1403,
+    "threshold": 4.3323
+  },
+  {
+    "id": "1768575506650_Chassis_VIBRATION MM/S",
+    "component": "Chassis",
+    "sensor": "VIBRATION MM/S",
+    "value": 6.91,
+    "anomalyType": "Threshold Breach",
+    "timestamp": "2026-01-16T20:28:26.650594",
+    "reconstructionError": 82.1403,
+    "threshold": 4.3323
+  },
+  {
+    "id": "1768575504687_Wheels_SPEED KM/H",
+    "component": "Wheels",
+    "sensor": "SPEED KM/H",
+    "value": 89.51,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:24.683070",
+    "reconstructionError": 58.4329,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575504681_Wheels_BRAKE TEMP \u00b0C",
+    "component": "Wheels",
+    "sensor": "BRAKE TEMP \u00b0C",
+    "value": 172.62,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:24.677976",
+    "reconstructionError": 58.4329,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575504676_Wheels_VIBRATION MM/S",
+    "component": "Wheels",
+    "sensor": "VIBRATION MM/S",
+    "value": 8.35,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:24.676828",
+    "reconstructionError": 58.4329,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575504583_Hydraulic_LOAD TONS",
+    "component": "Hydraulic",
+    "sensor": "LOAD TONS",
+    "value": 109.04,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:24.579155",
+    "reconstructionError": 134.896,
+    "threshold": 1.836
+  },
+  {
+    "id": "1768575504578_Hydraulic_HYDRAULIC PRESSURE BAR",
+    "component": "Hydraulic",
+    "sensor": "HYDRAULIC PRESSURE BAR",
+    "value": 309.22,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:24.577978",
+    "reconstructionError": 134.896,
+    "threshold": 1.836
+  },
+  {
+    "id": "1768575503786_Chassis_LOAD TONS",
+    "component": "Chassis",
+    "sensor": "LOAD TONS",
+    "value": 109.27,
+    "anomalyType": "Threshold Breach",
+    "timestamp": "2026-01-16T20:28:23.781479",
+    "reconstructionError": 130.5226,
+    "threshold": 4.3323
+  },
+  {
+    "id": "1768575503780_Chassis_VIBRATION MM/S",
+    "component": "Chassis",
+    "sensor": "VIBRATION MM/S",
+    "value": 7.64,
+    "anomalyType": "Threshold Breach",
+    "timestamp": "2026-01-16T20:28:23.780147",
+    "reconstructionError": 130.5226,
+    "threshold": 4.3323
+  },
+  {
+    "id": "1768575502565_Wheels_SPEED KM/H",
+    "component": "Wheels",
+    "sensor": "SPEED KM/H",
+    "value": 78.71,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:22.561836",
+    "reconstructionError": 53.0398,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575502561_Wheels_BRAKE TEMP \u00b0C",
+    "component": "Wheels",
+    "sensor": "BRAKE TEMP \u00b0C",
+    "value": 177.78,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:22.557328",
+    "reconstructionError": 53.0398,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575502556_Wheels_VIBRATION MM/S",
+    "component": "Wheels",
+    "sensor": "VIBRATION MM/S",
+    "value": 6.58,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:22.556144",
+    "reconstructionError": 53.0398,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575502462_Hydraulic_LOAD TONS",
+    "component": "Hydraulic",
+    "sensor": "LOAD TONS",
+    "value": 96.61,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:22.458544",
+    "reconstructionError": 126.4812,
+    "threshold": 1.836
+  },
+  {
+    "id": "1768575502457_Hydraulic_HYDRAULIC PRESSURE BAR",
+    "component": "Hydraulic",
+    "sensor": "HYDRAULIC PRESSURE BAR",
+    "value": 333.72,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:22.457166",
+    "reconstructionError": 126.4812,
+    "threshold": 1.836
+  },
+  {
+    "id": "1768575501660_Chassis_LOAD TONS",
+    "component": "Chassis",
+    "sensor": "LOAD TONS",
+    "value": 95.42,
+    "anomalyType": "Threshold Breach",
+    "timestamp": "2026-01-16T20:28:21.656145",
+    "reconstructionError": 72.8509,
+    "threshold": 4.3323
+  },
+  {
+    "id": "1768575501655_Chassis_VIBRATION MM/S",
+    "component": "Chassis",
+    "sensor": "VIBRATION MM/S",
+    "value": 6.36,
+    "anomalyType": "Threshold Breach",
+    "timestamp": "2026-01-16T20:28:21.654950",
+    "reconstructionError": 72.8509,
+    "threshold": 4.3323
+  },
+  {
+    "id": "1768575499577_Wheels_SPEED KM/H",
+    "component": "Wheels",
+    "sensor": "SPEED KM/H",
+    "value": 83.83,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:19.573368",
+    "reconstructionError": 56.2816,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575499572_Wheels_BRAKE TEMP \u00b0C",
+    "component": "Wheels",
+    "sensor": "BRAKE TEMP \u00b0C",
+    "value": 176.83,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:19.566857",
+    "reconstructionError": 56.2816,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575499565_Wheels_VIBRATION MM/S",
+    "component": "Wheels",
+    "sensor": "VIBRATION MM/S",
+    "value": 7.98,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:19.565697",
+    "reconstructionError": 56.2816,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575499474_Hydraulic_LOAD TONS",
+    "component": "Hydraulic",
+    "sensor": "LOAD TONS",
+    "value": 100.0,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:19.469990",
+    "reconstructionError": 116.3098,
+    "threshold": 1.836
+  },
+  {
+    "id": "1768575499468_Hydraulic_HYDRAULIC PRESSURE BAR",
+    "component": "Hydraulic",
+    "sensor": "HYDRAULIC PRESSURE BAR",
+    "value": 317.99,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:19.468789",
+    "reconstructionError": 116.3098,
+    "threshold": 1.836
+  },
+  {
+    "id": "1768575498650_Chassis_LOAD TONS",
+    "component": "Chassis",
+    "sensor": "LOAD TONS",
+    "value": 105.57,
+    "anomalyType": "Threshold Breach",
+    "timestamp": "2026-01-16T20:28:18.646242",
+    "reconstructionError": 100.8023,
+    "threshold": 4.3323
+  },
+  {
+    "id": "1768575498645_Chassis_VIBRATION MM/S",
+    "component": "Chassis",
+    "sensor": "VIBRATION MM/S",
+    "value": 6.5,
+    "anomalyType": "Threshold Breach",
+    "timestamp": "2026-01-16T20:28:18.645211",
+    "reconstructionError": 100.8023,
+    "threshold": 4.3323
+  },
+  {
+    "id": "1768575497567_Wheels_SPEED KM/H",
+    "component": "Wheels",
+    "sensor": "SPEED KM/H",
+    "value": 78.69,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:17.564104",
+    "reconstructionError": 47.8774,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575497563_Wheels_BRAKE TEMP \u00b0C",
+    "component": "Wheels",
+    "sensor": "BRAKE TEMP \u00b0C",
+    "value": 173.82,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:17.559382",
+    "reconstructionError": 47.8774,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575497558_Wheels_VIBRATION MM/S",
+    "component": "Wheels",
+    "sensor": "VIBRATION MM/S",
+    "value": 7.44,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:17.558216",
+    "reconstructionError": 47.8774,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575497459_Hydraulic_LOAD TONS",
+    "component": "Hydraulic",
+    "sensor": "LOAD TONS",
+    "value": 101.89,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:17.454035",
+    "reconstructionError": 122.5079,
+    "threshold": 1.836
+  },
+  {
+    "id": "1768575497453_Hydraulic_HYDRAULIC PRESSURE BAR",
+    "component": "Hydraulic",
+    "sensor": "HYDRAULIC PRESSURE BAR",
+    "value": 317.75,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:17.452947",
+    "reconstructionError": 122.5079,
+    "threshold": 1.836
+  },
+  {
+    "id": "1768575496633_Chassis_LOAD TONS",
+    "component": "Chassis",
+    "sensor": "LOAD TONS",
+    "value": 106.7,
+    "anomalyType": "Threshold Breach",
+    "timestamp": "2026-01-16T20:28:16.630417",
+    "reconstructionError": 111.08,
+    "threshold": 4.3323
+  },
+  {
+    "id": "1768575496629_Chassis_VIBRATION MM/S",
+    "component": "Chassis",
+    "sensor": "VIBRATION MM/S",
+    "value": 6.96,
+    "anomalyType": "Threshold Breach",
+    "timestamp": "2026-01-16T20:28:16.629425",
+    "reconstructionError": 111.08,
+    "threshold": 4.3323
+  },
+  {
+    "id": "1768575495538_Wheels_SPEED KM/H",
+    "component": "Wheels",
+    "sensor": "SPEED KM/H",
+    "value": 90.78,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:15.535114",
+    "reconstructionError": 70.0772,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575495534_Wheels_BRAKE TEMP \u00b0C",
+    "component": "Wheels",
+    "sensor": "BRAKE TEMP \u00b0C",
+    "value": 181.33,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:15.530753",
+    "reconstructionError": 70.0772,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575495529_Wheels_VIBRATION MM/S",
+    "component": "Wheels",
+    "sensor": "VIBRATION MM/S",
+    "value": 7.53,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:15.529770",
+    "reconstructionError": 70.0772,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575495441_Hydraulic_LOAD TONS",
+    "component": "Hydraulic",
+    "sensor": "LOAD TONS",
+    "value": 100.13,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:15.438068",
+    "reconstructionError": 113.8826,
+    "threshold": 1.836
+  },
+  {
+    "id": "1768575495437_Hydraulic_HYDRAULIC PRESSURE BAR",
+    "component": "Hydraulic",
+    "sensor": "HYDRAULIC PRESSURE BAR",
+    "value": 314.4,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:15.436950",
+    "reconstructionError": 113.8826,
+    "threshold": 1.836
+  },
+  {
+    "id": "1768575493673_Chassis_LOAD TONS",
+    "component": "Chassis",
+    "sensor": "LOAD TONS",
+    "value": 89.85,
+    "anomalyType": "Threshold Breach",
+    "timestamp": "2026-01-16T20:28:13.656322",
+    "reconstructionError": 67.3994,
+    "threshold": 4.3323
+  },
+  {
+    "id": "1768575493655_Chassis_VIBRATION MM/S",
+    "component": "Chassis",
+    "sensor": "VIBRATION MM/S",
+    "value": 6.79,
+    "anomalyType": "Threshold Breach",
+    "timestamp": "2026-01-16T20:28:13.654990",
+    "reconstructionError": 67.3994,
+    "threshold": 4.3323
+  },
+  {
+    "id": "1768575492586_Wheels_SPEED KM/H",
+    "component": "Wheels",
+    "sensor": "SPEED KM/H",
+    "value": 84.5,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:12.583187",
+    "reconstructionError": 73.0068,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575492582_Wheels_BRAKE TEMP \u00b0C",
+    "component": "Wheels",
+    "sensor": "BRAKE TEMP \u00b0C",
+    "value": 189.59,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:12.578599",
+    "reconstructionError": 73.0068,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575492577_Wheels_VIBRATION MM/S",
+    "component": "Wheels",
+    "sensor": "VIBRATION MM/S",
+    "value": 8.13,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:12.577552",
+    "reconstructionError": 73.0068,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575492487_Hydraulic_LOAD TONS",
+    "component": "Hydraulic",
+    "sensor": "LOAD TONS",
+    "value": 89.28,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:12.483145",
+    "reconstructionError": 74.3534,
+    "threshold": 1.836
+  },
+  {
+    "id": "1768575492482_Hydraulic_HYDRAULIC PRESSURE BAR",
+    "component": "Hydraulic",
+    "sensor": "HYDRAULIC PRESSURE BAR",
+    "value": 300.53,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:12.482125",
+    "reconstructionError": 74.3534,
+    "threshold": 1.836
+  },
+  {
+    "id": "1768575491638_Chassis_LOAD TONS",
+    "component": "Chassis",
+    "sensor": "LOAD TONS",
+    "value": 104.08,
+    "anomalyType": "Threshold Breach",
+    "timestamp": "2026-01-16T20:28:11.633315",
+    "reconstructionError": 105.9458,
+    "threshold": 4.3323
+  },
+  {
+    "id": "1768575491632_Chassis_VIBRATION MM/S",
+    "component": "Chassis",
+    "sensor": "VIBRATION MM/S",
+    "value": 7.1,
+    "anomalyType": "Threshold Breach",
+    "timestamp": "2026-01-16T20:28:11.632383",
+    "reconstructionError": 105.9458,
+    "threshold": 4.3323
+  },
+  {
+    "id": "1768575490474_Wheels_SPEED KM/H",
+    "component": "Wheels",
+    "sensor": "SPEED KM/H",
+    "value": 91.92,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:10.469512",
+    "reconstructionError": 62.2828,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575490468_Wheels_BRAKE TEMP \u00b0C",
+    "component": "Wheels",
+    "sensor": "BRAKE TEMP \u00b0C",
+    "value": 173.47,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:10.465871",
+    "reconstructionError": 62.2828,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575490465_Wheels_VIBRATION MM/S",
+    "component": "Wheels",
+    "sensor": "VIBRATION MM/S",
+    "value": 8.11,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:10.465078",
+    "reconstructionError": 62.2828,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575490396_Hydraulic_LOAD TONS",
+    "component": "Hydraulic",
+    "sensor": "LOAD TONS",
+    "value": 93.4,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:10.393966",
+    "reconstructionError": 110.1566,
+    "threshold": 1.836
+  },
+  {
+    "id": "1768575490393_Hydraulic_HYDRAULIC PRESSURE BAR",
+    "component": "Hydraulic",
+    "sensor": "HYDRAULIC PRESSURE BAR",
+    "value": 326.44,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:10.393112",
+    "reconstructionError": 110.1566,
+    "threshold": 1.836
+  },
+  {
+    "id": "1768575488581_Chassis_LOAD TONS",
+    "component": "Chassis",
+    "sensor": "LOAD TONS",
+    "value": 91.43,
+    "anomalyType": "Threshold Breach",
+    "timestamp": "2026-01-16T20:28:08.578587",
+    "reconstructionError": 65.7897,
+    "threshold": 4.3323
+  },
+  {
+    "id": "1768575488577_Chassis_VIBRATION MM/S",
+    "component": "Chassis",
+    "sensor": "VIBRATION MM/S",
+    "value": 6.47,
+    "anomalyType": "Threshold Breach",
+    "timestamp": "2026-01-16T20:28:08.577742",
+    "reconstructionError": 65.7897,
+    "threshold": 4.3323
+  },
+  {
+    "id": "1768575488056_Wheels_SPEED KM/H",
+    "component": "Wheels",
+    "sensor": "SPEED KM/H",
+    "value": 78.52,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:08.053126",
+    "reconstructionError": 40.9162,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575488052_Wheels_BRAKE TEMP \u00b0C",
+    "component": "Wheels",
+    "sensor": "BRAKE TEMP \u00b0C",
+    "value": 166.85,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:08.049493",
+    "reconstructionError": 40.9162,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575488048_Wheels_VIBRATION MM/S",
+    "component": "Wheels",
+    "sensor": "VIBRATION MM/S",
+    "value": 7.37,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:08.048629",
+    "reconstructionError": 40.9162,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575487975_Hydraulic_LOAD TONS",
+    "component": "Hydraulic",
+    "sensor": "LOAD TONS",
+    "value": 91.39,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:07.972340",
+    "reconstructionError": 86.2265,
+    "threshold": 1.836
+  },
+  {
+    "id": "1768575487971_Hydraulic_HYDRAULIC PRESSURE BAR",
+    "component": "Hydraulic",
+    "sensor": "HYDRAULIC PRESSURE BAR",
+    "value": 308.41,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:07.971451",
+    "reconstructionError": 86.2265,
+    "threshold": 1.836
+  },
+  {
+    "id": "1768575486329_Chassis_LOAD TONS",
+    "component": "Chassis",
+    "sensor": "LOAD TONS",
+    "value": 95.07,
+    "anomalyType": "Threshold Breach",
+    "timestamp": "2026-01-16T20:28:06.326768",
+    "reconstructionError": 94.167,
+    "threshold": 4.3323
+  },
+  {
+    "id": "1768575486326_Chassis_VIBRATION MM/S",
+    "component": "Chassis",
+    "sensor": "VIBRATION MM/S",
+    "value": 7.71,
+    "anomalyType": "Threshold Breach",
+    "timestamp": "2026-01-16T20:28:06.325958",
+    "reconstructionError": 94.167,
+    "threshold": 4.3323
+  },
+  {
+    "id": "1768575485859_Wheels_SPEED KM/H",
+    "component": "Wheels",
+    "sensor": "SPEED KM/H",
+    "value": 82.8,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:05.856808",
+    "reconstructionError": 59.3827,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575485856_Wheels_BRAKE TEMP \u00b0C",
+    "component": "Wheels",
+    "sensor": "BRAKE TEMP \u00b0C",
+    "value": 180.37,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:05.852437",
+    "reconstructionError": 59.3827,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575485851_Wheels_VIBRATION MM/S",
+    "component": "Wheels",
+    "sensor": "VIBRATION MM/S",
+    "value": 7.67,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:05.851594",
+    "reconstructionError": 59.3827,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1768575485788_Hydraulic_LOAD TONS",
+    "component": "Hydraulic",
+    "sensor": "LOAD TONS",
+    "value": 94.19,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-01-16T20:28:05.785091",
+    "reconstructionError": 81.3726,
+    "threshold": 1.836
+  }
+]

@@ -37,12 +37,88 @@ import tensorflow as tf
 from tensorflow import keras
 import threading
 import time
+import json
 from datetime import datetime
+from collections import deque
 
 # Base directory for resolving paths
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 app = Flask(__name__, template_folder=BASE_DIR, static_folder=BASE_DIR)
+
+# ============================================================
+# ANOMALY HISTORY STORAGE
+# ============================================================
+# Use /app/data for Docker persistence, fallback to BASE_DIR for local dev
+DATA_DIR = '/app/data' if os.path.exists('/app/data') else BASE_DIR
+ANOMALY_HISTORY_FILE = os.path.join(DATA_DIR, 'anomaly_history.json')
+MAX_ANOMALY_HISTORY = 100
+
+logger.info(f"📁 Anomaly history file: {ANOMALY_HISTORY_FILE}")
+
+# Thread-safe anomaly history storage
+anomaly_history_lock = threading.Lock()
+anomaly_history = deque(maxlen=MAX_ANOMALY_HISTORY)
+
+def load_anomaly_history():
+    """Load anomaly history from file on startup."""
+    global anomaly_history
+    try:
+        if os.path.exists(ANOMALY_HISTORY_FILE):
+            with open(ANOMALY_HISTORY_FILE, 'r') as f:
+                data = json.load(f)
+                anomaly_history = deque(data[-MAX_ANOMALY_HISTORY:], maxlen=MAX_ANOMALY_HISTORY)
+                logger.info(f"✅ Loaded {len(anomaly_history)} anomaly history records")
+    except Exception as e:
+        logger.warning(f"⚠️ Could not load anomaly history: {e}")
+        anomaly_history = deque(maxlen=MAX_ANOMALY_HISTORY)
+
+def save_anomaly_history():
+    """Save anomaly history to file."""
+    try:
+        with anomaly_history_lock:
+            with open(ANOMALY_HISTORY_FILE, 'w') as f:
+                json.dump(list(anomaly_history), f, indent=2)
+    except Exception as e:
+        logger.error(f"❌ Could not save anomaly history: {e}")
+
+def log_anomaly(component, sensor, value, anomaly_type, reconstruction_error=None, threshold=None):
+    """
+    Log an anomaly event to history.
+    Prevents duplicate entries within 2 seconds for same component/sensor.
+    """
+    timestamp = datetime.now().isoformat()
+    
+    with anomaly_history_lock:
+        # Check for duplicate (same component, sensor within 2 seconds)
+        for existing in anomaly_history:
+            if (existing['component'] == component and 
+                existing['sensor'] == sensor and
+                abs((datetime.fromisoformat(existing['timestamp']) - datetime.fromisoformat(timestamp)).total_seconds()) < 2):
+                return False  # Duplicate, skip
+        
+        entry = {
+            'id': f"{int(datetime.now().timestamp() * 1000)}_{component}_{sensor}",
+            'component': component,
+            'sensor': sensor,
+            'value': round(float(value), 2),
+            'anomalyType': anomaly_type,
+            'timestamp': timestamp,
+            'reconstructionError': round(float(reconstruction_error), 4) if reconstruction_error else None,
+            'threshold': round(float(threshold), 4) if threshold else None
+        }
+        
+        # Add to front (newest first)
+        anomaly_history.appendleft(entry)
+        
+    # Save to file asynchronously
+    threading.Thread(target=save_anomaly_history, daemon=True).start()
+    
+    logger.info(f"📝 Anomaly logged: {component}/{sensor} = {value} ({anomaly_type})")
+    return True
+
+# Load history on startup
+load_anomaly_history()
 
 # ============================================================
 # SHARED REAL-TIME STATE - SINGLE SOURCE OF TRUTH
@@ -505,6 +581,89 @@ def component_interface(component_name):
 # API ROUTES - DATA ENDPOINTS
 # ============================================================
 
+# ============================================================
+# ANOMALY HISTORY API ENDPOINTS
+# ============================================================
+
+@app.route('/api/anomaly_history', methods=['GET'])
+def get_anomaly_history():
+    """Get all stored anomaly history."""
+    with anomaly_history_lock:
+        return jsonify({
+            'history': list(anomaly_history),
+            'count': len(anomaly_history),
+            'max_entries': MAX_ANOMALY_HISTORY
+        })
+
+@app.route('/api/anomaly_history', methods=['POST'])
+def add_anomaly_to_history():
+    """Manually add an anomaly to history (for frontend logging)."""
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({'error': 'No data provided'}), 400
+        
+        component = data.get('component', 'Unknown')
+        sensor = data.get('sensor', 'Unknown')
+        value = data.get('value', 0)
+        anomaly_type = data.get('anomalyType', 'Unknown')
+        recon_error = data.get('reconstructionError')
+        threshold = data.get('threshold')
+        
+        success = log_anomaly(component, sensor, value, anomaly_type, recon_error, threshold)
+        
+        if success:
+            return jsonify({'status': 'ok', 'message': 'Anomaly logged successfully'})
+        else:
+            return jsonify({'status': 'duplicate', 'message': 'Duplicate entry skipped'})
+            
+    except Exception as e:
+        logger.error(f"Error logging anomaly: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/anomaly_history/clear', methods=['POST'])
+def clear_anomaly_history():
+    """Clear all anomaly history."""
+    global anomaly_history
+    with anomaly_history_lock:
+        anomaly_history.clear()
+    save_anomaly_history()
+    logger.info("🗑️ Anomaly history cleared")
+    return jsonify({'status': 'ok', 'message': 'History cleared'})
+
+@app.route('/api/anomaly_history/export', methods=['GET'])
+def export_anomaly_history():
+    """Export anomaly history as CSV."""
+    import io
+    import csv
+    
+    with anomaly_history_lock:
+        output = io.StringIO()
+        writer = csv.writer(output)
+        
+        # Write header
+        writer.writerow(['Timestamp', 'Component', 'Sensor', 'Value', 'Anomaly Type', 'Reconstruction Error', 'Threshold'])
+        
+        # Write data
+        for entry in anomaly_history:
+            writer.writerow([
+                entry.get('timestamp', ''),
+                entry.get('component', ''),
+                entry.get('sensor', ''),
+                entry.get('value', ''),
+                entry.get('anomalyType', ''),
+                entry.get('reconstructionError', ''),
+                entry.get('threshold', '')
+            ])
+        
+        output.seek(0)
+        from flask import Response
+        return Response(
+            output.getvalue(),
+            mimetype='text/csv',
+            headers={'Content-Disposition': 'attachment; filename=anomaly_history.csv'}
+        )
+
 @app.route('/toggle_injection', methods=['POST'])
 def toggle_injection():
     """Toggle anomaly injection state."""
@@ -715,6 +874,24 @@ def simulate_data():
             'root_cause_numeric': root_cause_numeric,
             'root_cause_text': root_cause_text
         }
+        
+        # ============================================================
+        # LOG ANOMALY TO HISTORY (if detected)
+        # ============================================================
+        if comp_anomaly:
+            # Determine anomaly type
+            anomaly_type = "Failure Injected" if (inject and comp_name in active_failures) else "Threshold Breach"
+            
+            # Log each anomalous sensor for this component
+            for sensor_display_name, sensor_value in comp_sensors.items():
+                log_anomaly(
+                    component=comp_name.title(),
+                    sensor=sensor_display_name,
+                    value=sensor_value,
+                    anomaly_type=anomaly_type,
+                    reconstruction_error=comp_recon_error,
+                    threshold=comp_threshold
+                )
     
     # Update time series
     ts = shared_state.time_series
