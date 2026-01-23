@@ -459,6 +459,10 @@
     <script>
         const COMPONENT = 'wheels';
         
+        // XAI Explanation display timer (7 seconds)
+        let explanationTimer = null;
+        const EXPLANATION_DISPLAY_TIME = 7000; // 7 seconds
+        
         function initCharts() {
             const chartLayout = {
                 paper_bgcolor: 'rgba(0,0,0,0)',
@@ -526,7 +530,7 @@
                 document.getElementById('sensor-vibration').classList.remove('anomaly');
                 document.getElementById('sensor-brake').classList.remove('anomaly');
                 document.getElementById('sensor-speed').classList.remove('anomaly');
-                document.getElementById('explanation-panel').style.display = 'none';
+                // Don't hide explanation immediately - let the timer handle it
             }
             
             if (ts.timestamps && ts.timestamps.length > 0) {
@@ -563,11 +567,20 @@
             const textContainer = document.getElementById('explanation-text');
             
             if (!rootCauseNumeric || rootCauseNumeric.length === 0) {
-                panel.style.display = 'none';
-                return;
+                return; // Don't hide immediately, let the timer handle it
+            }
+            
+            // Clear any existing timer
+            if (explanationTimer) {
+                clearTimeout(explanationTimer);
             }
             
             panel.style.display = 'block';
+            
+            // Set timer to hide after 7 seconds
+            explanationTimer = setTimeout(() => {
+                panel.style.display = 'none';
+            }, EXPLANATION_DISPLAY_TIME);
             
             let barsHTML = '';
             rootCauseNumeric.forEach(item => {

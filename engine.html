@@ -641,6 +641,10 @@
         // Component name for API calls
         const COMPONENT = 'engine';
         
+        // XAI Explanation display timer (7 seconds)
+        let explanationTimer = null;
+        const EXPLANATION_DISPLAY_TIME = 7000; // 7 seconds
+        
         // Chart data buffers
         let tempData = { x: [], y: [] };
         let oilData = { x: [], y: [] };
@@ -755,8 +759,7 @@
                 document.getElementById('sensor-oil').classList.remove('anomaly');
                 document.getElementById('sensor-fuel').classList.remove('anomaly');
                 
-                // Hide XAI explanation
-                document.getElementById('explanation-panel').style.display = 'none';
+                // Don't hide explanation immediately - let the timer handle it
             }
             
             // Update charts with time series data
@@ -801,12 +804,21 @@
             const textContainer = document.getElementById('explanation-text');
             
             if (!rootCauseNumeric || rootCauseNumeric.length === 0) {
-                panel.style.display = 'none';
-                return;
+                return; // Don't hide immediately, let the timer handle it
+            }
+            
+            // Clear any existing timer
+            if (explanationTimer) {
+                clearTimeout(explanationTimer);
             }
             
             // Show panel
             panel.style.display = 'block';
+            
+            // Set timer to hide after 7 seconds
+            explanationTimer = setTimeout(() => {
+                panel.style.display = 'none';
+            }, EXPLANATION_DISPLAY_TIME);
             
             // Build contribution bars HTML
             let barsHTML = '';

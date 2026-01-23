@@ -528,6 +528,557 @@ logger.info("=" * 60)
 logger.info("MODEL LOADING COMPLETE")
 logger.info("=" * 60)
 
+# ============================================================
+# DIAGNOSTIC CHATBOT - INTELLIGENT DUMP TRUCK ASSISTANT
+# ============================================================
+
+# Knowledge base for diagnostic responses
+DIAGNOSTIC_KNOWLEDGE = {
+    'engine': {
+        'symptoms': {
+            'overheating': {
+                'keywords': ['overheat', 'hot', 'temperature high', 'thermal', 'heat'],
+                'causes': [
+                    'Low coolant level or coolant leakage causing poor heat dissipation',
+                    'Clogged radiator or malfunctioning cooling fan',
+                    'Thermostat stuck in closed position',
+                    'Water pump failure or reduced flow',
+                    'Head gasket leak allowing combustion gases into coolant'
+                ],
+                'fixes': [
+                    'Check coolant level and inspect for leaks in hoses, radiator, and water pump',
+                    'Clean the radiator fins and ensure cooling fan operates correctly',
+                    'Test thermostat operation - replace if stuck',
+                    'Inspect water pump for leaks and proper impeller function',
+                    'Perform combustion leak test if head gasket is suspected'
+                ],
+                'prevention': [
+                    'Regularly monitor coolant levels before each shift',
+                    'Flush cooling system every 2000 operating hours',
+                    'Inspect radiator for debris buildup weekly'
+                ]
+            },
+            'vibration': {
+                'keywords': ['vibrat', 'shake', 'rough', 'wobble', 'tremor'],
+                'causes': [
+                    'Loose or damaged engine mounts allowing excessive movement',
+                    'Misfiring cylinder due to injector, spark, or compression issues',
+                    'Unbalanced rotating components (flywheel, harmonic balancer)',
+                    'Worn timing chain or belt causing erratic valve timing',
+                    'Air intake restriction causing uneven combustion'
+                ],
+                'fixes': [
+                    'Inspect and torque all engine mount bolts - replace worn mounts',
+                    'Run cylinder contribution test to identify misfiring cylinder',
+                    'Check flywheel and harmonic balancer for damage or looseness',
+                    'Inspect timing components for wear or stretch',
+                    'Check air filter and intake system for restrictions'
+                ],
+                'prevention': [
+                    'Perform vibration analysis during scheduled maintenance',
+                    'Replace engine mounts at recommended intervals',
+                    'Keep air filtration system clean'
+                ]
+            },
+            'power_loss': {
+                'keywords': ['power', 'weak', 'sluggish', 'slow', 'acceleration', 'performance'],
+                'causes': [
+                    'Clogged fuel filters restricting fuel flow',
+                    'Turbocharger boost leak or turbo failure',
+                    'EGR valve stuck open causing power loss',
+                    'Fuel injector malfunction or low fuel pressure',
+                    'Exhaust restriction from blocked DPF or catalytic converter'
+                ],
+                'fixes': [
+                    'Replace fuel filters (primary and secondary)',
+                    'Inspect turbo system for leaks, check boost pressure',
+                    'Clean or replace EGR valve and inspect passages',
+                    'Test fuel pressure and injector spray patterns',
+                    'Perform DPF regeneration or inspect exhaust backpressure'
+                ],
+                'prevention': [
+                    'Replace fuel filters at recommended intervals',
+                    'Use quality fuel to prevent injector deposits',
+                    'Monitor boost pressure during operation'
+                ]
+            },
+            'oil_pressure': {
+                'keywords': ['oil', 'pressure', 'lubrication'],
+                'causes': [
+                    'Low oil level from consumption or leaks',
+                    'Oil pump wear reducing output pressure',
+                    'Worn main or rod bearings increasing clearances',
+                    'Clogged oil filter bypassing filtration',
+                    'Wrong oil viscosity for operating conditions'
+                ],
+                'fixes': [
+                    'Check oil level and top up with correct specification oil',
+                    'Inspect for external oil leaks at gaskets and seals',
+                    'Verify oil pressure with mechanical gauge',
+                    'Replace oil filter and consider oil analysis',
+                    'Check bearing clearances if pressure remains low'
+                ],
+                'prevention': [
+                    'Check oil level daily before operation',
+                    'Change oil and filter at recommended intervals',
+                    'Use manufacturer-specified oil grade'
+                ]
+            }
+        }
+    },
+    'hydraulic': {
+        'symptoms': {
+            'slow_operation': {
+                'keywords': ['slow', 'sluggish', 'weak', 'lift', 'dump', 'response'],
+                'causes': [
+                    'Low hydraulic fluid level reducing system capacity',
+                    'Hydraulic pump wear causing reduced flow',
+                    'Internal valve leakage allowing fluid bypass',
+                    'Clogged hydraulic filter restricting flow',
+                    'Air in hydraulic system causing spongy response'
+                ],
+                'fixes': [
+                    'Check hydraulic reservoir level and top up with correct fluid',
+                    'Test pump output flow and pressure',
+                    'Inspect control valves for internal leakage',
+                    'Replace hydraulic filter and inspect for contamination',
+                    'Bleed air from system at highest points'
+                ],
+                'prevention': [
+                    'Check hydraulic fluid level daily',
+                    'Replace filters at recommended intervals',
+                    'Inspect hoses and fittings for leaks weekly'
+                ]
+            },
+            'pressure_issues': {
+                'keywords': ['pressure', 'low pressure', 'no pressure', 'weak'],
+                'causes': [
+                    'Relief valve stuck open or set incorrectly',
+                    'Pump inlet restriction causing cavitation',
+                    'Internal cylinder seal failure',
+                    'Hydraulic hose collapse under suction',
+                    'Pump drive coupling failure'
+                ],
+                'fixes': [
+                    'Test and adjust relief valve settings',
+                    'Inspect pump inlet line and strainer',
+                    'Pressure test cylinders for internal bypass',
+                    'Replace collapsed or damaged hoses',
+                    'Check pump drive coupling and shaft'
+                ],
+                'prevention': [
+                    'Monitor system pressure during operation',
+                    'Keep hydraulic fluid clean and at proper level',
+                    'Replace hoses showing wear or damage'
+                ]
+            },
+            'leaks': {
+                'keywords': ['leak', 'drip', 'fluid', 'wet', 'seep'],
+                'causes': [
+                    'Worn cylinder seals allowing external leakage',
+                    'Loose or damaged hose fittings',
+                    'Cracked hydraulic lines from vibration fatigue',
+                    'Pump shaft seal failure',
+                    'Tank breather blocked causing pressure buildup'
+                ],
+                'fixes': [
+                    'Replace cylinder seal kits as needed',
+                    'Tighten fittings and replace damaged O-rings',
+                    'Replace cracked or worn hydraulic hoses',
+                    'Replace pump shaft seal',
+                    'Clean or replace tank breather'
+                ],
+                'prevention': [
+                    'Inspect hydraulic system daily for leaks',
+                    'Replace hoses at recommended service intervals',
+                    'Keep reservoir breather clean'
+                ]
+            }
+        }
+    },
+    'brakes': {
+        'symptoms': {
+            'weak_braking': {
+                'keywords': ['weak', 'soft', 'spongy', 'distance', 'stopping', 'fade'],
+                'causes': [
+                    'Air in brake lines causing spongy pedal feel',
+                    'Worn brake pads or shoes below minimum thickness',
+                    'Glazed or contaminated brake friction material',
+                    'Brake fluid leak reducing system pressure',
+                    'Automatic slack adjuster not maintaining proper clearance'
+                ],
+                'fixes': [
+                    'Bleed brake system to remove all air',
+                    'Measure and replace worn brake friction material',
+                    'Resurface or replace glazed drums/rotors',
+                    'Inspect entire brake circuit for leaks',
+                    'Adjust or replace automatic slack adjusters'
+                ],
+                'prevention': [
+                    'Check brake adjustment weekly',
+                    'Inspect friction material thickness monthly',
+                    'Test brake performance before each shift'
+                ]
+            },
+            'overheating': {
+                'keywords': ['hot', 'overheat', 'smoke', 'smell', 'temperature'],
+                'causes': [
+                    'Dragging brakes from stuck caliper or actuator',
+                    'Excessive brake use on long downhill grades',
+                    'Automatic slack adjuster over-adjusted',
+                    'Parking brake not fully releasing',
+                    'Retarder malfunction causing brake overload'
+                ],
+                'fixes': [
+                    'Free stuck brake components and lubricate slides',
+                    'Allow brakes to cool before continuing - use engine braking',
+                    'Reset slack adjuster to proper clearance',
+                    'Inspect parking brake mechanism for proper release',
+                    'Check retarder operation and integration with service brakes'
+                ],
+                'prevention': [
+                    'Use engine braking and retarder on grades',
+                    'Allow brakes to cool after heavy use',
+                    'Train operators on proper braking techniques'
+                ]
+            },
+            'noise': {
+                'keywords': ['noise', 'squeal', 'grind', 'scrape', 'sound'],
+                'causes': [
+                    'Brake pads worn to metal backing plate',
+                    'Glazed friction material causing squeal',
+                    'Loose brake components vibrating',
+                    'Contamination on friction surfaces',
+                    'Worn or damaged brake drums/rotors'
+                ],
+                'fixes': [
+                    'Replace brake pads/shoes immediately if metal-to-metal',
+                    'Deglaze or replace friction material',
+                    'Secure all loose brake hardware',
+                    'Clean contamination from friction surfaces',
+                    'Measure and replace worn drums/rotors'
+                ],
+                'prevention': [
+                    'Regular brake inspections catch issues early',
+                    'Replace friction material before minimum thickness',
+                    'Keep brake components clean and dry'
+                ]
+            }
+        }
+    },
+    'transmission': {
+        'symptoms': {
+            'shifting_issues': {
+                'keywords': ['shift', 'gear', 'grind', 'slip', 'hard shift', 'no shift'],
+                'causes': [
+                    'Low transmission fluid level affecting pressure',
+                    'Worn clutch packs causing slipping',
+                    'Shift solenoid malfunction or electrical issue',
+                    'Transmission control module fault',
+                    'Linkage adjustment or cable stretch'
+                ],
+                'fixes': [
+                    'Check and correct transmission fluid level',
+                    'Perform transmission pressure tests',
+                    'Test shift solenoids and wiring',
+                    'Scan for transmission fault codes',
+                    'Adjust or replace shift linkage as needed'
+                ],
+                'prevention': [
+                    'Check transmission fluid level weekly',
+                    'Change transmission fluid at recommended intervals',
+                    'Address shifting issues promptly before they worsen'
+                ]
+            },
+            'overheating': {
+                'keywords': ['hot', 'overheat', 'temperature', 'thermal'],
+                'causes': [
+                    'Clogged transmission cooler reducing heat transfer',
+                    'Low fluid level causing increased friction',
+                    'Slipping clutches generating excessive heat',
+                    'Torque converter lockup not engaging',
+                    'Operating in wrong gear range for conditions'
+                ],
+                'fixes': [
+                    'Flush or replace transmission cooler',
+                    'Correct fluid level with proper specification fluid',
+                    'Diagnose and repair slipping clutch packs',
+                    'Test torque converter lockup operation',
+                    'Review operator shifting practices'
+                ],
+                'prevention': [
+                    'Keep transmission cooler clean',
+                    'Monitor transmission temperature during operation',
+                    'Use correct gear selection for load and grade'
+                ]
+            }
+        }
+    },
+    'wheels': {
+        'symptoms': {
+            'vibration': {
+                'keywords': ['vibrat', 'shake', 'wobble', 'shimmy'],
+                'causes': [
+                    'Tire out of balance or flat spots from skidding',
+                    'Wheel bearing wear or damage',
+                    'Bent wheel rim from impact',
+                    'Loose wheel nuts allowing movement',
+                    'Uneven tire wear from alignment issues'
+                ],
+                'fixes': [
+                    'Balance tires and inspect for flat spots',
+                    'Check wheel bearing play and replace if excessive',
+                    'Inspect rims for damage - replace bent wheels',
+                    'Torque wheel nuts to specification in star pattern',
+                    'Check and correct wheel alignment'
+                ],
+                'prevention': [
+                    'Rotate tires regularly for even wear',
+                    'Re-torque wheel nuts after new tire installation',
+                    'Check tire pressure daily'
+                ]
+            },
+            'bearing_issues': {
+                'keywords': ['bearing', 'noise', 'howl', 'rumble', 'growl'],
+                'causes': [
+                    'Lack of lubrication causing metal-to-metal contact',
+                    'Water contamination in bearing grease',
+                    'Impact damage from road hazards',
+                    'Improper bearing preload adjustment',
+                    'Seal failure allowing contamination'
+                ],
+                'fixes': [
+                    'Remove and inspect bearings - replace if damaged',
+                    'Repack with fresh grease if serviceable',
+                    'Adjust bearing preload to specification',
+                    'Replace seals when repacking bearings',
+                    'Check hub for damage if bearing failed'
+                ],
+                'prevention': [
+                    'Grease bearings at recommended intervals',
+                    'Inspect seals during tire changes',
+                    'Listen for bearing noise during operation'
+                ]
+            },
+            'tire_issues': {
+                'keywords': ['tire', 'flat', 'wear', 'puncture', 'pressure'],
+                'causes': [
+                    'Road hazards causing punctures',
+                    'Improper inflation causing uneven wear',
+                    'Alignment issues causing rapid edge wear',
+                    'Overloading causing excessive tire stress',
+                    'Age deterioration of tire rubber'
+                ],
+                'fixes': [
+                    'Repair or replace punctured tires',
+                    'Adjust inflation to proper pressure for load',
+                    'Correct alignment issues causing wear',
+                    'Verify load limits are not exceeded',
+                    'Replace tires showing age cracking'
+                ],
+                'prevention': [
+                    'Check tire pressure daily',
+                    'Inspect tires for damage before each shift',
+                    'Maintain proper alignment'
+                ]
+            }
+        }
+    },
+    'chassis': {
+        'symptoms': {
+            'structural_vibration': {
+                'keywords': ['vibrat', 'shake', 'crack', 'stress', 'frame'],
+                'causes': [
+                    'Frame fatigue cracks from cyclic loading',
+                    'Loose body mount bolts',
+                    'Suspension component wear',
+                    'Uneven load distribution causing twist',
+                    'Damaged cross members from impacts'
+                ],
+                'fixes': [
+                    'Inspect frame for cracks - repair or reinforce as needed',
+                    'Torque all body and frame fasteners',
+                    'Replace worn suspension bushings and pins',
+                    'Verify load is properly distributed',
+                    'Repair or replace damaged structural members'
+                ],
+                'prevention': [
+                    'Regular frame inspection for cracks',
+                    'Proper loading practices to prevent overload',
+                    'Address loose fasteners promptly'
+                ]
+            },
+            'suspension': {
+                'keywords': ['suspension', 'bounce', 'lean', 'sag', 'ride'],
+                'causes': [
+                    'Worn or broken leaf springs',
+                    'Leaking air suspension bags',
+                    'Damaged shock absorbers',
+                    'Worn suspension bushings and pins',
+                    'Incorrect ride height adjustment'
+                ],
+                'fixes': [
+                    'Replace broken or sagging springs',
+                    'Repair or replace leaking air bags',
+                    'Test and replace worn shock absorbers',
+                    'Replace worn bushings and pins',
+                    'Adjust ride height to specification'
+                ],
+                'prevention': [
+                    'Inspect suspension components regularly',
+                    'Avoid overloading the truck',
+                    'Address ride quality issues early'
+                ]
+            }
+        }
+    }
+}
+
+# Sensor thresholds for context-aware responses
+SENSOR_THRESHOLDS = {
+    'Engine_Temp_C': {'normal': (75, 95), 'warning': (95, 105), 'critical': 105},
+    'Oil_Pressure_bar': {'normal': (3.5, 5.5), 'warning': (2.5, 3.5), 'critical': 2.5},
+    'Hydraulic_Pressure_bar': {'normal': (180, 240), 'warning': (150, 180), 'critical': 150},
+    'Brake_Temp_C': {'normal': (80, 150), 'warning': (150, 200), 'critical': 200},
+    'Vibration_mm_s': {'normal': (1.0, 3.5), 'warning': (3.5, 5.0), 'critical': 5.0},
+    'Fuel_Rate_Lph': {'normal': (35, 55), 'warning': (55, 70), 'critical': 70},
+    'Load_tons': {'normal': (40, 70), 'warning': (70, 85), 'critical': 85},
+    'Speed_kmph': {'normal': (20, 45), 'warning': (45, 55), 'critical': 55}
+}
+
+def get_system_context():
+    """Get current sensor data and anomaly status for context-aware responses."""
+    state = shared_state.get_state()
+    context = {
+        'sensors': state.get('all_sensors', {}),
+        'is_anomaly': state.get('is_global_anomaly', False),
+        'anomalous_sensors': state.get('anomalous_sensors', []),
+        'components': state.get('components', {}),
+        'active_failures': state.get('active_failures', [])
+    }
+    return context
+
+def analyze_sensor_status(sensors):
+    """Analyze current sensor readings and return status."""
+    analysis = []
+    for sensor, value in sensors.items():
+        if sensor in SENSOR_THRESHOLDS:
+            thresholds = SENSOR_THRESHOLDS[sensor]
+            if isinstance(value, (int, float)):
+                if 'critical' in thresholds:
+                    if isinstance(thresholds['critical'], tuple):
+                        if value < thresholds['critical'][0] or value > thresholds['critical'][1]:
+                            analysis.append({'sensor': sensor, 'value': value, 'status': 'critical'})
+                    else:
+                        if value > thresholds['critical'] or value < thresholds['warning'][0]:
+                            analysis.append({'sensor': sensor, 'value': value, 'status': 'critical'})
+                        elif thresholds['warning'][0] <= value <= thresholds['warning'][1]:
+                            analysis.append({'sensor': sensor, 'value': value, 'status': 'warning'})
+    return analysis
+
+def find_best_match(query, knowledge_base):
+    """Find the best matching symptom category for a query."""
+    query_lower = query.lower()
+    best_match = None
+    best_score = 0
+    
+    for system, data in knowledge_base.items():
+        for symptom, info in data.get('symptoms', {}).items():
+            score = 0
+            for keyword in info.get('keywords', []):
+                if keyword in query_lower:
+                    score += 1
+            if system.lower() in query_lower:
+                score += 2
+            if score > best_score:
+                best_score = score
+                best_match = (system, symptom, info)
+    
+    return best_match if best_score > 0 else None
+
+def generate_diagnostic_response(query, context=None):
+    """Generate a diagnostic response based on user query and system context."""
+    
+    # Get current system context if not provided
+    if context is None:
+        context = get_system_context()
+    
+    query_lower = query.lower()
+    response_parts = []
+    
+    # Check if query is about current status
+    status_keywords = ['status', 'current', 'now', 'reading', 'what is', 'show me', 'how is']
+    if any(kw in query_lower for kw in status_keywords):
+        sensors = context.get('sensors', {})
+        if sensors:
+            response_parts.append("**📊 Current System Status:**\n")
+            is_anomaly = context.get('is_anomaly', False)
+            if is_anomaly:
+                response_parts.append("⚠️ **ANOMALY DETECTED** - System showing abnormal readings\n\n")
+            else:
+                response_parts.append("✅ **NORMAL** - All systems operating within parameters\n\n")
+            
+            response_parts.append("**Sensor Readings:**\n")
+            for sensor, value in sensors.items():
+                display_name = SENSOR_DISPLAY_NAMES.get(sensor, sensor)
+                status_icon = "✅"
+                if sensor in [s.get('sensor') for s in analyze_sensor_status(sensors)]:
+                    status_icon = "⚠️"
+                response_parts.append(f"- {status_icon} {display_name}: {value:.1f}\n")
+            
+            return ''.join(response_parts)
+    
+    # Find best matching diagnostic category
+    match = find_best_match(query, DIAGNOSTIC_KNOWLEDGE)
+    
+    if match:
+        system, symptom, info = match
+        
+        # Build structured response
+        response_parts.append(f"**🔧 Problem Summary:**\n")
+        response_parts.append(f"Issue detected in **{system.upper()}** system - {symptom.replace('_', ' ').title()}\n\n")
+        
+        # Add current context if relevant
+        if context.get('is_anomaly'):
+            anomalous = context.get('anomalous_sensors', [])
+            if anomalous:
+                response_parts.append(f"⚠️ **Current Alert:** Anomaly detected in sensors: {', '.join(anomalous)}\n\n")
+        
+        response_parts.append("**🔍 Possible Causes (most likely first):**\n")
+        for i, cause in enumerate(info.get('causes', [])[:5], 1):
+            response_parts.append(f"{i}. {cause}\n")
+        
+        response_parts.append("\n**🛠️ Recommended Fix:**\n")
+        for fix in info.get('fixes', [])[:5]:
+            response_parts.append(f"- {fix}\n")
+        
+        if info.get('prevention'):
+            response_parts.append("\n**💡 Preventive Tips:**\n")
+            for tip in info.get('prevention', [])[:3]:
+                response_parts.append(f"- {tip}\n")
+        
+        # Safety warning for critical issues
+        critical_keywords = ['overheat', 'brake', 'fail', 'leak', 'crack']
+        if any(kw in query_lower for kw in critical_keywords):
+            response_parts.append("\n**⚠️ SAFETY WARNING:** This issue may pose safety risks. ")
+            response_parts.append("Stop operation immediately if conditions worsen and consult a qualified technician.\n")
+        
+        return ''.join(response_parts)
+    
+    # Generic helpful response if no specific match
+    response_parts.append("**🔧 Diagnostic Assistant**\n\n")
+    response_parts.append("I can help diagnose issues with your dump truck. Please describe the problem you're experiencing, including:\n\n")
+    response_parts.append("- **What component** is affected (engine, hydraulic, brakes, transmission, wheels, chassis)\n")
+    response_parts.append("- **What symptoms** you're noticing (noise, vibration, temperature, performance)\n")
+    response_parts.append("- **When** the issue occurs (startup, under load, at speed)\n\n")
+    response_parts.append("**Example questions:**\n")
+    response_parts.append("- \"The engine is overheating and vibration levels are high\"\n")
+    response_parts.append("- \"Brakes feel weak and stopping distance has increased\"\n")
+    response_parts.append("- \"Hydraulic dump is lifting very slowly\"\n")
+    response_parts.append("- \"What is the current system status?\"\n")
+    
+    return ''.join(response_parts)
+
 # Sensor display name mapping
 SENSOR_DISPLAY_NAMES = {
     'Speed_kmph': 'SPEED KM/H',
@@ -1158,6 +1709,73 @@ def get_failure_probabilities():
             'wheels': 'Brake wear and bearing issues',
             'chassis': 'Structural - rarely fails'
         }
+    })
+
+# ============================================================
+# CHATBOT API ENDPOINT
+# ============================================================
+
+@app.route('/api/chat', methods=['POST'])
+def chat_endpoint():
+    """
+    Diagnostic chatbot API endpoint.
+    Receives user query and returns context-aware diagnostic response.
+    """
+    try:
+        data = request.get_json()
+        if not data or 'message' not in data:
+            return jsonify({'error': 'No message provided'}), 400
+        
+        user_message = data['message'].strip()
+        if not user_message:
+            return jsonify({'error': 'Empty message'}), 400
+        
+        # Get current system context
+        context = get_system_context()
+        
+        # Generate diagnostic response
+        response = generate_diagnostic_response(user_message, context)
+        
+        # Convert numpy booleans to Python booleans for JSON serialization
+        is_anomaly = context.get('is_anomaly', False)
+        if hasattr(is_anomaly, 'item'):
+            is_anomaly = is_anomaly.item()
+        
+        return jsonify({
+            'response': response,
+            'context': {
+                'is_anomaly': bool(is_anomaly),
+                'active_failures': list(context.get('active_failures', []))
+            }
+        })
+        
+    except Exception as e:
+        logger.error(f"Chat endpoint error: {e}")
+        return jsonify({'error': 'Failed to process request'}), 500
+
+@app.route('/api/chat/quick', methods=['GET'])
+def chat_quick_status():
+    """Quick status check for the chatbot."""
+    context = get_system_context()
+    
+    # Convert numpy boolean to Python boolean
+    is_anomaly = context.get('is_anomaly', False)
+    if hasattr(is_anomaly, 'item'):
+        is_anomaly = is_anomaly.item()
+    is_anomaly = bool(is_anomaly)
+    
+    if is_anomaly:
+        status = "⚠️ ANOMALY DETECTED"
+        failures = context.get('active_failures', [])
+        message = f"System showing abnormal readings. Affected: {', '.join(failures) if failures else 'unknown'}"
+    else:
+        status = "✅ NORMAL"
+        message = "All systems operating within normal parameters"
+    
+    return jsonify({
+        'status': status,
+        'message': message,
+        'is_anomaly': is_anomaly
     })
 
 if __name__ == '__main__':
