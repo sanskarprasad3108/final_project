@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Dump Truck Anomaly Detection</title>
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
     <style>
@@ -12,21 +12,45 @@
             box-sizing: border-box;
         }
 
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 50%, #0f0f23 100%);
             color: #ffffff;
             min-height: 100vh;
-            overflow-x: hidden;
+            min-height: 100dvh; /* Dynamic viewport height for mobile */
         }
 
         .dashboard {
             display: grid;
-            grid-template-columns: 300px 1fr 320px;
-            grid-template-rows: auto 1fr;
-            gap: 15px;
-            padding: 15px;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: auto auto auto auto auto;
+            gap: 12px;
+            padding: 12px;
             min-height: 100vh;
+            min-height: 100dvh;
+            width: 100%;
+            max-width: 100vw;
+        }
+
+        /* Full width sections */
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        /* Two column layout for middle sections */
+        .two-column-section {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
         }
 
         /* Header */
@@ -270,16 +294,18 @@
             border-radius: 12px;
             padding: 15px;
             border: 1px solid rgba(0, 255, 136, 0.2);
-            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         #pca-plot {
             width: 100%;
-            height: 280px;
+            height: 320px;
+            min-height: 280px;
             border-radius: 8px;
         }
 
-        /* Center Panel */
+        /* Center Panel - No longer used, keeping for compatibility */
         .center-panel {
             display: flex;
             flex-direction: column;
@@ -888,10 +914,13 @@
             border-radius: 12px;
             padding: 15px;
             border: 1px solid rgba(255, 68, 68, 0.3);
-            margin-top: 15px;
-            max-height: 350px;
+            max-height: 300px;
             display: flex;
             flex-direction: column;
+        }
+
+        .history-panel.full-width {
+            max-height: 250px;
         }
 
         .history-title {
@@ -1105,21 +1134,109 @@
             font-size: 0.8rem;
         }
 
-        /* Responsive */
+        /* Responsive - Mobile First */
+        @media (max-width: 1600px) {
+            .dashboard {
+                gap: 10px;
+                padding: 10px;
+            }
+        }
+
         @media (max-width: 1400px) {
             .dashboard {
-                grid-template-columns: 280px 1fr 280px;
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .two-column-section {
+                grid-template-columns: 1fr 1fr;
             }
         }
 
         @media (max-width: 1200px) {
             .dashboard {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr 1fr;
             }
             
             .header {
                 flex-direction: column;
                 gap: 15px;
+            }
+            
+            .two-column-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+                gap: 10px;
+                padding: 8px;
+            }
+            
+            .header {
+                padding: 12px 15px;
+            }
+            
+            .title h1 {
+                font-size: 1.4rem;
+            }
+            
+            .metrics {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .sensor-grid {
+                grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            }
+            
+            .component-nav-grid {
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            }
+            
+            .two-column-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .dashboard {
+                padding: 6px;
+                gap: 8px;
+            }
+            
+            .title h1 {
+                font-size: 1.2rem;
+            }
+            
+            .title-icon {
+                font-size: 1.5rem;
+            }
+            
+            .metric-box {
+                padding: 8px 12px;
+            }
+            
+            .system-status {
+                min-width: 160px;
+                padding: 8px 15px;
+            }
+            
+            .control-panel,
+            .sensor-panel,
+            .probability-panel,
+            .history-panel,
+            .chart-container,
+            .truck-panel,
+            .plot-panel {
+                padding: 12px;
+                border-radius: 10px;
+            }
+            
+            .btn {
+                padding: 12px 16px;
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -1127,7 +1244,7 @@
 <body>
     <div class="dashboard">
         <!-- Header -->
-        <div class="header">
+        <div class="header full-width">
             <div class="title">
                 <span class="title-icon">🚛</span>
                 <h1>Dump Truck Anomaly Detection</h1>
@@ -1152,117 +1269,71 @@
             </div>
         </div>
 
-        <!-- Left Panel -->
-        <div class="left-panel">
-            <div class="control-panel">
-                <div class="panel-title">
-                    <span>⚙️</span> Simulation Controls
-                </div>
-                <div class="control-buttons">
-                    <button class="btn btn-normal" id="btn-simulate" onclick="toggleSimulation()">
-                        📊 Simulate Normal
-                    </button>
-                    <button class="btn btn-danger" id="btn-inject" onclick="toggleInjection()">
-                        🔥 INJECT FAILURE 🔥
-                    </button>
-                </div>
-                <div class="toggle-status">
-                    <div class="status-item">
-                        <span class="status-dot" id="dot-injection"></span>
-                        <span id="label-injection">Inject Failure: OFF</span>
-                    </div>
-                    <div class="status-item">
-                        <span class="status-dot" id="dot-auto"></span>
-                        <span id="label-auto">Auto Mode: OFF</span>
-                    </div>
-                </div>
+        <!-- Row 1: Controls & Components (3 columns) -->
+        <div class="control-panel">
+            <div class="panel-title">
+                <span>⚙️</span> Simulation Controls
             </div>
-
-            <!-- Component Navigation Section -->
-            <div class="component-nav-panel">
-                <div class="component-nav-title">
-                    <span>🚛</span> Dump Truck Components
-                </div>
-                <div class="component-nav-grid">
-                    <a href="/component/engine" class="component-nav-btn">
-                        <span class="component-nav-icon">🔧</span>
-                        <span class="component-nav-label">ENGINE</span>
-                        <span class="component-nav-status" id="nav-status-engine">NORMAL</span>
-                    </a>
-                    <a href="/component/hydraulic" class="component-nav-btn">
-                        <span class="component-nav-icon">⚙️</span>
-                        <span class="component-nav-label">HYDRAULICS</span>
-                        <span class="component-nav-status" id="nav-status-hydraulic">NORMAL</span>
-                    </a>
-                    <a href="/component/wheels" class="component-nav-btn">
-                        <span class="component-nav-icon">🛞</span>
-                        <span class="component-nav-label">WHEELS</span>
-                        <span class="component-nav-status" id="nav-status-wheels">NORMAL</span>
-                    </a>
-                    <a href="/component/chassis" class="component-nav-btn">
-                        <span class="component-nav-icon">🏗️</span>
-                        <span class="component-nav-label">CHASSIS</span>
-                        <span class="component-nav-status" id="nav-status-chassis">NORMAL</span>
-                    </a>
-                </div>
+            <div class="control-buttons">
+                <button class="btn btn-normal" id="btn-simulate" onclick="toggleSimulation()">
+                    📊 Simulate Normal
+                </button>
+                <button class="btn btn-danger" id="btn-inject" onclick="toggleInjection()">
+                    🔥 INJECT FAILURE 🔥
+                </button>
             </div>
-
-            <div class="plot-panel">
-                <div class="panel-title">
-                    <span>🔮</span> 3D Sensor Feature Space
+            <div class="toggle-status">
+                <div class="status-item">
+                    <span class="status-dot" id="dot-injection"></span>
+                    <span id="label-injection">Inject Failure: OFF</span>
                 </div>
-                <div id="pca-plot"></div>
-            </div>
-
-            <!-- Past Anomaly History Panel -->
-            <div class="history-panel">
-                <div class="history-title">
-                    <div class="history-title-left">
-                        <span>📜</span> Past Anomaly History
-                        <span class="history-count" id="history-count">0 records</span>
-                    </div>
-                    <div class="history-controls">
-                        <select class="history-filter" id="history-filter" onchange="filterAnomalyHistory()">
-                            <option value="all">All Components</option>
-                            <option value="Engine">Engine</option>
-                            <option value="Hydraulic">Hydraulics</option>
-                            <option value="Wheels">Wheels</option>
-                            <option value="Chassis">Chassis</option>
-                        </select>
-                        <button class="history-btn history-btn-export" onclick="exportAnomalyHistory()" title="Export as CSV">
-                            📥 Export
-                        </button>
-                        <button class="history-btn history-btn-clear" onclick="clearAnomalyHistory()" title="Clear History">
-                            🗑️ Clear
-                        </button>
-                    </div>
-                </div>
-                <div class="history-table-container" id="history-container">
-                    <table class="history-table">
-                        <thead>
-                            <tr>
-                                <th>Component</th>
-                                <th>Sensor</th>
-                                <th>Value</th>
-                                <th>Type</th>
-                                <th>Time</th>
-                            </tr>
-                        </thead>
-                        <tbody id="history-tbody">
-                            <!-- History entries populated by JavaScript -->
-                        </tbody>
-                    </table>
-                    <div class="history-empty" id="history-empty">
-                        <div class="history-empty-icon">📋</div>
-                        <div>No anomaly history yet</div>
-                        <div style="font-size: 0.7rem; margin-top: 5px;">Anomalies will appear here when detected</div>
-                    </div>
+                <div class="status-item">
+                    <span class="status-dot" id="dot-auto"></span>
+                    <span id="label-auto">Auto Mode: OFF</span>
                 </div>
             </div>
         </div>
 
-        <!-- Center Panel -->
-        <div class="center-panel">
+        <!-- Component Navigation Section -->
+        <div class="component-nav-panel">
+            <div class="component-nav-title">
+                <span>🚛</span> Dump Truck Components
+            </div>
+            <div class="component-nav-grid">
+                <a href="/component/engine" class="component-nav-btn">
+                    <span class="component-nav-icon">🔧</span>
+                    <span class="component-nav-label">ENGINE</span>
+                    <span class="component-nav-status" id="nav-status-engine">NORMAL</span>
+                </a>
+                <a href="/component/hydraulic" class="component-nav-btn">
+                    <span class="component-nav-icon">⚙️</span>
+                    <span class="component-nav-label">HYDRAULICS</span>
+                    <span class="component-nav-status" id="nav-status-hydraulic">NORMAL</span>
+                </a>
+                <a href="/component/wheels" class="component-nav-btn">
+                    <span class="component-nav-icon">🛞</span>
+                    <span class="component-nav-label">WHEELS</span>
+                    <span class="component-nav-status" id="nav-status-wheels">NORMAL</span>
+                </a>
+                <a href="/component/chassis" class="component-nav-btn">
+                    <span class="component-nav-icon">🏗️</span>
+                    <span class="component-nav-label">CHASSIS</span>
+                    <span class="component-nav-status" id="nav-status-chassis">NORMAL</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Sensor Panel (was in right panel) -->
+        <div class="sensor-panel">
+            <div class="panel-title">
+                <span>📡</span> Sensor Readings
+            </div>
+            <div class="sensor-grid" id="sensor-grid">
+                <!-- Sensors will be dynamically populated -->
+            </div>
+        </div>
+        <!-- Row 2: Charts (Full Width Two Column Section) -->
+        <div class="two-column-section">
             <div class="chart-container">
                 <div class="chart-title">📈 Engine Temp & Hydraulic Pressure</div>
                 <div id="chart-engine"></div>
@@ -1272,7 +1343,10 @@
                 <div class="chart-title">📊 Vibration & Speed</div>
                 <div id="chart-vibration"></div>
             </div>
+        </div>
 
+        <!-- Row 3: Truck Diagram & 3D Plot (Full Width Two Column Section) -->
+        <div class="two-column-section">
             <div class="truck-panel">
                 <div class="panel-title">
                     <span>🔧</span> Real-Time Diagnostics
@@ -1820,25 +1894,21 @@
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Right Panel -->
-        <div class="right-panel">
-            <div class="sensor-panel">
+            <div class="plot-panel">
                 <div class="panel-title">
-                    <span>📡</span> Sensor Readings
+                    <span>🔮</span> 3D Sensor Feature Space
                 </div>
-                <div class="sensor-grid" id="sensor-grid">
-                    <!-- Sensors will be dynamically populated -->
-                </div>
+                <div id="pca-plot"></div>
             </div>
+        </div> <!-- End two-column-section for truck & 3D plot -->
 
-            <!-- Failure Probability Panel -->
-            <div class="probability-panel">
-                <div class="panel-title">
-                    <span>📊</span> Failure Probability
-                </div>
-                <div class="probability-grid" id="probability-grid">
+        <!-- Row 4: Probability & Quick Controls (2 columns) + History (1 column spanning) -->
+        <div class="probability-panel">
+            <div class="panel-title">
+                <span>📊</span> Failure Probability
+            </div>
+            <div class="probability-grid" id="probability-grid">
                     <!-- Engine -->
                     <div class="probability-item" id="prob-engine">
                         <div class="probability-header">
@@ -1901,13 +1971,58 @@
                 </div>
             </div>
 
-            <div class="sim-controls">
-                <div class="panel-title">
-                    <span>🎮</span> Quick Controls
+        <div class="sim-controls">
+            <div class="panel-title">
+                <span>🎮</span> Quick Controls
+            </div>
+            <div class="sim-buttons">
+                <button class="btn btn-normal" onclick="startStream()">▶ Start Stream</button>
+                <button class="btn btn-danger" onclick="stopStream()">⏹ Stop</button>
+            </div>
+        </div>
+
+        <!-- Row 5: Past Anomaly History Panel (Full Width) -->
+        <div class="history-panel full-width">
+            <div class="history-title">
+                <div class="history-title-left">
+                    <span>📜</span> Past Anomaly History
+                    <span class="history-count" id="history-count">0 records</span>
                 </div>
-                <div class="sim-buttons">
-                    <button class="btn btn-normal" onclick="startStream()">▶ Start Stream</button>
-                    <button class="btn btn-danger" onclick="stopStream()">⏹ Stop</button>
+                <div class="history-controls">
+                    <select class="history-filter" id="history-filter" onchange="filterAnomalyHistory()">
+                        <option value="all">All Components</option>
+                        <option value="Engine">Engine</option>
+                        <option value="Hydraulic">Hydraulics</option>
+                        <option value="Wheels">Wheels</option>
+                        <option value="Chassis">Chassis</option>
+                    </select>
+                    <button class="history-btn history-btn-export" onclick="exportAnomalyHistory()" title="Export as CSV">
+                        📥 Export
+                    </button>
+                    <button class="history-btn history-btn-clear" onclick="clearAnomalyHistory()" title="Clear History">
+                        🗑️ Clear
+                    </button>
+                </div>
+            </div>
+            <div class="history-table-container" id="history-container">
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Component</th>
+                            <th>Sensor</th>
+                            <th>Value</th>
+                            <th>Type</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-tbody">
+                        <!-- History entries populated by JavaScript -->
+                    </tbody>
+                </table>
+                <div class="history-empty" id="history-empty">
+                    <div class="history-empty-icon">📋</div>
+                    <div>No anomaly history yet</div>
+                    <div style="font-size: 0.7rem; margin-top: 5px;">Anomalies will appear here when detected</div>
                 </div>
             </div>
         </div>

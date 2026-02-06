@@ -1,5 +1,155 @@
 [
   {
+    "id": "1770286765349_Chassis_LOAD TONS",
+    "component": "Chassis",
+    "sensor": "LOAD TONS",
+    "value": 56.32,
+    "anomalyType": "Threshold Breach",
+    "timestamp": "2026-02-05T15:49:25.345400",
+    "reconstructionError": 44.059,
+    "threshold": 4.3323
+  },
+  {
+    "id": "1770286765344_Chassis_VIBRATION MM/S",
+    "component": "Chassis",
+    "sensor": "VIBRATION MM/S",
+    "value": 7.43,
+    "anomalyType": "Threshold Breach",
+    "timestamp": "2026-02-05T15:49:25.343907",
+    "reconstructionError": 44.059,
+    "threshold": 4.3323
+  },
+  {
+    "id": "1770286765267_Wheels_SPEED KM/H",
+    "component": "Wheels",
+    "sensor": "SPEED KM/H",
+    "value": 77.21,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-02-05T15:49:25.263818",
+    "reconstructionError": 46.3217,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1770286765262_Wheels_BRAKE TEMP \u00b0C",
+    "component": "Wheels",
+    "sensor": "BRAKE TEMP \u00b0C",
+    "value": 173.66,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-02-05T15:49:25.258815",
+    "reconstructionError": 46.3217,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1770286765258_Wheels_VIBRATION MM/S",
+    "component": "Wheels",
+    "sensor": "VIBRATION MM/S",
+    "value": 7.43,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-02-05T15:49:25.257984",
+    "reconstructionError": 46.3217,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1770286763229_Chassis_LOAD TONS",
+    "component": "Chassis",
+    "sensor": "LOAD TONS",
+    "value": 56.76,
+    "anomalyType": "Threshold Breach",
+    "timestamp": "2026-02-05T15:49:23.225458",
+    "reconstructionError": 40.7784,
+    "threshold": 4.3323
+  },
+  {
+    "id": "1770286763224_Chassis_VIBRATION MM/S",
+    "component": "Chassis",
+    "sensor": "VIBRATION MM/S",
+    "value": 7.24,
+    "anomalyType": "Threshold Breach",
+    "timestamp": "2026-02-05T15:49:23.224606",
+    "reconstructionError": 40.7784,
+    "threshold": 4.3323
+  },
+  {
+    "id": "1770286763139_Wheels_SPEED KM/H",
+    "component": "Wheels",
+    "sensor": "SPEED KM/H",
+    "value": 91.4,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-02-05T15:49:23.135756",
+    "reconstructionError": 68.7575,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1770286763134_Wheels_BRAKE TEMP \u00b0C",
+    "component": "Wheels",
+    "sensor": "BRAKE TEMP \u00b0C",
+    "value": 179.33,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-02-05T15:49:23.129949",
+    "reconstructionError": 68.7575,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1770286763129_Wheels_VIBRATION MM/S",
+    "component": "Wheels",
+    "sensor": "VIBRATION MM/S",
+    "value": 7.24,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-02-05T15:49:23.128946",
+    "reconstructionError": 68.7575,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1770286761145_Chassis_LOAD TONS",
+    "component": "Chassis",
+    "sensor": "LOAD TONS",
+    "value": 54.61,
+    "anomalyType": "Threshold Breach",
+    "timestamp": "2026-02-05T15:49:21.142320",
+    "reconstructionError": 47.8396,
+    "threshold": 4.3323
+  },
+  {
+    "id": "1770286761141_Chassis_VIBRATION MM/S",
+    "component": "Chassis",
+    "sensor": "VIBRATION MM/S",
+    "value": 7.64,
+    "anomalyType": "Threshold Breach",
+    "timestamp": "2026-02-05T15:49:21.141562",
+    "reconstructionError": 47.8396,
+    "threshold": 4.3323
+  },
+  {
+    "id": "1770286761053_Wheels_SPEED KM/H",
+    "component": "Wheels",
+    "sensor": "SPEED KM/H",
+    "value": 87.49,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-02-05T15:49:21.049709",
+    "reconstructionError": 79.2581,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1770286761047_Wheels_BRAKE TEMP \u00b0C",
+    "component": "Wheels",
+    "sensor": "BRAKE TEMP \u00b0C",
+    "value": 191.15,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-02-05T15:49:21.042340",
+    "reconstructionError": 79.2581,
+    "threshold": 2.0407
+  },
+  {
+    "id": "1770286761041_Wheels_VIBRATION MM/S",
+    "component": "Wheels",
+    "sensor": "VIBRATION MM/S",
+    "value": 7.64,
+    "anomalyType": "Failure Injected",
+    "timestamp": "2026-02-05T15:49:21.041531",
+    "reconstructionError": 79.2581,
+    "threshold": 2.0407
+  },
+  {
     "id": "1769203994191_Engine_FUEL RATE L/H",
     "component": "Engine",
     "sensor": "FUEL RATE L/H",
@@ -847,156 +997,6 @@
     "anomalyType": "Failure Injected",
     "timestamp": "2026-01-24T03:02:06.047464",
     "reconstructionError": 86.3808,
-    "threshold": 1.552
-  },
-  {
-    "id": "1769203926045_Engine_OIL PRESSURE BAR",
-    "component": "Engine",
-    "sensor": "OIL PRESSURE BAR",
-    "value": 6.9,
-    "anomalyType": "Failure Injected",
-    "timestamp": "2026-01-24T03:02:06.039258",
-    "reconstructionError": 86.3808,
-    "threshold": 1.552
-  },
-  {
-    "id": "1769203926037_Engine_ENGINE TEMP \u00b0C",
-    "component": "Engine",
-    "sensor": "ENGINE TEMP \u00b0C",
-    "value": 126.41,
-    "anomalyType": "Failure Injected",
-    "timestamp": "2026-01-24T03:02:06.037088",
-    "reconstructionError": 86.3808,
-    "threshold": 1.552
-  },
-  {
-    "id": "1769203923691_Engine_FUEL RATE L/H",
-    "component": "Engine",
-    "sensor": "FUEL RATE L/H",
-    "value": 91.56,
-    "anomalyType": "Failure Injected",
-    "timestamp": "2026-01-24T03:02:03.682943",
-    "reconstructionError": 83.4957,
-    "threshold": 1.552
-  },
-  {
-    "id": "1769203923681_Engine_OIL PRESSURE BAR",
-    "component": "Engine",
-    "sensor": "OIL PRESSURE BAR",
-    "value": 6.86,
-    "anomalyType": "Failure Injected",
-    "timestamp": "2026-01-24T03:02:03.672884",
-    "reconstructionError": 83.4957,
-    "threshold": 1.552
-  },
-  {
-    "id": "1769203923671_Engine_ENGINE TEMP \u00b0C",
-    "component": "Engine",
-    "sensor": "ENGINE TEMP \u00b0C",
-    "value": 124.74,
-    "anomalyType": "Failure Injected",
-    "timestamp": "2026-01-24T03:02:03.670997",
-    "reconstructionError": 83.4957,
-    "threshold": 1.552
-  },
-  {
-    "id": "1769203921232_Engine_FUEL RATE L/H",
-    "component": "Engine",
-    "sensor": "FUEL RATE L/H",
-    "value": 83.09,
-    "anomalyType": "Failure Injected",
-    "timestamp": "2026-01-24T03:02:01.224504",
-    "reconstructionError": 92.5316,
-    "threshold": 1.552
-  },
-  {
-    "id": "1769203921223_Engine_OIL PRESSURE BAR",
-    "component": "Engine",
-    "sensor": "OIL PRESSURE BAR",
-    "value": 7.0,
-    "anomalyType": "Failure Injected",
-    "timestamp": "2026-01-24T03:02:01.215754",
-    "reconstructionError": 92.5316,
-    "threshold": 1.552
-  },
-  {
-    "id": "1769203921214_Engine_ENGINE TEMP \u00b0C",
-    "component": "Engine",
-    "sensor": "ENGINE TEMP \u00b0C",
-    "value": 138.06,
-    "anomalyType": "Failure Injected",
-    "timestamp": "2026-01-24T03:02:01.214265",
-    "reconstructionError": 92.5316,
-    "threshold": 1.552
-  },
-  {
-    "id": "1769203918711_Engine_FUEL RATE L/H",
-    "component": "Engine",
-    "sensor": "FUEL RATE L/H",
-    "value": 86.54,
-    "anomalyType": "Failure Injected",
-    "timestamp": "2026-01-24T03:01:58.702055",
-    "reconstructionError": 112.2361,
-    "threshold": 1.552
-  },
-  {
-    "id": "1769203918700_Engine_OIL PRESSURE BAR",
-    "component": "Engine",
-    "sensor": "OIL PRESSURE BAR",
-    "value": 7.53,
-    "anomalyType": "Failure Injected",
-    "timestamp": "2026-01-24T03:01:58.693499",
-    "reconstructionError": 112.2361,
-    "threshold": 1.552
-  },
-  {
-    "id": "1769203918691_Engine_ENGINE TEMP \u00b0C",
-    "component": "Engine",
-    "sensor": "ENGINE TEMP \u00b0C",
-    "value": 139.08,
-    "anomalyType": "Failure Injected",
-    "timestamp": "2026-01-24T03:01:58.691390",
-    "reconstructionError": 112.2361,
-    "threshold": 1.552
-  },
-  {
-    "id": "1769203916354_Engine_FUEL RATE L/H",
-    "component": "Engine",
-    "sensor": "FUEL RATE L/H",
-    "value": 81.77,
-    "anomalyType": "Failure Injected",
-    "timestamp": "2026-01-24T03:01:56.346149",
-    "reconstructionError": 83.793,
-    "threshold": 1.552
-  },
-  {
-    "id": "1769203916344_Engine_OIL PRESSURE BAR",
-    "component": "Engine",
-    "sensor": "OIL PRESSURE BAR",
-    "value": 7.44,
-    "anomalyType": "Failure Injected",
-    "timestamp": "2026-01-24T03:01:56.337287",
-    "reconstructionError": 83.793,
-    "threshold": 1.552
-  },
-  {
-    "id": "1769203916335_Engine_ENGINE TEMP \u00b0C",
-    "component": "Engine",
-    "sensor": "ENGINE TEMP \u00b0C",
-    "value": 124.2,
-    "anomalyType": "Failure Injected",
-    "timestamp": "2026-01-24T03:01:56.335618",
-    "reconstructionError": 83.793,
-    "threshold": 1.552
-  },
-  {
-    "id": "1769203913862_Engine_FUEL RATE L/H",
-    "component": "Engine",
-    "sensor": "FUEL RATE L/H",
-    "value": 89.35,
-    "anomalyType": "Failure Injected",
-    "timestamp": "2026-01-24T03:01:53.852725",
-    "reconstructionError": 85.4867,
     "threshold": 1.552
   }
 ]

@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dump Truck Anomaly Detection System - User Guide</title>
+    <style>
+        @media print {
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .page-break { page-break-before: always; }
+            .no-print { display: none; }
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: #f5f5f5;
+        }
+        
+        .cover-page {
+            text-align: center;
+            padding: 100px 20px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 40px;
+        }
+        
+        .cover-page h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #00ff88, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .cover-page .subtitle {
+            font-size: 1.3rem;
+            color: #00d4ff;
+            margin-bottom: 30px;
+        }
+        
+        .cover-page .version {
+            font-size: 1rem;
+            color: #888;
+            margin-top: 50px;
+        }
+        
+        .cover-page .docker-badge {
+            display: inline-block;
+            background: #0db7ed;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        
+        h1 {
+            color: #1a1a2e;
+            border-bottom: 3px solid #00ff88;
+            padding-bottom: 10px;
+            margin: 40px 0 20px 0;
+        }
+        
+        h2 {
+            color: #16213e;
+            margin: 30px 0 15px 0;
+            padding-left: 10px;
+            border-left: 4px solid #00d4ff;
+        }
+        
+        h3 {
+            color: #0f3460;
+            margin: 20px 0 10px 0;
+        }
+        
+        p {
+            margin: 10px 0;
+        }
+        
+        .section {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .important-box {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            border-left: 5px solid #4caf50;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .warning-box {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            border-left: 5px solid #ff9800;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .command-box {
+            background: #1a1a2e;
+            color: #00ff88;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        
+        .command-box code {
+            color: #00ff88;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        th {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .icon {
+            font-size: 1.2rem;
+            margin-right: 8px;
+        }
+        
+        .step-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #00ff88, #00d4ff);
+            color: #1a1a2e;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .feature-card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            border: 1px solid #dee2e6;
+        }
+        
+        .feature-card h4 {
+            color: #1a1a2e;
+            margin-bottom: 10px;
+        }
+        
+        ul, ol {
+            margin: 10px 0 10px 30px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+        
+        .toc {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .toc h2 {
+            border-left: none;
+            padding-left: 0;
+            margin-top: 0;
+        }
+        
+        .toc ul {
+            list-style: none;
+            margin-left: 0;
+        }
+        
+        .toc li {
+            padding: 8px 0;
+            border-bottom: 1px dashed #ddd;
+        }
+        
+        .toc a {
+            color: #16213e;
+            text-decoration: none;
+        }
+        
+        .toc a:hover {
+            color: #00d4ff;
+        }
+        
+        .print-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #00ff88, #00d4ff);
+            color: #1a1a2e;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(0,255,136,0.3);
+            transition: all 0.3s;
+        }
+        
+        .print-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,255,136,0.4);
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+            margin-top: 50px;
+            border-top: 2px solid #eee;
+        }
+    </style>
+</head>
+<body>
+
+<button class="print-btn no-print" onclick="window.print()">📄 Save as PDF</button>
+
+<!-- Cover Page -->
+<div class="cover-page">
+    <h1>🚛 Dump Truck Anomaly Detection System</h1>
+    <p class="subtitle">Complete User Guide & Documentation</p>
+    <div class="docker-badge">🐳 Docker Ready</div>
+    <p class="version">
+        Version 2.0<br>
+        Author: Sanskar P<br>
+        Docker Hub: sanskar3108/dump-truck-anomaly-detector
+    </p>
+</div>
+
+<!-- Table of Contents -->
+<div class="toc">
+    <h2>📑 Table of Contents</h2>
+    <ul>
+        <li><a href="#docker-setup">1. Docker Setup & Installation</a></li>
+        <li><a href="#running-app">2. Running the Application</a></li>
+        <li><a href="#main-dashboard">3. Main Dashboard Features</a></li>
+        <li><a href="#simulation-controls">4. Simulation Controls</a></li>
+        <li><a href="#component-interfaces">5. Component Interfaces (Engine, Hydraulic, Wheels, Chassis)</a></li>
+        <li><a href="#chatbot">6. Diagnostic Chatbot</a></li>
+        <li><a href="#xai">7. Explainable AI (XAI) Features</a></li>
+        <li><a href="#anomaly-history">8. Anomaly History & Export</a></li>
+        <li><a href="#tutorial">9. Quick Start Tutorial</a></li>
+        <li><a href="#troubleshooting">10. Troubleshooting</a></li>
+    </ul>
+</div>
+
+<div class="page-break"></div>
+
+<!-- Section 1: Docker Setup -->
+<div class="section" id="docker-setup">
+    <h1>1. Docker Setup & Installation</h1>
+    
+    <h2>Prerequisites</h2>
+    <p>Before running the application, ensure you have Docker installed on your system.</p>
+    
+    <h3>Step 1: Install Docker Desktop</h3>
+    <ol>
+        <li>Visit: <strong>https://www.docker.com/products/docker-desktop/</strong></li>
+        <li>Download Docker Desktop for your operating system (Windows/Mac/Linux)</li>
+        <li>Run the installer and follow the setup wizard</li>
+        <li>Restart your computer after installation</li>
+        <li>Launch Docker Desktop and wait for it to start (whale icon in system tray)</li>
+    </ol>
+    
+    <div class="important-box">
+        <strong>✅ Verify Docker Installation:</strong>
+        <div class="command-box">
+            <code>docker --version</code>
+        </div>
+        <p>You should see: <code>Docker version 24.x.x</code> or higher</p>
+    </div>
+</div>
+
+<!-- Section 2: Running the App -->
+<div class="section" id="running-app">
+    <h1>2. Running the Application</h1>
+    
+    <h2>Method 1: Pull from Docker Hub (Recommended)</h2>
+    <p>The easiest way to run the application - no source code needed!</p>
+    
+    <h3><span class="step-number">1</span> Pull the Docker Image</h3>
+    <div class="command-box">
+        <code>docker pull sanskar3108/dump-truck-anomaly-detector:latest</code>
+    </div>
+    
+    <h3><span class="step-number">2</span> Run the Container</h3>
+    <div class="command-box">
+        <code>docker run -d -p 5000:5000 --name dump-truck-app sanskar3108/dump-truck-anomaly-detector:latest</code>
+    </div>
+    
+    <h3><span class="step-number">3</span> Open in Browser</h3>
+    <div class="command-box">
+        <code>http://localhost:5000</code>
+    </div>
+    
+    <div class="important-box">
+        <strong>🎉 That's it!</strong> The application is now running. Open your browser and navigate to <strong>http://localhost:5000</strong>
+    </div>
+    
+    <h2>Method 2: Build from Source Code</h2>
+    <p>If you have the source code files:</p>
+    
+    <h3><span class="step-number">1</span> Navigate to Project Folder</h3>
+    <div class="command-box">
+        <code>cd path/to/project/folder</code>
+    </div>
+    
+    <h3><span class="step-number">2</span> Build and Run with Docker Compose</h3>
+    <div class="command-box">
+        <code>docker compose up --build</code>
+    </div>
+    
+    <h2>Useful Docker Commands</h2>
+    <table>
+        <tr>
+            <th>Command</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td><code>docker ps</code></td>
+            <td>List running containers</td>
+        </tr>
+        <tr>
+            <td><code>docker stop dump-truck-app</code></td>
+            <td>Stop the container</td>
+        </tr>
+        <tr>
+            <td><code>docker start dump-truck-app</code></td>
+            <td>Start the container again</td>
+        </tr>
+        <tr>
+            <td><code>docker logs dump-truck-app</code></td>
+            <td>View container logs</td>
+        </tr>
+        <tr>
+            <td><code>docker rm dump-truck-app</code></td>
+            <td>Remove the container</td>
+        </tr>
+    </table>
+</div>
+
+<div class="page-break"></div>
+
+<!-- Section 3: Main Dashboard -->
+<div class="section" id="main-dashboard">
+    <h1>3. Main Dashboard Features</h1>
+    
+    <p>The main dashboard provides a comprehensive view of the dump truck's health status with real-time monitoring capabilities.</p>
+    
+    <div class="feature-card">
+        <h4>🎯 System Status Indicator</h4>
+        <p>Located at the top of the dashboard, shows overall system health:</p>
+        <ul>
+            <li><strong style="color: #00ff88;">● NORMAL</strong> - All systems operating within parameters (Green)</li>
+            <li><strong style="color: #ff4444;">● ANOMALY DETECTED</strong> - One or more components showing abnormal readings (Red, pulsing)</li>
+        </ul>
+    </div>
+    
+    <div class="feature-card">
+        <h4>📡 Sensor Readings Panel</h4>
+        <p>Displays 8 real-time sensor values:</p>
+        <table>
+            <tr><th>Sensor</th><th>Unit</th><th>Normal Range</th></tr>
+            <tr><td>SPEED</td><td>KM/H</td><td>20-45</td></tr>
+            <tr><td>LOAD</td><td>TONS</td><td>40-70</td></tr>
+            <tr><td>FUEL RATE</td><td>L/H</td><td>35-55</td></tr>
+            <tr><td>BRAKE TEMP</td><td>°C</td><td>80-150</td></tr>
+            <tr><td>VIBRATION</td><td>MM/S</td><td>1.0-3.5</td></tr>
+            <tr><td>OIL PRESSURE</td><td>BAR</td><td>3.5-5.5</td></tr>
+            <tr><td>HYDRAULIC PRESSURE</td><td>BAR</td><td>180-240</td></tr>
+            <tr><td>ENGINE TEMP</td><td>°C</td><td>75-95</td></tr>
+        </table>
+    </div>
+    
+    <div class="feature-card">
+        <h4>📈 Time Series Charts</h4>
+        <p>Two real-time streaming charts showing sensor trends:</p>
+        <ul>
+            <li><strong>Chart 1:</strong> Engine Temperature & Hydraulic Pressure over time</li>
+            <li><strong>Chart 2:</strong> Vibration & Speed over time</li>
+        </ul>
+        <p>Charts display the last 250 data points with smooth animations.</p>
+    </div>
+    
+    <div class="feature-card">
+        <h4>🚛 Interactive Truck Diagram</h4>
+        <p>SVG visualization of the dump truck with real-time component status:</p>
+        <ul>
+            <li><strong style="color: #00ff88;">Green Glow</strong> = Component healthy</li>
+            <li><strong style="color: #ff4444;">Red Glow + Smoke Animation</strong> = Component failing</li>
+        </ul>
+        <p>Smoke effects appear from the affected component area when anomaly is detected.</p>
+    </div>
+    
+    <div class="feature-card">
+        <h4>🔮 3D PCA Feature Space</h4>
+        <p>Interactive 3D visualization of sensor data:</p>
+        <ul>
+            <li><strong style="color: #0066ff;">Blue Dots</strong> = Historical normal readings</li>
+            <li><strong style="color: #00ff88;">Green Dot</strong> = Current reading (normal)</li>
+            <li><strong style="color: #ff4444;">Red Dot</strong> = Current reading (anomaly)</li>
+        </ul>
+        <p>Click and drag to rotate the 3D plot for better visualization.</p>
+    </div>
+    
+    <div class="feature-card">
+        <h4>📊 Failure Probability Panel</h4>
+        <p>Shows weighted probability of each component failing when injection is active:</p>
+        <table>
+            <tr><th>Component</th><th>Probability</th></tr>
+            <tr><td>🔥 Engine</td><td>40%</td></tr>
+            <tr><td>💧 Hydraulics</td><td>30%</td></tr>
+            <tr><td>⚙️ Wheels</td><td>20%</td></tr>
+            <tr><td>🛡️ Chassis</td><td>10%</td></tr>
+        </table>
+    </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- Section 4: Simulation Controls -->
+<div class="section" id="simulation-controls">
+    <h1>4. Simulation Controls</h1>
+    
+    <h2>Control Buttons</h2>
+    <table>
+        <tr>
+            <th>Button</th>
+            <th>Action</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td><strong>📊 Simulate Normal</strong></td>
+            <td>Click to Start/Stop</td>
+            <td>Starts real-time sensor data simulation with normal operating values</td>
+        </tr>
+        <tr>
+            <td><strong>🔥 INJECT FAILURE 🔥</strong></td>
+            <td>Click to Toggle</td>
+            <td>Injects anomalies into randomly selected components based on failure probability weights</td>
+        </tr>
+        <tr>
+            <td><strong>▶ Start Stream</strong></td>
+            <td>Click to Start</td>
+            <td>Begin continuous data streaming</td>
+        </tr>
+        <tr>
+            <td><strong>⏹ Stop</strong></td>
+            <td>Click to Stop</td>
+            <td>Pause the simulation</td>
+        </tr>
+    </table>
+    
+    <h2>Status Indicators</h2>
+    <ul>
+        <li><strong style="color: #00ff88;">● Green Dot</strong> - Inject Failure: OFF (System running normally)</li>
+        <li><strong style="color: #ff4444;">● Red Blinking Dot</strong> - Inject Failure: ON (Anomalies being injected)</li>
+    </ul>
+    
+    <div class="warning-box">
+        <strong>⚠️ Note:</strong> When "Inject Failure" is active, the system randomly selects components to fail based on the probability weights. Multiple components can fail simultaneously.
+    </div>
+</div>
+
+<!-- Section 5: Component Interfaces -->
+<div class="section" id="component-interfaces">
+    <h1>5. Component Interfaces</h1>
+    
+    <p>Click on any component icon in the "Dump Truck Components" panel to access its dedicated diagnostic interface.</p>
+    
+    <h2>Available Components</h2>
+    <table>
+        <tr>
+            <th>Icon</th>
+            <th>Component</th>
+            <th>Monitored Sensors</th>
+        </tr>
+        <tr>
+            <td>🔧</td>
+            <td><strong>ENGINE</strong></td>
+            <td>Engine Temperature, Oil Pressure, Fuel Rate</td>
+        </tr>
+        <tr>
+            <td>⚙️</td>
+            <td><strong>HYDRAULICS</strong></td>
+            <td>Hydraulic Pressure, Load</td>
+        </tr>
+        <tr>
+            <td>🛞</td>
+            <td><strong>WHEELS</strong></td>
+            <td>Vibration, Brake Temperature, Speed</td>
+        </tr>
+        <tr>
+            <td>🏗️</td>
+            <td><strong>CHASSIS</strong></td>
+            <td>Vibration, Load</td>
+        </tr>
+    </table>
+    
+    <h2>Component Interface Features</h2>
+    <ol>
+        <li><strong>Component Status</strong> - Shows NORMAL (green) or ANOMALY (red pulsing)</li>
+        <li><strong>Component Diagram</strong> - Visual representation with glow effects</li>
+        <li><strong>Sensor Gauge Cards</strong> - Real-time readings specific to that component</li>
+        <li><strong>3D PCA Visualization</strong> - Component-focused feature space</li>
+        <li><strong>XAI Explanation Panel</strong> - Appears when anomaly is detected (see Section 7)</li>
+        <li><strong>← Back to Dashboard</strong> - Button to return to main view</li>
+    </ol>
+</div>
+
+<div class="page-break"></div>
+
+<!-- Section 6: Chatbot -->
+<div class="section" id="chatbot">
+    <h1>6. Diagnostic Chatbot</h1>
+    
+    <h2>Accessing the Chatbot</h2>
+    <p>Click the <strong>🤖 floating robot button</strong> in the bottom-right corner of the screen to open the AI diagnostic assistant.</p>
+    
+    <h2>Features</h2>
+    <ul>
+        <li>Real-time system status queries</li>
+        <li>Troubleshooting help for all components</li>
+        <li>Detailed causes, fixes, and prevention tips</li>
+        <li>Context-aware responses based on current sensor readings</li>
+    </ul>
+    
+    <h2>Quick Action Buttons</h2>
+    <table>
+        <tr>
+            <th>Button</th>
+            <th>Action</th>
+        </tr>
+        <tr>
+            <td><strong>📊 System Status</strong></td>
+            <td>Shows current sensor readings and anomaly status</td>
+        </tr>
+        <tr>
+            <td><strong>🔥 Engine Issue</strong></td>
+            <td>Get help with engine overheating problems</td>
+        </tr>
+        <tr>
+            <td><strong>💧 Hydraulic</strong></td>
+            <td>Get help with hydraulic system issues</td>
+        </tr>
+    </table>
+    
+    <h2>Example Questions to Ask</h2>
+    <ul>
+        <li>"What is the current system status?"</li>
+        <li>"The engine is overheating"</li>
+        <li>"Brakes feel weak and stopping distance increased"</li>
+        <li>"Hydraulic dump is lifting very slowly"</li>
+        <li>"Why is there high vibration?"</li>
+        <li>"Oil pressure is low"</li>
+        <li>"Transmission is making grinding noise"</li>
+    </ul>
+    
+    <h2>Response Format</h2>
+    <p>The chatbot provides structured responses including:</p>
+    <ol>
+        <li><strong>🔧 Problem Summary</strong> - Identified issue and affected system</li>
+        <li><strong>🔍 Possible Causes</strong> - Ranked list of likely causes</li>
+        <li><strong>🛠️ Recommended Fixes</strong> - Step-by-step repair actions</li>
+        <li><strong>💡 Preventive Tips</strong> - How to prevent future occurrences</li>
+        <li><strong>⚠️ Safety Warning</strong> - For critical issues</li>
+    </ol>
+</div>
+
+<!-- Section 7: XAI -->
+<div class="section" id="xai">
+    <h1>7. Explainable AI (XAI) Features</h1>
+    
+    <p>When an anomaly is detected in any component, the XAI system provides human-readable explanations of <strong>why</strong> the anomaly was flagged.</p>
+    
+    <h2>XAI Explanation Panel</h2>
+    <p>Appears automatically in component interfaces when anomaly is detected.</p>
+    
+    <h3>Feature Contribution Bars</h3>
+    <p>Visual bar chart showing which sensors contributed most to the anomaly detection:</p>
+    <ul>
+        <li>Bars are sorted by contribution percentage (highest first)</li>
+        <li>Color intensity indicates severity of deviation</li>
+        <li>Each bar shows the feature name and percentage contribution</li>
+    </ul>
+    
+    <h3>Natural Language Explanation</h3>
+    <p>Human-readable text explaining the anomaly. Example:</p>
+    
+    <div class="important-box" style="background: linear-gradient(135deg, #ffebee, #ffcdd2); border-color: #f44336;">
+        <em>"Engine anomaly detected primarily due to <strong>critically elevated engine temperature</strong>, contributing <strong>65%</strong> of the total deviation. This indicates <strong>overheating condition</strong>. Elevated oil pressure (25%) further indicates lubrication system stress."</em>
+    </div>
+    
+    <h2>How XAI Works</h2>
+    <ol>
+        <li><strong>Reconstruction Error</strong> - The autoencoder model computes reconstruction error for each sensor</li>
+        <li><strong>Feature Attribution</strong> - Per-feature errors are calculated and normalized to percentages</li>
+        <li><strong>Severity Assessment</strong> - Contribution levels are mapped to severity adjectives (critically, significantly, notably, moderately, slightly)</li>
+        <li><strong>Cause Mapping</strong> - High-contributing features are mapped to domain-specific cause descriptions</li>
+        <li><strong>Text Generation</strong> - Natural language explanation is generated from the analysis</li>
+    </ol>
+</div>
+
+<div class="page-break"></div>
+
+<!-- Section 8: Anomaly History -->
+<div class="section" id="anomaly-history">
+    <h1>8. Anomaly History & Export</h1>
+    
+    <h2>Past Anomaly History Panel</h2>
+    <p>Located at the bottom of the main dashboard, this panel maintains a log of all detected anomalies.</p>
+    
+    <h3>Table Columns</h3>
+    <table>
+        <tr>
+            <th>Column</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td><strong>Component</strong></td>
+            <td>Which component was affected (Engine, Hydraulic, Wheels, Chassis)</td>
+        </tr>
+        <tr>
+            <td><strong>Sensor</strong></td>
+            <td>Specific sensor that triggered the anomaly</td>
+        </tr>
+        <tr>
+            <td><strong>Value</strong></td>
+            <td>The anomalous reading value</td>
+        </tr>
+        <tr>
+            <td><strong>Type</strong></td>
+            <td>🔥 Injected (manual injection) or ⚠️ Breach (threshold exceeded)</td>
+        </tr>
+        <tr>
+            <td><strong>Time</strong></td>
+            <td>Timestamp when anomaly was detected</td>
+        </tr>
+    </table>
+    
+    <h2>History Controls</h2>
+    <table>
+        <tr>
+            <th>Control</th>
+            <th>Function</th>
+        </tr>
+        <tr>
+            <td><strong>Filter Dropdown</strong></td>
+            <td>Filter history by component (All, Engine, Hydraulics, Wheels, Chassis)</td>
+        </tr>
+        <tr>
+            <td><strong>📥 Export</strong></td>
+            <td>Download complete anomaly history as CSV file</td>
+        </tr>
+        <tr>
+            <td><strong>🗑️ Clear</strong></td>
+            <td>Clear all history records</td>
+        </tr>
+    </table>
+    
+    <div class="important-box">
+        <strong>💾 Data Persistence:</strong> Anomaly history is automatically saved and persists across container restarts when using Docker volumes.
+    </div>
+</div>
+
+<!-- Section 9: Tutorial -->
+<div class="section" id="tutorial">
+    <h1>9. Quick Start Tutorial</h1>
+    
+    <h2>Step-by-Step Walkthrough</h2>
+    
+    <h3><span class="step-number">1</span> Start Normal Simulation</h3>
+    <ol>
+        <li>Click the <strong>📊 Simulate Normal</strong> button</li>
+        <li>Watch sensor values stream in real-time</li>
+        <li>All indicators should be <strong style="color: #00ff88;">green</strong></li>
+        <li>Observe the truck diagram - all components have green glow</li>
+    </ol>
+    
+    <h3><span class="step-number">2</span> Inject a Failure</h3>
+    <ol>
+        <li>Click the <strong>🔥 INJECT FAILURE 🔥</strong> button</li>
+        <li>Watch the system randomly select components to fail</li>
+        <li>Observe the changes:
+            <ul>
+                <li>Status changes to <strong style="color: #ff4444;">"ANOMALY DETECTED"</strong></li>
+                <li>Truck diagram shows <strong>smoke</strong> from failing components</li>
+                <li>Sensor cards turn <strong style="color: #ff4444;">red</strong> for anomalous readings</li>
+                <li>3D plot shows a <strong style="color: #ff4444;">red point</strong></li>
+                <li>History table logs the anomaly</li>
+            </ul>
+        </li>
+    </ol>
+    
+    <h3><span class="step-number">3</span> Investigate the Anomaly</h3>
+    <ol>
+        <li>Click on the <strong>failing component icon</strong> (e.g., 🔧 ENGINE)</li>
+        <li>View the <strong>XAI Explanation Panel</strong>:
+            <ul>
+                <li>See which sensor caused the anomaly</li>
+                <li>Read the natural language explanation</li>
+                <li>Understand the severity and recommended actions</li>
+            </ul>
+        </li>
+        <li>Click <strong>← Back to Dashboard</strong> to return</li>
+    </ol>
+    
+    <h3><span class="step-number">4</span> Use the Chatbot</h3>
+    <ol>
+        <li>Click the <strong>🤖 robot icon</strong> (bottom-right)</li>
+        <li>Ask: <em>"What is the current system status?"</em></li>
+        <li>Or describe an issue: <em>"Engine is overheating"</em></li>
+        <li>Get detailed causes, fixes, and prevention tips</li>
+    </ol>
+    
+    <h3><span class="step-number">5</span> Stop Injection</h3>
+    <ol>
+        <li>Click <strong>🔥 INJECT FAILURE 🔥</strong> again to turn it off</li>
+        <li>System returns to normal operation</li>
+        <li>All indicators return to <strong style="color: #00ff88;">green</strong></li>
+    </ol>
+    
+    <h3><span class="step-number">6</span> Export History</h3>
+    <ol>
+        <li>Scroll to the <strong>Past Anomaly History</strong> panel</li>
+        <li>Click <strong>📥 Export</strong> to download CSV file</li>
+        <li>Use for further analysis or reporting</li>
+    </ol>
+</div>
+
+<div class="page-break"></div>
+
+<!-- Section 10: Troubleshooting -->
+<div class="section" id="troubleshooting">
+    <h1>10. Troubleshooting</h1>
+    
+    <h2>Common Issues & Solutions</h2>
+    
+    <table>
+        <tr>
+            <th>Issue</th>
+            <th>Solution</th>
+        </tr>
+        <tr>
+            <td><strong>Port 5000 already in use</strong></td>
+            <td>Use a different port: <code>docker run -p 8080:5000 ...</code><br>Then access via <code>http://localhost:8080</code></td>
+        </tr>
+        <tr>
+            <td><strong>Docker not running</strong></td>
+            <td>Start Docker Desktop application and wait for it to initialize</td>
+        </tr>
+        <tr>
+            <td><strong>Permission denied</strong></td>
+            <td>Run terminal as Administrator (Windows) or use <code>sudo</code> (Linux/Mac)</td>
+        </tr>
+        <tr>
+            <td><strong>Container exits immediately</strong></td>
+            <td>Check logs: <code>docker logs dump-truck-app</code></td>
+        </tr>
+        <tr>
+            <td><strong>Page not loading</strong></td>
+            <td>Verify container is running: <code>docker ps</code><br>Check if port mapping is correct</td>
+        </tr>
+        <tr>
+            <td><strong>Charts not updating</strong></td>
+            <td>Click "Start Stream" button or refresh the page</td>
+        </tr>
+        <tr>
+            <td><strong>Chatbot not responding</strong></td>
+            <td>Check browser console for errors (F12), refresh page</td>
+        </tr>
+    </table>
+    
+    <h2>Docker Commands Reference</h2>
+    <div class="command-box">
+        <code># Check running containers</code><br>
+        <code>docker ps</code><br><br>
+        <code># View container logs</code><br>
+        <code>docker logs dump-truck-app</code><br><br>
+        <code># Restart container</code><br>
+        <code>docker restart dump-truck-app</code><br><br>
+        <code># Stop and remove container</code><br>
+        <code>docker stop dump-truck-app && docker rm dump-truck-app</code><br><br>
+        <code># Pull latest image</code><br>
+        <code>docker pull sanskar3108/dump-truck-anomaly-detector:latest</code>
+    </div>
+    
+    <h2>System Requirements</h2>
+    <ul>
+        <li><strong>Docker Desktop:</strong> Version 4.0 or higher</li>
+        <li><strong>RAM:</strong> Minimum 4GB (8GB recommended)</li>
+        <li><strong>Storage:</strong> ~3GB for Docker image</li>
+        <li><strong>Browser:</strong> Chrome, Firefox, Edge, Safari (latest versions)</li>
+        <li><strong>Network:</strong> Internet connection for initial image pull</li>
+    </ul>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+    <p><strong>Dump Truck Anomaly Detection System</strong></p>
+    <p>Version 2.0 | Docker Hub: sanskar3108/dump-truck-anomaly-detector</p>
+    <p>© 2026 Sanskar P. All rights reserved.</p>
+    <p style="margin-top: 20px; color: #999;">
+        To save this document as PDF: Click the "Save as PDF" button above,<br>
+        or press <strong>Ctrl+P</strong> (Windows) / <strong>Cmd+P</strong> (Mac) and select "Save as PDF"
+    </p>
+</div>
+
+</body>
+</html>
