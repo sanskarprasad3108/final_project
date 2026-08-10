@@ -2,6 +2,8 @@
 
 A production-grade industrial monitoring platform that leverages deep learning autoencoders for real-time anomaly detection in mining dump truck components. This system provides predictive maintenance capabilities through unsupervised machine learning, component-wise health monitoring, and explainable AI-driven root cause analysis.
 
+**Live link**:-https://dump-truck-anomaly-detector-design.onrender.com
+
 ---
 
 ## Table of Contents
